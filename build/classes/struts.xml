@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.1.7//EN"
+	"http://struts.apache.org/dtds/struts-2.1.7.dtd">
+	
+<struts>
+	<constant name="struts.i18n.encoding" value="utf-8"/>
+	<constant name="struts.devMode" value="true" />
+	<constant name="struts.ui.theme" value="simple" />
+	<package name="user" extends="json-default" namespace="/user">
+		<action name="insert" class="userAction" method="insert">
+			<result name="input">/jsp/chat/index.jsp</result>
+			<result name="success">/jsp/chat/index.jsp</result>
+			<result name="json" type="json"><param name="root">ajaxUtil</param></result>
+		</action>
+		
+		<!-- 登录页面 -->
+		<action name="login" class="userAction" method="login">
+			<result name="input">/jsp/user/login.jsp</result>
+			<result name="success">/jsp/chat/index.jsp</result>
+			<result name="json" type="json"><param name="root">ajaxUtil</param></result>
+		</action>
+	</package>
+	
+	<package name="message" extends="json-default" namespace="/message">
+		<action name="insert" class="messageAction" method="insert">
+			<result name="json" type="json"><param name="root">ajaxUtil</param></result>
+		</action>
+		
+		<!-- 获取未读的新消息列表 -->
+		<action name="getMessageList" class="messageAction" method="getMessageList">
+			<result name="json" type="json"><param name="root">ajaxUtil</param></result>
+		</action>
+		
+		<action name="getMessageCount" class="messageAction" method="getMessageCount">
+			<result name="json" type="json"><param name="root">ajaxUtil</param></result>
+		</action>
+		
+		 <!-- 分页获取消息列表 -->
+		<action name="findMessageListByPage" class="messageAction" method="findMessageListByPage">
+			<result name="json" type="json"><param name="root">ajaxUtil</param></result>
+		</action>
+		
+		<!-- 将消息置为已读 -->
+		<action name="updateMessageIsRead" class="messageAction" method="updateMessageIsRead">
+			<result name="json" type="json"><param name="root">ajaxUtil</param></result>
+		</action>
+	</package>
+	
+	
+</struts>
