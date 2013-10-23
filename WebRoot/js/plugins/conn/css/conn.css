@@ -1,0 +1,33 @@
+@CHARSET "UTF-8";
+@import url(icon.css);
+
+.green{color: green;}
+.red{color: red;}
+.gray{color:gray;}
+.black{color:black;}
+.bg_td { background-color: #D5DFFF !important;}
+.bg_null { background-color: #F7F7F7;}
+
+.menu_tree{ width:140px; height:auto;}
+.create_table{width:600px;height:321px; overflow: auto;}
+.create_table input[type="text"]{ width:100%;}
+.create_table .bhover{background-color: #EDF0FC;}
+.create_table .warned{background-color: #F4E3E3; border: 1px solid #8f0000 !important;}
+.create_table td,.create_table th{text-align: center !important;}
+.create_table_name{height:28px; line-height: 28px; padding-left: 10px;}
+.create_table_name input[type="text"]{width:200px;border:1px solid #ccc; height:20px; line-height: 20px;}
+.sql_preview{width:100%;height:140px;position: absolute; top:0;left:0; z-index: 90000; display: none;}
+.sql_preview .close{position: absolute; top:0px;right: 0px; z-index: 90001; cursor: pointer;}
+.sql_preview textarea{width:580px; height:100%;font-size: 12px;margin:0;padding:0;}
+
+
+.conn_content .sql_text{width:100%;height:100%;font-size: 12px;border-width:0;border-top:1px solid #99BBE8;}
+.result_table{width:100%; height:100%; display: none;}
+.result_table em{color:#666;}
+.result_list .msg_tip{border-top:1px solid #95B8E7; height:99.5%;}
+.table_datagrid{width: 100%;}
+
+.list_table thead th{font-weight: normal;}
+.list_table tbody td{max-width: 300px;}
+.list_table td:first-child{color:#606060; text-align: center;}
+.list_page{position: absolute;bottom: 0;left: 0; background-color: #F7F7F7; width:100%; height:28px; line-height: 28px;}
