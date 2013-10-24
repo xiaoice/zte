@@ -13,6 +13,11 @@
 		select * from user where id=#{id} 
     </select>
     
+        
+	<select id="findAll" resultType="com.zte.user.domain.User">
+		select * from user
+    </select>
+    
     <update id="update" parameterType="com.zte.user.domain.User">
     	update user set age=#{age}
     </update>

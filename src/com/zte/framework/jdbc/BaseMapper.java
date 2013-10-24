@@ -1,6 +1,6 @@
 package com.zte.framework.jdbc;
 
-import java.util.Map;
+import java.util.List;
 
 import org.springframework.stereotype.Component;
 
@@ -10,4 +10,5 @@ public interface BaseMapper<T>{
 	public int deleteById(int id);
 	public int update(T user);
 	public T getById(int id);
+	public List<T> findAll();
 }

@@ -2,11 +2,14 @@ package com.zte.user.action;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.ibatis.session.SqlSession;
 import org.apache.struts2.json.JSONException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import com.zte.framework.util.AjaxAction;
@@ -15,8 +18,12 @@ import com.zte.user.service.UserService;
 
 @Controller("userAction")
 public class UserAction extends AjaxAction{
-	@Resource(name="userService")
+	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	SqlSession sqlSession;
+	
 	
 	private User user;
 	
@@ -39,6 +46,8 @@ public class UserAction extends AjaxAction{
 	
 	//登录
 	public String login(){
+		List<User> list =userService.findAll();
+		System.out.println(list);
 		if(user==null){
 			return INPUT;
 		}else{
