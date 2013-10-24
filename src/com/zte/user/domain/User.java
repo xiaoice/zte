@@ -6,8 +6,6 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
-import sun.misc.Sort;
-
 @Component
 public class User {
 	private int id;
