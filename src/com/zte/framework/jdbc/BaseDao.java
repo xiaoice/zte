@@ -1,16 +1,32 @@
 package com.zte.framework.jdbc;
 
-import org.mybatis.spring.support.SqlSessionDaoSupport;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.session.ResultHandler;
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Repository;
 
-import com.zte.framework.util.SysConfigHelper;
-import com.zte.user.domain.User;
-
-@Repository
-public class BaseDao<T> extends SqlSessionDaoSupport {
+@Repository("baseDao")
+public interface BaseDao<T>{
 	
-	//根据beanname获取对象实例
-	protected T getBean(String beanName){
-		return (T)SysConfigHelper.getAppContext().getBean(beanName);
-	}
+    T selectOne(String statement, Object parameter);
+    <E> List<E> selectList(String statement, Object parameter);
+    <K,V> Map<K,V> selectMap(String statement, Object parameter, String mapKey);
+    int insert(String statement, Object parameter);
+    int update(String statement, Object parameter);
+    int delete(String statement, Object parameter);
+      
+    T selectOne(String statement);
+    <E> List<E> selectList(String statement);
+    <K,V> Map<K,V> selectMap(String statement, String mapKey);
+    int insert(String statement);
+    int update(String statement);
+    int delete(String statement);
+      
+    <E> List<E> selectList (String statement, Object parameter, RowBounds rowBounds);
+    <K,V> Map<K,V> selectMap(String statement, Object parameter, String mapKey, RowBounds rowBounds);
+    ResultHandler select(String statement, ResultHandler handler);
+    ResultHandler select (String statement, Object parameter, ResultHandler handler);
+    ResultHandler select (String statement, Object parameter, RowBounds rowBounds, ResultHandler handler);
 }

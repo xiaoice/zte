@@ -7,6 +7,26 @@
 	<constant name="struts.i18n.encoding" value="utf-8"/>
 	<constant name="struts.devMode" value="true" />
 	<constant name="struts.ui.theme" value="simple" />
+	<package name="struts-intercept" abstract="true" extends="struts-default" namespace="/">
+		<!-- 拦截器 -->
+		<interceptors>
+			<interceptor-stack name="myStack">
+				<interceptor-ref name="authStack"></interceptor-ref>
+			</interceptor-stack>
+			<interceptor name="authStack" class="com.zte.framework.util.UserAuthorityInterceptor" />
+		</interceptors>
+
+		<default-interceptor-ref name="myStack">
+			 <param name="includeMethod">login,execute</param>
+		</default-interceptor-ref>
+
+		<global-results>
+			<result name="login">/jsp/user/login.jsp</result>
+		</global-results>
+	</package>
+	
+	
+	<!-- 用户 -->
 	<package name="user" extends="json-default" namespace="/user">
 		<action name="insert" class="userAction" method="insert">
 			<result name="input">/jsp/chat/index.jsp</result>

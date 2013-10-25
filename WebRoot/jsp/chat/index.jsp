@@ -4,7 +4,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<title>聊天室</title>
+	<title>列表</title>
 	<%@include file="/jsp/common/head.jsp"%>
 	<link type="text/css" href="css/chat.css" rel="stylesheet" />
 	<script src="${base}js/plugins/ember.js/js/libs/handlebars-1.0.0.js" type="text/javascript"></script>

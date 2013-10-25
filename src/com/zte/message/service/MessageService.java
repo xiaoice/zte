@@ -3,38 +3,23 @@ package com.zte.message.service;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.session.SqlSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.zte.framework.jdbc.BaseService;
-import com.zte.framework.util.Page;
 import com.zte.message.domain.Message;
-import com.zte.message.mapper.MessageMapper;
 
 @Service("messageService")
-public class MessageService extends BaseService<Message> implements MessageMapper{
+public interface MessageService extends BaseService<Message>{
+	public int insert(Message message);
 
-	@Override
-	public List<Message> getMessageList(Map<String,Object> map) {
-		MessageMapper mapper=(MessageMapper)getBean("messageMapper");
-		return mapper.getMessageList(map);
-	}
+	public List<Message> getMessageList(Map<String,Object> map);
 
-	@Override
-	public int getMessageCount(Map<String,Object> map) {
-		MessageMapper mapper=(MessageMapper)getBean("messageMapper");
-		return mapper.getMessageCount(map);
-	}
+	public int getMessageCount(Map<String,Object> map);
 	
-	@Override
-	public List<Message> findMessageListByPage(Map<String,Object> map) {
-		MessageMapper mapper=(MessageMapper)getBean("messageMapper");
-		return mapper.findMessageListByPage(map);
-	}
+	public List<Message> findMessageListByPage(Map<String,Object> map);
 
-	@Override
-	public int updateMessageIsRead(Map<String, Object> map) {
-		MessageMapper mapper=(MessageMapper)getBean("messageMapper");
-		return mapper.updateMessageIsRead(map);
-	}
+	public int updateMessageIsRead(Map<String, Object> map);
 
 }
