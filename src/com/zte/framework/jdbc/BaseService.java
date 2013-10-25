@@ -2,6 +2,7 @@ package com.zte.framework.jdbc;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 
@@ -47,6 +48,11 @@ public class BaseService<T>  implements BaseMapper<T>{
 	@Override
 	public T getById(int id) {
 		return (T) getMapper().getById(id);
+	}
+
+	@Override
+	public List<T> findAll() {
+		return (List<T>) getMapper().findAll();
 	}
 
 }
