@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.1.7//EN"
+	"http://struts.apache.org/dtds/struts-2.1.7.dtd">
+	
+<struts>
+	<package name="struts-user" extends="struts-intercept" namespace="/user">
+		<!-- <action name="user_*" class="userAction" method="{1}">
+			<result name="index" type="dispatcher">/jsp/user/index.jsp</result>
+			<result name="reg" type="dispatcher">/jsp/user/reg.jsp</result>
+			<result name="login" type="dispatcher">/jsp/user/login.jsp</result>
+		</action>
+
+		<action name="test_*">
+			<result type="dispatcher">/jsp/user/{1}.jsp</result>
+		</action> -->
+		
+		<action name="index" class="userAction" method="index">
+			<result type="dispatcher">/jsp/user/index.jsp</result>
+		</action>
+		
+	</package>
+</struts>
