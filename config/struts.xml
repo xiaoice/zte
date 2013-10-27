@@ -10,62 +10,49 @@
 	<package name="struts-intercept" abstract="true" extends="struts-default" namespace="/">
 		<!-- 拦截器 -->
 		<interceptors>
-			<interceptor-stack name="myStack">
-				<interceptor-ref name="authStack"></interceptor-ref>
+			<interceptor name="userAuthorityInterceptor" class="com.zte.framework.util.UserAuthorityInterceptor" />
+			<interceptor-stack name="authorityStack">
+ 	            <interceptor-ref name="defaultStack" />
+				<interceptor-ref name="userAuthorityInterceptor"></interceptor-ref>
 			</interceptor-stack>
-			<interceptor name="authStack" class="com.zte.framework.util.UserAuthorityInterceptor" />
 		</interceptors>
-
-		<default-interceptor-ref name="myStack">
-			 <param name="includeMethod">login,execute</param>
-		</default-interceptor-ref>
-
+		<default-interceptor-ref name="authorityStack" />
 		<global-results>
-			<result name="login">/jsp/user/login.jsp</result>
+			<result name="error">/error.jsp</result>
+			<result name="login">/login.jsp</result>
 		</global-results>
 	</package>
 	
-	
-	<!-- 用户 -->
-	<package name="user" extends="json-default" namespace="/user">
-		<action name="insert" class="userAction" method="insert">
-			<result name="input">/jsp/chat/index.jsp</result>
-			<result name="success">/jsp/chat/index.jsp</result>
-			<result name="json" type="json"><param name="root">ajaxUtil</param></result>
+	<package name="struts-index" extends="json-default" namespace="/">
+		<action name="login">
+			<result>login.jsp</result>
 		</action>
 		
-		<!-- 登录页面 -->
-		<action name="login" class="userAction" method="login">
-			<result name="input">/jsp/user/login.jsp</result>
-			<result name="success">/jsp/chat/index.jsp</result>
-			<result name="json" type="json"><param name="root">ajaxUtil</param></result>
+		<action name="reg">
+			<result>reg.jsp</result>
+		</action>
+		<action name="reg_success">
+			<result>reg_success.jsp</result>
+		</action>
+		
+		<action name="index" class="userAction">
+			<result>index.jsp</result>
+		</action>
+		
+		<action name="session" class="userAction" method="session">
+			<result name="input" type="redirectAction">login</result>
+			<result name="success">login_success.jsp</result>
+		</action>
+		
+		<action name="logout" class="userAction" method="logout">
+			<result name="success">logout_success.jsp</result>
+		</action>
+		
+		<action name="join" class="userAction" method="join">
+			<result name="success" type="redirectAction">reg_success</result>
 		</action>
 	</package>
-	
-	<package name="message" extends="json-default" namespace="/message">
-		<action name="insert" class="messageAction" method="insert">
-			<result name="json" type="json"><param name="root">ajaxUtil</param></result>
-		</action>
-		
-		<!-- 获取未读的新消息列表 -->
-		<action name="getMessageList" class="messageAction" method="getMessageList">
-			<result name="json" type="json"><param name="root">ajaxUtil</param></result>
-		</action>
-		
-		<action name="getMessageCount" class="messageAction" method="getMessageCount">
-			<result name="json" type="json"><param name="root">ajaxUtil</param></result>
-		</action>
-		
-		 <!-- 分页获取消息列表 -->
-		<action name="findMessageListByPage" class="messageAction" method="findMessageListByPage">
-			<result name="json" type="json"><param name="root">ajaxUtil</param></result>
-		</action>
-		
-		<!-- 将消息置为已读 -->
-		<action name="updateMessageIsRead" class="messageAction" method="updateMessageIsRead">
-			<result name="json" type="json"><param name="root">ajaxUtil</param></result>
-		</action>
-	</package>
-	
-	
+
+	<include file="struts-user.xml" />
+	<include file="struts-message.xml" />
 </struts>

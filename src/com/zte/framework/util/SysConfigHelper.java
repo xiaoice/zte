@@ -17,10 +17,10 @@ public class SysConfigHelper implements ApplicationContextAware{
 	
 	public void setApplicationContext(ApplicationContext applicationContext)throws BeansException{
 	    appContext = (XmlWebApplicationContext)applicationContext;	    
-	    attributes.put("contextName", appContext.getServletContext().getServletContextName());
-	    String webRoot = appContext.getServletContext().getRealPath("/") + "/";
-	    attributes.put("sysPath",webRoot);
-	    System.setProperty("logDir",webRoot + "WEB-INF/logs/");
+	    //attributes.put("contextName", appContext.getServletContext().getServletContextName());
+	    //String webRoot = appContext.getServletContext().getRealPath("/") + "/";
+	    //attributes.put("sysPath",webRoot);
+	    //System.setProperty("logDir",webRoot + "WEB-INF/logs/");
 	}
 	
 	public void setAttributes(Map<String,String> attributes){

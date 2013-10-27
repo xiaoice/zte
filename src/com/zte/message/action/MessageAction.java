@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import com.zte.framework.util.AjaxAction;
+import com.zte.framework.util.DateUtil;
 import com.zte.framework.util.Page;
 import com.zte.message.domain.Message;
 import com.zte.message.service.MessageService;
@@ -22,15 +23,27 @@ public class MessageAction extends AjaxAction {
 	@Autowired
 	private MessageService messageService;
 	//参数
-	Map<String,String> para;
-	private Message message;
+	Map<String,String> parameter;
 	
-	public String insert(){
-		if(message!=null){
+	public String index(){
+		return INPUT;
+	}
+	
+	public String send(){
+		if(parameter!=null){
+			Integer friendId=Integer.valueOf(parameter.get("friendId"));
+			User user=getUser();
+			Message message=new Message();
+			message.setContent(parameter.get("content"));
+			message.setSendUsername(user.getName());
+			message.setCreateBy(user.getUsername());
+			message.setUserId(user.getId());
+			message.setFriendId(friendId);
+			message.setCreateTime(DateUtil.getCurrentDateTime());
 			messageService.insert(message);
-			ajaxUtil.setSuccess("发送成功！");
+			ajaxUtil.setSuccess("发送成功！",message);
 		}else{
-			ajaxUtil.setFail();
+			ajaxUtil.setFail("发送失败！");
 		}
 		return JSON;
 	}
@@ -38,7 +51,9 @@ public class MessageAction extends AjaxAction {
 	//获取未读的新消息列表
 	public String getMessageList(){
 		Map<String,Object> map=new HashMap<String, Object>();
-		map.put("sendReceiveGroup", "10-11");
+		map.put("userId", getUserId());
+		map.put("friendId", parameter.get("friendId"));
+		map.put("createBy", getUser().getUsername());
 		List<Message> list = messageService.getMessageList(map);
 		if(list.size()>0){
 			return ajaxUtil.setSuccess(list);
@@ -49,7 +64,7 @@ public class MessageAction extends AjaxAction {
 	//获取消息总数
 	public String getMessageCount(){
 		Map<String,Object> map=new HashMap<String, Object>();
-		map.put("sendReceiveGroup", message.getSendReceiveGroup());
+		//map.put("sendReceiveGroup", message.getSendReceiveGroup());
 		map.put("isRead",MessageConstant.ISREAD_TRUE);
 		int count = messageService.getMessageCount(map);
 		ajaxUtil.setSuccess(count);
@@ -58,16 +73,16 @@ public class MessageAction extends AjaxAction {
 	
 	//分页获取消息列表
 	public String findMessageListByPage(){
-		if(para==null){
+		if(parameter==null){
 			return ajaxUtil.setFail("参数不能为空！");
 		}
-		else if(!(para.containsKey("pageIndex")&&StringUtils.isNotBlank(para.get("pageIndex")) 
-				&& para.containsKey("pageSize")&&StringUtils.isNotBlank(para.get("pageSize")))){
+		else if(!(parameter.containsKey("pageIndex")&&StringUtils.isNotBlank(parameter.get("pageIndex")) 
+				&& parameter.containsKey("pageSize")&&StringUtils.isNotBlank(parameter.get("pageSize")))){
 			return ajaxUtil.setFail("参数错误！");
 		}
 		Map<String,Object> map=new HashMap<String, Object>();
-		int pageIndex=Integer.valueOf(para.get("pageIndex"));
-		int pageSize=Integer.valueOf(para.get("pageSize"));
+		int pageIndex=Integer.valueOf(parameter.get("pageIndex"));
+		int pageSize=Integer.valueOf(parameter.get("pageSize"));
 		
 		map.put("sendReceiveGroup", "10-11");
 		map.put("isRead",MessageConstant.ISREAD_TRUE);
@@ -85,17 +100,17 @@ public class MessageAction extends AjaxAction {
 		if(user!=null){
 			return ajaxUtil.setFail("请先登录！");
 		}
-		if(para==null){
+		if(parameter==null){
 			return ajaxUtil.setFail("参数不能为空！");
 		}
-		else if(!para.containsKey("ids")){
+		else if(!parameter.containsKey("ids")){
 			return ajaxUtil.setFail("参数错误！");
 		}
 		Map<String,Object> map=new HashMap<String, Object>();
 		
-		//String sendReceiveGroup=para.get("sendReceiveGroup");
+		//String sendReceiveGroup=parameter.get("sendReceiveGroup");
 		map.put("sendReceiveGroup", "10-11");
-		map.put("ids", para.get("ids"));
+		map.put("ids", parameter.get("ids"));
 		map.put("createId", user.getId());
 		try{
 			int result =messageService.updateMessageIsRead(map);
@@ -108,19 +123,12 @@ public class MessageAction extends AjaxAction {
 		return ajaxUtil.setSuccess("数据更新为已读状态！");
 	}
 
-	public Message getMessage() {
-		return message;
+	public Map<String, String> getParameter() {
+		return parameter;
 	}
 
-	public void setMessage(Message message) {
-		this.message = message;
+	public void setParameter(Map<String, String> parameter) {
+		this.parameter = parameter;
 	}
 
-	public Map<String, String> getPara() {
-		return para;
-	}
-
-	public void setPara(Map<String, String> para) {
-		this.para = para;
-	}
 }

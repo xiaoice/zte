@@ -7,7 +7,7 @@
 	
 	<insert id="insert" parameterType="message" useGeneratedKeys="true" keyProperty="id">
 		insert into message(sendReceiveGroup,content,sendUsername,ip,createBy,createTime) values
-				(#{sendReceiveGroup},#{content},#{sendUsername},#{ip},#{createBy},now())
+				(#{sendReceiveGroup},#{content},#{sendUsername},#{ip},#{createBy},#{createTime})
     </insert>
     
 	<select id="getById" resultType="message" parameterType="int">
@@ -24,7 +24,7 @@
     
     <!-- 获取未读的新消息列表 -->
 	<select id="getMessageList" resultType="message" parameterType="hashMap">
-		select * from message where sendReceiveGroup=#{sendReceiveGroup} and isRead=0 and isDel=0 
+		select * from message where userId=#{userId} and friendId=#{friendId} and createBy!=#{createBy} and isRead=0 and isDel=0 
     </select>
     
     <select id="getMessageCount" resultType="int" parameterType="hashMap">

@@ -61,20 +61,6 @@ public class MapUtil {
     @SuppressWarnings("unchecked")
 	public static void main(String[] agrs) throws Exception{
     	User user=new User();
-    	user.setAge(11);
-    	user.setA1(true);
-    	user.setA2(true);
-    	user.setA3(new Date());
-    	user.setA4(4.3d);
-    	user.setA5(8.0);
-    	user.setA6(null);
-    	user.setA7(new BigDecimal(12322));
-    	user.setA8((short)2);
-    	user.setName("dddd");
-    	user.setA0(null);
-    	user.setListInt(Arrays.asList(new Integer[]{1,2}));
-    	user.setListStr(Arrays.asList(new String[]{"dd","cc"}));
-    	
     	Map<String,Object> map=MapUtil.fromT(user);
     	//Map<String,Object> map=JSONObject.fromObject(user);
     	System.out.println(map);

@@ -1,15 +1,11 @@
 package com.zte.framework.jdbc;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
-import org.apache.struts2.ServletActionContext;
 import org.springframework.context.ApplicationContext;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import com.zte.framework.util.SysConfigHelper;
+import com.zte.user.domain.User;
 
 public class BaseAction extends ActionSupport {
 	
@@ -18,7 +14,8 @@ public class BaseAction extends ActionSupport {
 	 * @return
 	 */
 	public String getAppPath() {
-		return ServletActionContext.getServletContext().getRealPath("/");
+		//return ServletActionContext.getServletContext().getRealPath("/");
+		return null;
 	}
 
 	/**
@@ -40,6 +37,56 @@ public class BaseAction extends ActionSupport {
 	}
 	
 	/**
+	 * 移除指定的session
+	 * @param key
+	 * @return
+	 */
+	public void removeSessionProperty(String key) {
+		ActionContext.getContext().getSession().remove(key);
+	}
+	
+	/**
+	 * 获取context的值
+	 * @param key
+	 * @return
+	 */
+	public Object getContextProperty(String key) {
+		return ActionContext.getContext().get(key);
+	}
+	
+	/**
+	 * 设置context的值
+	 * @param key
+	 * @return
+	 */
+	public void setContextProperty(String key, Object value) {
+		ActionContext.getContext().put(key, value);
+	}
+	
+	/**
+	 * 获取User
+	 * @param key
+	 * @return
+	 */
+	public User getUser() {
+		return (User)getSessionProperty("user");
+	}
+	
+	/**
+	 * 获取UserId
+	 * @param key
+	 * @return
+	 */
+	public Integer getUserId() {
+		User user = (User)getSessionProperty("user");
+		if(user!=null){
+			return user.getId();
+		}else{
+			return null;
+		}
+	}
+	
+	/**
 	 * 获取spring容器
 	 * @return
 	 */
@@ -47,28 +94,4 @@ public class BaseAction extends ActionSupport {
 		return SysConfigHelper.getAppContext();
 	}
 	
-	/**
-	 * 获取servlet request
-	 * @return
-	 */
-	public HttpServletRequest getRequest(){
-		return ServletActionContext.getRequest();
-	}
-	
-	/**
-	 * 获取servlet response
-	 * @return
-	 */
-	public HttpServletResponse getResponse(){
-		return ServletActionContext.getResponse();
-	}
-	
-	/**
-	 * 获取servlet session
-	 * @return
-	 */
-	public HttpSession getSession(){
-		return ServletActionContext.getRequest().getSession();
-	}
-
 }

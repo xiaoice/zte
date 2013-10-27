@@ -1,69 +1,56 @@
 package com.zte.user.action;
 
-import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 
-import org.apache.ibatis.session.SqlSession;
-import org.apache.struts2.json.JSONException;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import com.zte.framework.util.AjaxAction;
-import com.zte.message.service.MessageService;
 import com.zte.user.domain.User;
+import com.zte.user.service.UserFriendService;
 import com.zte.user.service.UserService;
 
 @Controller
+@Scope("prototype")
 public class UserAction extends AjaxAction{
 	@Resource(name="userServiceImpl")
 	private UserService userService;
-	private User user;
+	@Resource(name="userFriendServiceImpl")
+	private UserFriendService userFriendService;
+	Map<String,String> parameter;
 	
-	public String insert() throws IOException, JSONException{
+	//登录
+	public String session(){
+		User user = userService.findUserByUsernameAndPwd(parameter);
 		if(user!=null){
-			user.setUsername("zhangshan");
-			user.setPassword("123456");
-			//user.setName("张三");
-			user.setPhoto("default.png");
-			//ActionContext.getContext().getSession().put("user", "");
-			//userService.insert(user);
-			ajaxUtil.setSuccess("dddddd", user);
-			//String str = JSONUtil.serialize(ajaxResult);
-		    //ServletActionContext.getResponse().getWriter().print("233");
-			return INPUT;
-		}else{
-			return INPUT;
+			user.setPassword(null);
+			setSessionProperty("user", user);
+			return SUCCESS;
 		}
+		setContextProperty("tip", "用户名或者密码错误！");
+		return INPUT;
+	}
+	
+	//注销
+	public String logout(){
+		removeSessionProperty("user");
+		return SUCCESS;
 	}
 	
 	//登录
-	public String login(){
-		/*
-		 * Map<String, Object> parameter=new HashMap<String, Object>();
-		parameter.put("sendReceiveGroup", "10-11");
-		parameter.put("isRead",MessageConstant.ISREAD_TRUE);
-		MessageService s=new MessageServiceImpl();
-		//int dd =messageServiceImpl.getMessageCount(parameter);
-		parameter.put("username", "admin");
-		parameter.put("password", "admin");
-		List<User> dd = sqlSession.selectList("com.zte.user.dao.UserDao.findAll");
-		User a1 = sqlSession.selectOne("com.zte.user.dao.UserDao.findUserByUsernameAndPwd", parameter);
-		User a2 = userService.findUserByUsernameAndPwd(parameter);
-		*/
-		
-		if(user==null){
+	public String join(){
+		if(parameter==null){
 			return INPUT;
 		}else{
-			String username=user.getUsername();
-			String password=user.getPassword();
-			Map<String,Object> map=new HashMap<String,Object>();
-			map.put("username", username);
-			map.put("password", password);
-			User user = userService.findUserByUsernameAndPwd(map);
-			if(user!=null){
+			User user=new User();
+			user.setUsername(parameter.get("username"));
+			user.setPassword(parameter.get("password"));
+			int result = userService.insert(user);
+			if(result>0){
 				setSessionProperty("user", user);
 				return SUCCESS;
 			}
@@ -71,12 +58,23 @@ public class UserAction extends AjaxAction{
 		return INPUT;
 	}
 	
-	public User getUser() {
-		return user;
+	//用户消息中心
+	public String index(){
+		Integer userId=getUserId();
+		if(userId!=null){
+			Map<String,Object> map=new HashMap<String, Object>();
+			map.put("userId", userId);
+			List<Map<String, Object>> userList = userFriendService.findByUserId(map);
+			setContextProperty("userList", userList);
+		}
+		return SUCCESS;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
+	public Map<String, String> getParameter() {
+		return parameter;
 	}
-	
+
+	public void setParameter(Map<String, String> parameter) {
+		this.parameter = parameter;
+	}
 }

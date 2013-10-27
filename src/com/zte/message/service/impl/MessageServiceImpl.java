@@ -3,7 +3,6 @@ package com.zte.message.service.impl;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,8 +14,6 @@ import com.zte.message.service.MessageService;
 public class MessageServiceImpl extends BaseServiceImpl<Message> implements MessageService {
 	@Autowired
 	MessageService messageService;
-	@Autowired
-	SqlSession sqlSession;
 	
 	@Override
 	public List<Message> getMessageList(Map<String,Object> parameter) {
@@ -25,11 +22,8 @@ public class MessageServiceImpl extends BaseServiceImpl<Message> implements Mess
 
 	@Override
 	public int getMessageCount(Map<String,Object> parameter) {
-		String a="eeeeeeeeeeeee";
-		System.out.println(a);
-		sqlSession.select("messageService.getMessageCount", parameter,null);
-		//messageService.select("MessageService.getMessageCount", parameter,null);
-		return 3;
+		this.select("MessageService.getMessageCount", parameter,null);
+		return 0;
 	}
 	
 	@Override

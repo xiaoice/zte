@@ -15,12 +15,14 @@
     <!-- 别名配置 -->  
     <typeAliases>  
         <typeAlias alias="User" type="com.zte.user.domain.User" />  
+        <typeAlias alias="UserFriend" type="com.zte.user.domain.UserFriend" />  
         <typeAlias alias="Message" type="com.zte.message.domain.Message" />  
     </typeAliases>  
       
     <!-- 指定映射器路径 -->  
     <mappers>  
         <mapper resource="com/zte/user/domain/User.xml" />
+        <mapper resource="com/zte/user/domain/UserFriend.xml" />
         <mapper resource="com/zte/message/domain/Message.xml" />
     </mappers>  
 </configuration>  

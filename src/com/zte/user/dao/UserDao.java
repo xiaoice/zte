@@ -2,6 +2,7 @@ package com.zte.user.dao;
 
 import java.util.Map;
 
+import com.zte.framework.jdbc.BaseDao;
 import com.zte.user.domain.User;
 
 public interface UserDao {
@@ -11,5 +12,5 @@ public interface UserDao {
 	 * @param map
 	 * @return
 	 */
-	User findUserByUsernameAndPwd(Map<String,Object> map);
+	User findUserByUsernameAndPwd(Map<String,String> map);
 }

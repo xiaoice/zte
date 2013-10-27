@@ -10,12 +10,12 @@ import com.zte.user.domain.User;
 
 public class UserAuthorityInterceptor extends AbstractInterceptor {
 	
-	public void destroy() {
-		System.out.println("interceptor is close!");
-	}
-
 	public void init() {
-		System.out.println("interceptor is open!");
+		System.out.println("interceptor is init!");
+	}
+	
+	public void destroy() {
+		System.out.println("interceptor is destroy!");
 	}
 
 	@Override

@@ -16,9 +16,14 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
 	private UserDao userDao;
 
 	@Override
-	public User findUserByUsernameAndPwd(Map<String, Object> parameter) {
+	public User findUserByUsernameAndPwd(Map<String, String> parameter) {
 		//return this.selectOne("com.zte.user.dao.UserDao.findUserByUsernameAndPwd", parameter);
 		return userDao.findUserByUsernameAndPwd(parameter);
+	}
+
+	@Override
+	public int insert(User user) {
+		return this.insert("com.zte.user.dao.UserDao.insert", user);
 	}
 	
 }

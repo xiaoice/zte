@@ -2,7 +2,8 @@ package com.zte.message.domain;
 
 public class Message {
 	private int id;
-	private String sendReceiveGroup;
+	private int userId;
+	private int friendId;
 	private String content;
 	private String sendUsername;
 	private String ip;
@@ -16,12 +17,6 @@ public class Message {
 	}
 	public void setId(int id) {
 		this.id = id;
-	}
-	public String getSendReceiveGroup() {
-		return sendReceiveGroup;
-	}
-	public void setSendReceiveGroup(String sendReceiveGroup) {
-		this.sendReceiveGroup = sendReceiveGroup;
 	}
 	public String getContent() {
 		return content;
@@ -64,5 +59,17 @@ public class Message {
 	}
 	public void setIsDel(String isDel) {
 		this.isDel = isDel;
+	}
+	public int getUserId() {
+		return userId;
+	}
+	public void setUserId(int userId) {
+		this.userId = userId;
+	}
+	public int getFriendId() {
+		return friendId;
+	}
+	public void setFriendId(int friendId) {
+		this.friendId = friendId;
 	}
 }
