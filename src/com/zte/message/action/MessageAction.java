@@ -31,7 +31,7 @@ public class MessageAction extends AjaxAction {
 	
 	public String send(){
 		if(parameter!=null){
-			Integer friendId=Integer.valueOf(parameter.get("friendId"));
+			int friendId=Integer.valueOf(parameter.get("friendId"));
 			User user=getUser();
 			Message message=new Message();
 			message.setContent(parameter.get("content"));
@@ -51,8 +51,9 @@ public class MessageAction extends AjaxAction {
 	//获取未读的新消息列表
 	public String getMessageList(){
 		Map<String,Object> map=new HashMap<String, Object>();
-		map.put("userId", getUserId());
-		map.put("friendId", parameter.get("friendId"));
+		int friendId=Integer.valueOf(parameter.get("friendId"));
+		map.put("userId", friendId);
+		map.put("friendId", getUserId());
 		map.put("createBy", getUser().getUsername());
 		List<Message> list = messageService.getMessageList(map);
 		if(list.size()>0){
@@ -83,8 +84,9 @@ public class MessageAction extends AjaxAction {
 		Map<String,Object> map=new HashMap<String, Object>();
 		int pageIndex=Integer.valueOf(parameter.get("pageIndex"));
 		int pageSize=Integer.valueOf(parameter.get("pageSize"));
-		
-		map.put("sendReceiveGroup", "10-11");
+		int friendId=Integer.valueOf(parameter.get("friendId"));
+		map.put("userId", getUserId());
+		map.put("friendId", friendId);
 		map.put("isRead",MessageConstant.ISREAD_TRUE);
 		map.put("startNum", Page.getStartNum(pageIndex, pageSize));
 		map.put("endNum",Page.getEndNum(pageIndex, pageSize));
@@ -97,10 +99,10 @@ public class MessageAction extends AjaxAction {
 	//将消息置为已读
 	public String updateMessageIsRead(){
 		User user=(User)getSessionProperty("user");
-		if(user!=null){
+		if(user==null){
 			return ajaxUtil.setFail("请先登录！");
 		}
-		if(parameter==null){
+		else if(parameter==null){
 			return ajaxUtil.setFail("参数不能为空！");
 		}
 		else if(!parameter.containsKey("ids")){
@@ -108,10 +110,8 @@ public class MessageAction extends AjaxAction {
 		}
 		Map<String,Object> map=new HashMap<String, Object>();
 		
-		//String sendReceiveGroup=parameter.get("sendReceiveGroup");
-		map.put("sendReceiveGroup", "10-11");
+		map.put("friendId", user.getId());
 		map.put("ids", parameter.get("ids"));
-		map.put("createId", user.getId());
 		try{
 			int result =messageService.updateMessageIsRead(map);
 			if(result==0){

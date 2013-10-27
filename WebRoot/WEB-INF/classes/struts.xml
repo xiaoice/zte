@@ -24,6 +24,7 @@
 	</package>
 	
 	<package name="struts-index" extends="json-default" namespace="/">
+		<default-action-ref name="index" />
 		<action name="login">
 			<result>login.jsp</result>
 		</action>

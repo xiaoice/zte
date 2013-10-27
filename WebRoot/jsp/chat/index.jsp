@@ -75,7 +75,7 @@
 		//标记消息为已读
 		updateMsgRead:function(ids){
 			if(ids.length>0){
-				$.ajax({url:"message/updateMessageIsRead.action?para.ids="+ids.join(","),async:false}).done(function(result){
+				$.ajax({url:"message/updateMessageIsRead.action?parameter.ids="+ids.join(","),async:false}).done(function(result){
 					console.log(result.message);
 				});
 			}

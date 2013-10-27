@@ -1,14 +1,14 @@
 @CHARSET "UTF-8";
 .chat_warp{margin:auto; padding:0;width:100%;height:auto;}
-.chat_warp .chat_warp_out { overflow-x: hide; overflow: auto;padding:0;}
+.chat_warp .chat_warp_out { overflow-x: hide; overflow: auto;padding:0;position: relative;}
 .chat_warp .chat_warp_out ul{height:400px; max-height: 400px;margin:0; padding:0; padding-bottom:10px; overflow: auto; }
 .chat_warp .chat_warp_out .wait{background: url(../images/loading.gif) center center no-repeat;}
 .chat_warp_out li{margin: 0 10px 16px 20px; list-style-type: none; background-color: #fff;}
 .chat_warp_out li:after{clear: both;content: " ";display: block;height: 0;}
 .chat_warp_out li .chat_user{margin-right: 10px;}
 .chat_warp_out li .user_img{width:40px; height:40px; border-width:0px;}
-.chat_warp_out .more_message_list{margin:0 -10px 10px -10px;height:18px; padding:5px !important; border-bottom:1px solid #ccc; text-align: center; cursor: pointer; color:#5048ED;}
-.chat_warp_out .more_message_list:hover{color:green;}
+.chat_warp_out .more_message{margin:0;font-size:12px; padding:5px !important; border-bottom:1px solid #ccc; text-align: center; cursor: pointer; color:#5048ED;}
+.chat_warp_out .more_message:hover{color:green;}
 .chat_warp_out li:first-child{padding-top:10px;}
 .chat_body{position: relative; padding: 12px 12px 5px; max-width: 400px;min-width: 200px;}
 .chat_body p{margin:0;padding: 0;}

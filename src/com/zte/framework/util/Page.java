@@ -26,11 +26,7 @@ public class Page<T> {
 			this.pageNum = list.size();
 		}
 
-		if (pageNum % pageSize == 0)
-			this.pageTotal = (numTotal / pageSize);
-		else {
-			this.pageTotal = (numTotal / pageSize + 1);
-		}
+		this.pageTotal = (int) Math.ceil(Double.valueOf(numTotal) / Double.valueOf(pageSize));
 		this.startNum =(pageIndex - 1)*pageSize;
 		this.endNum = pageIndex * pageSize;
 	}
