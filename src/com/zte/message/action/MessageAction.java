@@ -50,6 +50,10 @@ public class MessageAction extends AjaxAction {
 	
 	//获取未读的新消息列表
 	public String getMessageList(){
+		if(!( parameter==null&&parameter.containsKey("friendId")&&StringUtils.isNotBlank(parameter.get("friendId")))){
+			return ajaxUtil.setFail("参数错误！");
+		}
+			
 		Map<String,Object> map=new HashMap<String, Object>();
 		int friendId=Integer.valueOf(parameter.get("friendId"));
 		map.put("userId", friendId);

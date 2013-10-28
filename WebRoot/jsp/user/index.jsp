@@ -17,8 +17,10 @@
 		<div class="row">
 		  	<div class="col-md-8 no_padding_right">
 				<div class="panel panel-default chat_warp">
+					<div class="chat_blank">请先选择右边好友！</div>
 					<div class="panel-heading"><span id="chat_title">与</span><span id="btn_reload" title="刷新" class="glyphicon glyphicon-refresh pull-right"></span></div>
 					<div class="panel-body chat_warp_out">
+						<div class="chat_wait"></div>
 						<div class="more_message">加载更早记录</div>
 						<ul class="chat_warp_out_ui"></ul>
 					</div>
@@ -33,20 +35,60 @@
 				</div>
 			</div>
 		  	<div class="col-md-4">
-				<div class="panel panel-default">
+				<div class="panel panel-default chat_user">
 				  	<div class="panel-heading clearfix">
 						<a class="btn btn-default btn-xs">批量删除</a>
 						<a class="btn btn-default btn-xs">标为已读</a>
 					</div>
-					<div class="list-group">
+					<div class="list-group chat_user_list">
 					  <s:iterator value="userList" var="t">
-					  	 <a class="list-group-item user_cursor" friendId="${t.friend.id}">${t.friend.name}</a>
+					  	 <a class="list-group-item chat_user_cursor" friendId="${t.friend.id}">${t.friend.name}</a>
 					  </s:iterator>
+					</div>
+					<div class="panel-footer clearfix">
+						<span class="glyphicon glyphicon-th-large chat_user_menu"></span>
+						<a class="btn btn-default btn-xs glyphicon glyphicon-plus pull-right chat_user_add">添加好友</a>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
+	
+	
+	<div id="dialog_search_user" title="<span class='glyphicon glyphicon-search'>查找好友</span>">
+	    <label>请输入用户名：</label>
+	    <div class="input-group">
+	      <input type="text" class="form-control">
+	      <span class="input-group-btn"><button class="btn btn-default" type="button">搜索</button></span>
+		</div>
+		
+		<div class="dialog_search_user_result">
+			
+
+		<div class="row no_margin">
+			<div class="col-md-2 no_padding">
+				 <a href="#" class="dialog_search_user_photo">
+			      <img alt="头像" src="images/github.png">
+			    </a>
+			</div>
+			<div class="col-md-2 no_padding">
+				 <a href="#" class="dialog_search_user_photo">
+			      <img alt="头像" src="images/github.png">
+			    </a>
+			</div>
+			<div class="col-md-2 no_padding">
+				 <a href="#" class="dialog_search_user_photo">
+			      <img alt="头像" src="images/github.png">
+			    </a>
+			</div>
+		</div>
+
+
+
+			
+		</div>
+	</div>
+	
 </body>
 </html>
 
@@ -59,7 +101,7 @@ var page={
 	pageIndex:1,	//默认第一页
 	pageSize:10		//每页显示10条
 };
-var $out=$(".chat_warp_out_ui"),$more=$(".more_message");
+var $out=$(".chat_warp_out_ui"),$more=$(".more_message"),$blank=$(".chat_blank"),$wait=$(".chat_wait");
 var service={
 		//发送消息
 		sendMsg:function(item){
@@ -75,6 +117,7 @@ var service={
 		//刷新新消息列表
 		getNewMessageList:function(){
 			$.get("message/getMessageList.action?parameter.friendId="+$("#friendId").val()).done(function(result){
+				$wait.hide();
 				if(typeof result=="object" && result.data!=null && result.data.length>0){
 					var ids=[],msgListCache=[],data=result.data;
 					for(var i=0,j=data.length;i<j;i++){
@@ -89,7 +132,7 @@ var service={
 				    		ids.push(item.id);
 						}
 			    	}
-					$out.removeClass("wait").append(msgListCache);
+					$out.append(msgListCache);
 					service.updateMsgRead(ids);
 					service.scrollEnd();
 				}
@@ -144,6 +187,8 @@ var service={
 						}else{
 							page.pageIndex++;
 						}
+					}else{
+						$more.hide();
 					}
 				}
 			});
@@ -160,22 +205,20 @@ var service={
 		},
 		clear:function(){
 			$out.empty();
-		},
-		wait:function(){
-			$out.addClass("wait");
 		}
 	};
 	
 	//service.timer();
 	//点击用户列表
-	$(".user_cursor").on("click",function(){
+	$(".chat_user_cursor").on("click",function(){
 		var $this=$(this);
 		var friendId=$this.attr("friendId"),
 			friendName=$this.html();
 		$("#friendId").val(friendId);
 		$("#chat_title").html("我与"+friendName+"的聊天");
 		service.clear();
-		service.wait();
+		$blank.hide();
+		$wait.show();
 		service.getNewMessageList();
 	});
 	
@@ -193,4 +236,21 @@ var service={
 		service.getNewMessageList();
 	});
 	
+	 $('#dialog_search_user').dialog({
+		 autoOpen: false,
+		 resizable :false,
+		 modal:true,
+		 width: 800,
+		 height:500,
+		 buttons: {
+		 	"关闭": function () {
+		 		$(this).dialog("close");
+		 	}
+		 }
+	 });
+	 
+	 $( ".chat_user_add" ).click(function() {
+		 $( "#dialog_search_user" ).dialog( "open" );
+	 });
+		 
 </script>

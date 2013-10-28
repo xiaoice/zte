@@ -4,6 +4,11 @@
 .jspjs_width_300{max-width: 300px;}
 .no_padding_right{padding-right: 0;}
 .no_border{border-width: 0;}
+.no_padding{padding: 0;}
+.no_margin{margin: 0;}
 .right{float: right;}
 .left{float:left;}
 .cursor{cursor: curse;}
+
+
+.ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button{ font-size: 14px;}

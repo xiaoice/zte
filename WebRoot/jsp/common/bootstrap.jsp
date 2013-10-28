@@ -10,6 +10,7 @@
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="${base}js/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
+<link type="text/css" href="${base}js/plugins/jquery-ui-bootstrap/css/custom-theme/jquery-ui-1.10.0.custom.css" rel="stylesheet" />
 <link href="${base}css/jspjs.css" rel="stylesheet" media="screen">
 <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -22,6 +23,7 @@
 <![endif]-->
 <script type="text/javascript" src="${base}js/jquery.min.js?ver=1.10.2"></script>
 <script src="${base}js/plugins/bootstrap/js/bootstrap.min.js"></script>
+<script src="${base}js/plugins/jquery-ui-bootstrap/assets/js/jquery-ui-1.9.2.custom.min.js" type="text/javascript"></script>
 <script>
 var isLogin="${tip}";
 if(isLogin!=""){
