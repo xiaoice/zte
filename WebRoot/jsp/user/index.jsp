@@ -102,6 +102,8 @@ var page={
 	pageSize:10		//每页显示10条
 };
 var $out=$(".chat_warp_out_ui"),$more=$(".more_message"),$blank=$(".chat_blank"),$wait=$(".chat_wait");
+var timer_user=null;
+
 var service={
 		//发送消息
 		sendMsg:function(item){
@@ -195,9 +197,9 @@ var service={
 		},
 		//循环获取消息
 		timer:function(){
-			setInterval(function(){
+			return setInterval(function(){
 				service.getNewMessageList();
-			},2000);
+			},5000);
 		},
 		//滚屏置底
 		scrollEnd:function(){
@@ -208,7 +210,6 @@ var service={
 		}
 	};
 	
-	//service.timer();
 	//点击用户列表
 	$(".chat_user_cursor").on("click",function(){
 		var $this=$(this);
@@ -220,6 +221,10 @@ var service={
 		$blank.hide();
 		$wait.show();
 		service.getNewMessageList();
+		if(timer_user!=null){
+			clearInterval(timer_user);
+		}
+		timer_user=service.timer();
 	});
 	
 	//点击发送消息
@@ -231,7 +236,7 @@ var service={
 	$more.on("click",function(){
 		service.pageNext();
 	});
-	//点击发送消息
+	//点击刷新消息
 	$("#btn_reload").on("click",function(){
 		service.getNewMessageList();
 	});
@@ -249,8 +254,9 @@ var service={
 		 }
 	 });
 	 
+	 //添加好友
 	 $( ".chat_user_add" ).click(function() {
 		 $( "#dialog_search_user" ).dialog( "open" );
 	 });
-		 
+	 
 </script>
