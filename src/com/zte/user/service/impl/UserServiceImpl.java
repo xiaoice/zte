@@ -1,5 +1,6 @@
 package com.zte.user.service.impl;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,21 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
 	@Override
 	public int insert(User user) {
 		return this.insert("com.zte.user.dao.UserDao.insert", user);
+	}
+
+	@Override
+	public List<Map<String, String>> findListByPage(Map<String, Object> parameter) {
+		return userDao.findListByPage(parameter);
+	}
+
+	@Override
+	public int findListCountByPage(Map<String, Object> parameter) {
+		return userDao.findListCountByPage(parameter);
+	}
+
+	@Override
+	public int update(User user) {
+		return this.update("com.zte.user.dao.UserDao.update", user);
 	}
 	
 }

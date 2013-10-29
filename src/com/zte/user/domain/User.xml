@@ -9,27 +9,33 @@
 		insert into user(username,password,name,photo,age) values(#{username},#{password},#{name},#{photo},#{age})
     </insert>
     
+    <update id="update" parameterType="User">
+    	update user set name=#{name},photo=#{photo},age=#{age} where id=#{id} and username=#{username}
+    </update>
+    
 	<select id="findById" resultType="User" parameterType="int">
 		select id,username,name,photo,age from user where id=#{id} 
     </select>
-    
-        
-	<select id="findAll" resultType="User">
-		select * from user
-    </select>
-    
-    <update id="update" parameterType="User">
-    	update user set age=#{age}
-    </update>
-    
-    <delete id="deleteById" parameterType="int" >
-    	delete from user where id=#{id}
-    </delete>
     
     <!-- 根据用户名、密码登录 -->
 	<select id="findUserByUsernameAndPwd" resultType="User" parameterType="hashMap">
 		select * from user where username=#{username} and password=#{password} 
     </select>
-
-	<!-- 当使用该Mybatis与Spring整合的时候，该文件必须和相应的Mapper接口文件同名，并在同一路径下 -->
+	
+	<!-- 根据用户名分页查询用户信息 -->
+	<select id="findListByPage" parameterType="hashMap" resultType="hashMap">
+		select id,username,name,photo,age from user
+		<where>
+			name like '%${name}%'
+		</where>
+		limit #{startNum},#{endNum}
+    </select>
+    
+    <!-- 根据用户名分页查询用户总数 -->
+	<select id="findListCountByPage" parameterType="hashMap" resultType="int">
+		select count(1) from user
+		<where>
+			name like '%${name}%'
+		</where>
+    </select>
 </mapper> 

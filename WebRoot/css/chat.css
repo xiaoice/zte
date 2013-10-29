@@ -40,6 +40,14 @@
 .chat_user .chat_user_cursor{cursor:pointer;border-bottom:1px dashed #ccc;}
 .chat_user .chat_user_add{height: 19px;}
 .chat_user .chat_user_menu{font-size: 15px;}
-.dialog_search_user_result{height:300px; border:1px solid #ccc; margin-top: -2px;}
-.dialog_search_user_result .dialog_search_user_photo{padding:20px; padding-right:0; text-align:center; width:100px; height:120px; line-height:120px; display: block;}
-.dialog_search_user_result .dialog_search_user_photo img{ width:80px; height:80px; display: block;}
+.dialog_search_user_result{border:1px solid #ccc; padding-bottom:17px; margin-top: -2px; height: 252px;}
+.dialog_search_user_result .dialog_search_user_row{margin: 0; padding-top:10px;}
+.dialog_search_user_result .dialog_search_user_photo{float:left; padding:10px 0 0 20px; text-align:center;display: block;}
+.dialog_search_user_result .dialog_search_user_photo a{display: block;cursor: pointer;position: relative;}
+.dialog_search_user_result .dialog_search_user_photo a:hover,.dialog_search_user_result .dialog_search_user_photo .checked{text-decoration: none;color:#397813;}
+.dialog_search_user_result .dialog_search_user_photo em{background: url(../images/icon_chat.png) 0 0; width:19px;height:18px; display:block; position: absolute;top: 60px;right: 2px;}
+.dialog_search_user_result .dialog_search_user_photo .checked em{background: url(../images/icon_chat.png) 0 -21px;}
+.dialog_search_user_result .dialog_search_user_photo span{font-size: 12px;height:24px; line-height: 24px;display: block;}
+.dialog_search_user_result .dialog_search_user_photo img{ width:80px; height:80px; display: block;padding:2px; border: 1px solid #ccc;}
+.dialog_search_user_result .dialog_search_user_photo img:hover,.dialog_search_user_result .dialog_search_user_photo .checked img{border: 1px solid #428bca; border-radius:5px;}
+

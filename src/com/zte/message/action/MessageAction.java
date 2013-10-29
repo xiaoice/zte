@@ -78,10 +78,7 @@ public class MessageAction extends AjaxAction {
 	
 	//分页获取消息列表
 	public String findMessageListByPage(){
-		if(parameter==null){
-			return ajaxUtil.setFail("参数不能为空！");
-		}
-		else if(!(parameter.containsKey("pageIndex")&&StringUtils.isNotBlank(parameter.get("pageIndex")) 
+		if(!(parameter!=null&&parameter.containsKey("pageIndex")&&StringUtils.isNotBlank(parameter.get("pageIndex")) 
 				&& parameter.containsKey("pageSize")&&StringUtils.isNotBlank(parameter.get("pageSize")))){
 			return ajaxUtil.setFail("参数错误！");
 		}

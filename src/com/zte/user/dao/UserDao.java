@@ -1,8 +1,8 @@
 package com.zte.user.dao;
 
+import java.util.List;
 import java.util.Map;
 
-import com.zte.framework.jdbc.BaseDao;
 import com.zte.user.domain.User;
 
 public interface UserDao {
@@ -12,5 +12,22 @@ public interface UserDao {
 	 * @param map
 	 * @return
 	 */
-	User findUserByUsernameAndPwd(Map<String,String> map);
+	User findUserByUsernameAndPwd(Map<String,String> parameter);
+	
+	/**
+	 * 根据用户名等条件进行分页查找列表数据
+	 * @param parameter
+	 * @return
+	 */
+	List<Map<String,String>> findListByPage(Map<String,Object> parameter);
+	
+	/**
+	 * 根据用户名等条件进行分页查找总数
+	 * @param parameter
+	 * @return
+	 */
+	int findListCountByPage(Map<String,Object> parameter);
+	
+	int insert(User user);
+	int update(User user);
 }

@@ -11,12 +11,22 @@
 			<result name="login" type="dispatcher">/jsp/user/login.jsp</result>
 		</action>
 
-		<action name="test_*">
+		-->
+		
+		<action name="user_*">
 			<result type="dispatcher">/jsp/user/{1}.jsp</result>
-		</action> -->
+		</action>
 		
 		<action name="index" class="userAction" method="index">
 			<result type="dispatcher">/jsp/user/index.jsp</result>
+		</action>
+		<action name="updateUserinfo" class="userAction" method="updateUserinfo">
+			<result name="success" type="redirectAction">user_update_success</result>
+			<result name="error" type="dispatcher">/jsp/user/userinfo.jsp</result>
+		</action>
+		
+		<action name="findListByPage" class="userAction" method="findListByPage">
+			<result name="json" type="json"><param name="root">ajaxUtil</param></result>
 		</action>
 		
 	</package>

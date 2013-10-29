@@ -5,6 +5,4 @@ import com.zte.user.domain.User;
 
 public interface UserService extends UserDao{
 	
-	int insert(User user);
-	
 }
