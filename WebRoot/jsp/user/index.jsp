@@ -18,7 +18,7 @@
 		  	<div class="col-md-8 no_padding_right">
 				<div class="panel panel-default chat_warp">
 					<div class="chat_blank">请先选择右边好友！</div>
-					<div class="panel-heading"><span id="chat_title">与</span><span id="btn_reload" title="刷新" class="glyphicon glyphicon-refresh pull-right"></span></div>
+					<div class="panel-heading"><span id="chat_title">与</span><a href="javascript:;" id="btn_reload" title="刷新" class="glyphicon glyphicon-refresh pull-right"></a></div>
 					<div class="panel-body chat_warp_out">
 						<div class="chat_wait"></div>
 						<div class="more_message">加载更早记录</div>
@@ -58,34 +58,27 @@
 	<div id="dialog_search_user" title="<span class='glyphicon glyphicon-search'>查找好友</span>">
 	    <label>请输入用户名：</label>
 	    <div class="input-group">
-	      <input type="text" class="form-control">
-	      <span class="input-group-btn"><button class="btn btn-default" type="button">搜索</button></span>
+	      <input id="text_search_user" type="text" class="form-control">
+	      <span class="input-group-btn"><button id="btn_search_user" class="btn btn-default" type="button">搜索</button></span>
 		</div>
 		
 		<div class="dialog_search_user_result">
-			
-
-		<div class="row no_margin">
-			<div class="col-md-2 no_padding">
-				 <a href="#" class="dialog_search_user_photo">
-			      <img alt="头像" src="images/github.png">
-			    </a>
+			<div class="row dialog_search_user_row">
+				<div class="dialog_search_user_photo">
+					<a>
+						<em></em>
+				      	<img alt="头像" src="images/github.png" />
+				      	<span>系统管理员</span>
+				    </a>
+				</div>
+				<div class="dialog_search_user_photo">
+					<a class="checked">
+						<em></em>
+				      	<img alt="头像" src="images/github.png" />
+				      	<span>系统管理员</span>
+				    </a>
+				</div>
 			</div>
-			<div class="col-md-2 no_padding">
-				 <a href="#" class="dialog_search_user_photo">
-			      <img alt="头像" src="images/github.png">
-			    </a>
-			</div>
-			<div class="col-md-2 no_padding">
-				 <a href="#" class="dialog_search_user_photo">
-			      <img alt="头像" src="images/github.png">
-			    </a>
-			</div>
-		</div>
-
-
-
-			
 		</div>
 	</div>
 	
@@ -245,18 +238,54 @@ var service={
 		 autoOpen: false,
 		 resizable :false,
 		 modal:true,
-		 width: 800,
-		 height:500,
+		 width: 755,
+		 height:453,
 		 buttons: {
+		 	"加为好友": function () {
+		 		$(this).dialog("close");
+		 	},
 		 	"关闭": function () {
 		 		$(this).dialog("close");
 		 	}
 		 }
 	 });
 	 
-	 //添加好友
-	 $( ".chat_user_add" ).click(function() {
+	 //点击添加好友按钮
+	 $( ".chat_user_add").click(function() {
 		 $( "#dialog_search_user" ).dialog( "open" );
+	 });
+	 
+	 //点击搜索按钮
+	 $("#btn_search_user").on("click",function(){
+		 var text_search=$("#text_search_user").val();
+		 if(text_search==""){
+			 return alert("请输入用户名！");
+		 }
+		 $.post("${base}user/findListByPage.action",{"parameter.pageIndex":1,"parameter.pageSize":100,"parameter.name":text_search},function(result){
+			 if(typeof result=="object"&&result.data!=null&result.data.list!=null){
+				 if(result.data!=null&&result.data.list!=null&&result.data.list.length!=0){
+					 var data =result.data.list;
+					 var userArray=[];
+					 for(var i=0,j=data.length;i<j;i++){
+						 var item=data[i];
+						 var user='<div class="dialog_search_user_photo"><a userid="'+item.id+'">'
+								+'<em class="checked"></em>'
+					      		+'<img src="images/github.png" alt="头像">'
+					      		+'<span>'+item.name+'</span></a></div>';
+						 userArray.push(user);
+					 }
+					 $(".dialog_search_user_row").html(userArray.join(""));
+				 }else{
+					 $(".dialog_search_user_row").html("没有找到用户！");
+				 }
+			 }
+		 });
+	 });
+	 
+	 //点击选中头像
+	 $(".dialog_search_user_row").on("click","a",function(){
+		 var $this=$(this);
+		 $this.toggleClass("checked");
 	 });
 	 
 </script>

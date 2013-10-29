@@ -1,6 +1,5 @@
 package com.zte.user.service.impl;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,5 +20,7 @@ public class UserFriendServiceImpl extends BaseServiceImpl<User> implements User
 	public List<Map<String, Object>> findByUserId(Map<String, Object> parameter) {
 		return userFriendDao.findByUserId(parameter);
 	}
+	
+	
 
 }

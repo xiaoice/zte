@@ -17,7 +17,7 @@
 		    <ul class="nav navbar-nav navbar-right">
 		    <s:if test="#session.user!=null">
 		      <li><a class="small" href="${base}user/index.action"><b>个人中心</b></a></li>
-		      <li><a href="${base}"><b>${user.username}</b></a></li>
+		      <li><a href="${base}user/user_userinfo.action"><b>${user.username}</b></a></li>
 		      <li><a href="${base}logout.action">注销</a></li>
 		    </s:if>
 		    <s:else>
