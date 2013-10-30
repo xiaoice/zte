@@ -15,4 +15,8 @@
 	<select id="findByUserId" resultMap="UserFriendMap" parameterType="hashMap">
 		 select * from userFriend where userId=#{userId} and status=1
     </select>
-</mapper> 
+    
+	<insert id="insert" parameterType="hashMap" useGeneratedKeys="true" keyProperty="id">
+		insert into user(userId,friendId,status,createTime,createBy) values(#{userId},#{friendId},#{status},#{createTime},#{createBy})
+    </insert>
+</mapper>

@@ -1,8 +1,9 @@
 package com.zte.user.dao;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.zte.user.domain.UserFriend;
 
 public interface UserFriendDao {
 	
@@ -12,4 +13,7 @@ public interface UserFriendDao {
 	 * @return
 	 */
 	List<Map<String, Object>> findByUserId(Map<String,Object> parameter);
+	
+	int insert(UserFriend userFriend);
+	
 }

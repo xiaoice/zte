@@ -11,10 +11,12 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import com.zte.framework.util.AjaxAction;
+import com.zte.framework.util.DateUtil;
 import com.zte.framework.util.Page;
 import com.zte.message.domain.Message;
 import com.zte.message.util.MessageConstant;
 import com.zte.user.domain.User;
+import com.zte.user.domain.UserFriend;
 import com.zte.user.service.UserFriendService;
 import com.zte.user.service.UserService;
 
@@ -113,6 +115,23 @@ public class UserAction extends AjaxAction{
 			setContextProperty("result_tip", ERROR);
 			return ERROR;
 		}
+	}
+	
+	//加为好友
+	public String saveUserFriend(){
+		if(parameter==null){
+			return ajaxUtil.setFail("参数错误！");
+		}
+		
+		int friendId=Integer.valueOf(parameter.get("friendId"));
+		UserFriend userFriend = new UserFriend();
+		userFriend.setCreateBy(getUser().getUsername());
+		userFriend.setCreateTime(DateUtil.getCurrentDateTime());
+		userFriend.setFriendId(friendId);
+		userFriend.setStatus("1");
+		userFriend.setUserId(getUserId());
+		userFriendService.insert(userFriend);
+		return ajaxUtil.setSuccess();
 	}
 
 	public Map<String, String> getParameter() {
