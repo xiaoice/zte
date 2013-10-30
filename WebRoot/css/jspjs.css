@@ -10,6 +10,8 @@
 .right{float: right;}
 .left{float:left;}
 .cursor{cursor: curse;}
+.trigon_down{border-color: #000000 rgba(0, 0, 0, 0) -moz-use-text-color;border-style: solid solid dotted;
+			border-width: 4px 4px 0;display: inline-block;height: 0; margin-left: 2px;vertical-align: middle;width: 0; transform:rotate(90deg);}
 
 
 .ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button{ font-size: 14px;}

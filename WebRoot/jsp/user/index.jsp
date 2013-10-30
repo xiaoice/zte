@@ -49,20 +49,27 @@
 						<a class="btn btn-default btn-xs">标为已读</a>
 					</div>
 					<div class="list-group chat_user_list">
-						<div class="chat_user_group">
-							<span data-toggle="collapse" data-target="#chat_user_group_stranger"><span class="ui-icon ui-icon-triangle-1-e chat_left"></span>黑名单</span>
+						<div class="chat_user_group clearfix">
+							<div class="chat_user_group_head"><em class="ui-icon ui-icon-triangle-1-e chat_user_group_dot"></em>我的好友</div>
+							<div class="chat_user_group_body">
+							  <s:iterator value="userList" var="t">
+							  	 <a class="chat_user_item clearfix" friendId="${t.friend.id}">
+							  	 	<img class="user_img pull-left" src="${t.friend.photo}"/>
+							  	 	<div class="chat_user_item_name">
+							  	 		<div class="chat_user_group_title">${t.friend.name}</div>
+							  	 		<div class="chat_user_group_history">127.0.0.1</div>
+							  	 	</div>
+							  	 </a>
+							  </s:iterator>
+							</div>
 						</div>
-						<div id="chat_user_group_stranger" class="collapse in chat_user_group_body ">
-						  <s:iterator value="userList" var="t">
-						  	 <a class="chat_user_cursor" friendId="${t.friend.id}">
-						  	 <img src="${t.friend.photo}"/>
-						  	 ${t.friend.name}
-						  	 </a>
-						  </s:iterator>
+						
+						<div class="chat_user_group clearfix">
+							<div class="chat_user_group_head"><em class="ui-icon ui-icon-triangle-1-e chat_user_group_dot"></em>陌生人</div>
+							<div class="chat_user_group_body">
+							</div>
 						</div>
 					</div>
-
-
 
 					<div class="panel-footer clearfix">
 						<span class="glyphicon glyphicon-th-large chat_user_menu"></span>
@@ -82,22 +89,7 @@
 		</div>
 		
 		<div class="dialog_search_user_result">
-			<div class="row dialog_search_user_row">
-				<div class="dialog_search_user_photo">
-					<a>
-						<em></em>
-				      	<img alt="头像" src="images/github.png" />
-				      	<span>系统管理员</span>
-				    </a>
-				</div>
-				<div class="dialog_search_user_photo">
-					<a class="checked">
-						<em></em>
-				      	<img alt="头像" src="images/github.png" />
-				      	<span>系统管理员</span>
-				    </a>
-				</div>
-			</div>
+			<div class="row dialog_search_user_row"></div>
 		</div>
 	</div>
 	
@@ -237,10 +229,17 @@ var service={
 	};
 	
 	//点击用户列表
-	$(".chat_user_cursor").on("click",function(){
+	$(".chat_user_group_head").on("click",function(){
+		$(this).parent(".chat_user_group").toggleClass("chat_user_group_active");
+	});
+	
+	//单击用户
+	$(".chat_user_item").on("click",function(){
 		var $this=$(this);
 		var friendId=$this.attr("friendId"),
-			friendName=$this.html();
+			friendName=$this.find(".chat_user_group_title").html();
+		$(".chat_user_group_body .chat_user_item").removeClass("chat_user_item_focus");
+		$this.addClass("chat_user_item_focus");
 		$("#friendId").val(friendId);
 		$("#chat_title").html("我与"+friendName+"的聊天");
 		service.clear();
@@ -262,12 +261,14 @@ var service={
 	$more.on("click",function(){
 		service.pageNext();
 	});
+	
 	//点击刷新消息
 	$("#btn_reload").on("click",function(){
 		service.getNewMessageList();
 	});
 	
-	 $('#dialog_search_user').dialog({
+	//初始化弹出框
+	$("#dialog_search_user").dialog({
 		 autoOpen: false,
 		 resizable :false,
 		 modal:true,
@@ -303,7 +304,7 @@ var service={
 						 var item=data[i];
 						 var user='<div class="dialog_search_user_photo"><a userid="'+item.id+'">'
 								+'<em class="checked"></em>'
-					      		+'<img src="images/github.png" alt="头像">'
+					      		+'<img src="'+item.photo+'" alt="头像">'
 					      		+'<span>'+item.name+'</span></a></div>';
 						 userArray.push(user);
 					 }
