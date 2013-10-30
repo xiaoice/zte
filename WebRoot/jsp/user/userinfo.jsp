@@ -7,6 +7,7 @@
 <title>修改用户信息</title>
 <!-- Bootstrap -->
 <%@include file="/jsp/common/bootstrap.jsp"%>
+<link type="text/css" href="css/chat.css" rel="stylesheet" />
 </head>
 <body>
 	<div class="container">
@@ -33,8 +34,8 @@
 					</tr>
 					<tr>
 						<td align="right"><label for="user_photo">头像：</label></td>
-						<td valign="top"><img alt="头像" src="${user.photo}" onerror="this.onerror=null;this.src='images/github.png'" wdith="32" height="32"/> <a class="text-warning">更换头像</a></td>
-						<td></td>
+						<td valign="top"><img id="user_photo_img" alt="头像" src="${user.photo}" onerror="this.onerror=null;this.src='images/github.png'" wdith="32" height="32"/> <a id="btn_change_photo" class="text-warning">更换头像</a></td>
+						<td><input id="user_photo" name="parameter.photo" type="hidden" value="${user.photo}"/></td>
 					</tr>
 					<tr>
 						<td align="right"><label for="user_name">昵称：</label></td>
@@ -57,6 +58,57 @@
 		</div>
 	</div>
 
+
+	<div id="dialog_search_user" title="<span class='glyphicon glyphicon-search'>更换头像</span>">
+		<div class="dialog_search_user_result">
+			<div class="row dialog_search_user_row">
+				<s:iterator begin="1" end="21" status="photo">
+					<div class="dialog_search_user_photo">
+						<a>
+							<i></i>
+					      	<img alt="头像${photo.index+1}" src="images/head_photo/user_${photo.index+1}.jpg" />
+					    </a>
+					</div>
+				</s:iterator>
+			</div>
+		</div>
+	</div>
 </body>
 </html>
+
+<script type="text/javascript">
+	$('#dialog_search_user').dialog({
+		 autoOpen: false,
+		 resizable :false,
+		 modal:true,
+		 width: 755,
+		 height:"auto",
+		 buttons: {
+		 	"选择": function () {
+		 		var src = $(".dialog_search_user_row .checked img").attr("src");
+		 		if(!src){
+		 			return alert("请选择一个头像！");
+		 		}
+		 		$("#user_photo").val(src);
+		 		$("#user_photo_img").attr("src",src);
+		 		$(this).dialog("close");
+		 	},
+		 	"取消": function () {
+		 		$(this).dialog("close");
+		 	}
+		 }
+	});
+	
+	//点击添加好友按钮
+	$( "#btn_change_photo").click(function() {
+		 $( "#dialog_search_user" ).dialog( "open" );
+	});
+	
+	//点击选中头像
+	$(".dialog_search_user_row").on("click","a",function(){
+		 var $this=$(this);
+		 $(".dialog_search_user_row .checked").removeClass("checked");
+		 $this.addClass("checked");
+	});
+</script>
 

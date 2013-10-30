@@ -16,18 +16,17 @@ public class MessageServiceImpl extends BaseServiceImpl<Message> implements Mess
 	MessageService messageService;
 	
 	@Override
-	public List<Message> getMessageList(Map<String,Object> parameter) {
+	public List<Map<String,Object>> getMessageList(Map<String,Object> parameter) {
 		return this.selectList("messageService.getMessageList",parameter);
 	}
 
 	@Override
 	public int getMessageCount(Map<String,Object> parameter) {
-		this.select("MessageService.getMessageCount", parameter,null);
-		return 0;
+		return messageService.getMessageCount(parameter);
 	}
 	
 	@Override
-	public List<Message> findMessageListByPage(Map<String,Object> parameter) {
+	public List<Map<String,Object>> findMessageListByPage(Map<String,Object> parameter) {
 		return this.selectList("messageService.findMessageListByPage",parameter);
 	}
 

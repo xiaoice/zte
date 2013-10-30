@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
+import com.zte.framework.jdbc.MapUtil;
 import com.zte.framework.util.AjaxAction;
 import com.zte.framework.util.DateUtil;
 import com.zte.framework.util.Page;
@@ -41,7 +42,9 @@ public class MessageAction extends AjaxAction {
 			message.setFriendId(friendId);
 			message.setCreateTime(DateUtil.getCurrentDateTime());
 			messageService.insert(message);
-			ajaxUtil.setSuccess("发送成功！",message);
+			Map<String,Object> map =MapUtil.fromObject(message);
+			map.put("photo", user.getPhoto());
+			ajaxUtil.setSuccess("发送成功！",map);
 		}else{
 			ajaxUtil.setFail("发送失败！");
 		}
@@ -59,14 +62,14 @@ public class MessageAction extends AjaxAction {
 		map.put("userId", friendId);
 		map.put("friendId", getUserId());
 		map.put("createBy", getUser().getUsername());
-		List<Message> list = messageService.getMessageList(map);
+		List<Map<String,Object>> list = messageService.getMessageList(map);
 		if(list.size()>0){
 			return ajaxUtil.setSuccess(list);
 		}
 		return ajaxUtil.setFail("暂无消息！");
 	}
 	
-	//获取消息总数
+/*	//获取消息总数
 	public String getMessageCount(){
 		Map<String,Object> map=new HashMap<String, Object>();
 		//map.put("sendReceiveGroup", message.getSendReceiveGroup());
@@ -75,7 +78,7 @@ public class MessageAction extends AjaxAction {
 		ajaxUtil.setSuccess(count);
 		return JSON;
 	}
-	
+*/	
 	//分页获取消息列表
 	public String findMessageListByPage(){
 		if(!(parameter!=null&&parameter.containsKey("pageIndex")&&StringUtils.isNotBlank(parameter.get("pageIndex")) 
@@ -91,9 +94,9 @@ public class MessageAction extends AjaxAction {
 		map.put("isRead",MessageConstant.ISREAD_TRUE);
 		map.put("startNum", Page.getStartNum(pageIndex, pageSize));
 		map.put("endNum",Page.getEndNum(pageIndex, pageSize));
-		List<Message> list = messageService.findMessageListByPage(map);
+		List<Map<String,Object>> list = messageService.findMessageListByPage(map);
 		int pageTotal = messageService.getMessageCount(map);
-		Page<Message> page=new Page<Message>(pageIndex,pageSize,list,pageTotal);
+		Page<Map<String,Object>> page=new Page<Map<String,Object>>(pageIndex,pageSize,list,pageTotal);
 		return ajaxUtil.setSuccess(page);
 	}
 	

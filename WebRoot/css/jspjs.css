@@ -6,6 +6,7 @@
 .no_border{border-width: 0;}
 .no_padding{padding: 0;}
 .no_margin{margin: 0;}
+.no_background{background: none;}
 .right{float: right;}
 .left{float:left;}
 .cursor{cursor: curse;}

@@ -69,7 +69,8 @@ public class BaseAction extends ActionSupport {
 	 * @return
 	 */
 	public User getUser() {
-		return (User)getSessionProperty("user");
+		User user =(User)getSessionProperty("user");
+		return user;
 	}
 	
 	/**

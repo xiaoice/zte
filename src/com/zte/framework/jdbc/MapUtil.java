@@ -19,7 +19,7 @@ import com.zte.user.domain.User;
 
 public class MapUtil {
 	
-	public static <T> Map<String,Object> fromT(T t) throws Exception{
+	public static <T> Map<String,Object> fromObject(T t){
         Map<String,Object> map=new HashMap<String, Object>();
         Class<? extends Object> clazz=t.getClass();
         Field[] fields=clazz.getDeclaredFields();
@@ -37,16 +37,21 @@ public class MapUtil {
 
         
         for(Field field:fields){
-            String name=getMethodName(field.getName());
-            Type type =field.getGenericType();
-            //System.out.println(type.toString()+"|"+name);
-            Method method;
-            if(type==boolean.class){
-                method=clazz.getMethod("is"+name);
-            }else{
-            	method=clazz.getMethod("get"+name);
-            }
-            map.put(name, method.invoke(t));
+			try {
+				 String fieldname= field.getName();
+				 String name= getMethodName(fieldname);
+	            Type type =field.getGenericType();
+	            //System.out.println(type.toString()+"|"+name);
+	            Method method;
+	            if(type==boolean.class){
+	                method=clazz.getMethod("is"+name);
+	            }else{
+	            	method=clazz.getMethod("get"+name);
+	            }
+	            map.put(field.getName(), method.invoke(t));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
         }
         return map;
     }
@@ -61,7 +66,7 @@ public class MapUtil {
     @SuppressWarnings("unchecked")
 	public static void main(String[] agrs) throws Exception{
     	User user=new User();
-    	Map<String,Object> map=MapUtil.fromT(user);
+    	Map<String,Object> map=MapUtil.fromObject(user);
     	//Map<String,Object> map=JSONObject.fromObject(user);
     	System.out.println(map);
     	

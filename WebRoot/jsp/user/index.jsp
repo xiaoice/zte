@@ -35,16 +35,35 @@
 				</div>
 			</div>
 		  	<div class="col-md-4">
-				<div class="panel panel-default chat_user">
+				<!-- 		  	
+				<ul class="nav nav-tabs">
+				  <li class="active"><a href="#">我的好友</a></li>
+				  <li><a href="#">最近联系人</a></li>
+				</ul> 
+				-->
+				
+				
+				<div class="panel panel-default chat_user_panel">
 				  	<div class="panel-heading clearfix">
 						<a class="btn btn-default btn-xs">批量删除</a>
 						<a class="btn btn-default btn-xs">标为已读</a>
 					</div>
 					<div class="list-group chat_user_list">
-					  <s:iterator value="userList" var="t">
-					  	 <a class="list-group-item chat_user_cursor" friendId="${t.friend.id}">${t.friend.name}</a>
-					  </s:iterator>
+						<div class="chat_user_group">
+							<span data-toggle="collapse" data-target="#chat_user_group_stranger"><span class="ui-icon ui-icon-triangle-1-e chat_left"></span>黑名单</span>
+						</div>
+						<div id="chat_user_group_stranger" class="collapse in chat_user_group_body ">
+						  <s:iterator value="userList" var="t">
+						  	 <a class="chat_user_cursor" friendId="${t.friend.id}">
+						  	 <img src="${t.friend.photo}"/>
+						  	 ${t.friend.name}
+						  	 </a>
+						  </s:iterator>
+						</div>
 					</div>
+
+
+
 					<div class="panel-footer clearfix">
 						<span class="glyphicon glyphicon-th-large chat_user_menu"></span>
 						<a class="btn btn-default btn-xs glyphicon glyphicon-plus pull-right chat_user_add">添加好友</a>
@@ -105,6 +124,7 @@ var service={
 				"parameter.friendId":$("#friendId").val()
 			};
 			$.post("${base}message/send.action",option).done(function(result){
+				console.log(result.data);
 				$out.append(service.getOneself(result.data));
 				service.scrollEnd();
 			});
@@ -143,8 +163,10 @@ var service={
 		},
 		//显示自己
 		getHimself:function(data){
-			var li ="<li id=\"chat_"+data.id+"\" class=\"chat_left\"> <div class=\"left tip\"></div> <div class= " 
-				+"\"border-radius-5 left chat_body\"> <a class=\"close\" href=\"javascript:;\">×</a> <p class= " 
+			var li ="<li id=\"chat_"+data.id+"\" class=\"chat_left\">"
+				+'<div class="left chat_user">'
+				+'<a href="javascript:;"><img class="border-radius-5 border-shadow-img user_img" src="${base}'+data.photo+'"/></a></div>'
+				+"<div class=\"left tip\"></div> <div class=\"border-radius-5 left chat_body\"> <a class=\"close\" href=\"javascript:;\">×</a> <p class= " 
 				+"\"content\">"+data.content+"</p> <p class=\"create_time\"><span class=\"user\"> " 
 				+"用户名："+data.sendUsername+"</span><span class=\"time\">"+data.createTime.replace("T"," ")+"</span><a href=\"javascript:;\" " 
 				+"class=\"reply hide\">回复</a></p> </div> </li>";
@@ -152,8 +174,10 @@ var service={
 		},
 		//显示他人
 		getOneself:function(data){
-			var li ="<li id=\"chat_"+data.id+"\" class=\"chat_right\"> <div class=\"right tip\"></div> <div class= " 
-				+"\"border-radius-5 right chat_body\"> <a class=\"close\" href=\"javascript:;\">×</a> <p class= " 
+			var li ="<li id=\"chat_"+data.id+"\" class=\"chat_right\">" 
+				+'<div class="right chat_user">'
+				+'<a href="javascript:;"><img class="border-radius-5 border-shadow-img user_img" src="${base}'+data.photo+'"/></a></div>'
+				+"<div class=\"right tip\"></div><div class=\"border-radius-5 right chat_body\"> <a class=\"close\" href=\"javascript:;\">×</a> <p class= " 
 				+"\"content\">"+data.content+"</p> <p class=\"create_time\"><span class=\"user\"> " 
 				+"用户名："+data.sendUsername+"</span><span class=\"time\">"+data.createTime.replace("T"," ")+"</span><a href=\"javascript:;\" " 
 				+"class=\"reply hide\">回复</a></p> </div> </li>";
@@ -167,23 +191,24 @@ var service={
 						var ids=[],msgListCache=[],data=result.data.list;
 						for(var i=0,j=data.length;i<j;i++){
 							var item=data[i];
-				    		if(item.createBy==$("#username").val()){
-				    			msgListCache.push(service.getOneself(item));
+							if($("#chat_"+item.id).size()==0){
+					    		if(item.createBy==$("#username").val()){
+					    			msgListCache.push(service.getOneself(item));
+								}
+								else{
+									msgListCache.push(service.getHimself(item));
+								}
+					    		ids.push(item.id);
 							}
-							else{
-								msgListCache.push(service.getHimself(item));
-							}
-				    		ids.push(item.id);
 				    	}
 						$out.prepend(msgListCache.reverse());
-						console.log(page.pageIndex,page.pageTotal);
 						if(page.pageIndex==page.pageTotal){
-							$more.hide();
+							service.waitHide();
 						}else{
 							page.pageIndex++;
 						}
 					}else{
-						$more.hide();
+						service.waitHide();
 					}
 				}
 			});
@@ -200,6 +225,14 @@ var service={
 		},
 		clear:function(){
 			$out.empty();
+		},
+		waitShow:function(){
+			$more.show();
+			$(".chat_warp_out_ui").height(291);
+		},
+		waitHide:function(){
+			$more.hide();
+			$(".chat_warp_out_ui").height(319);
 		}
 	};
 	
@@ -212,7 +245,7 @@ var service={
 		$("#chat_title").html("我与"+friendName+"的聊天");
 		service.clear();
 		$blank.hide();
-		$wait.show();
+		service.waitShow();
 		service.getNewMessageList();
 		if(timer_user!=null){
 			clearInterval(timer_user);
@@ -239,7 +272,7 @@ var service={
 		 resizable :false,
 		 modal:true,
 		 width: 755,
-		 height:453,
+		 height:"auto",
 		 buttons: {
 		 	"加为好友": function () {
 		 		$(this).dialog("close");

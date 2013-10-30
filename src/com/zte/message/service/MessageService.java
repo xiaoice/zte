@@ -12,11 +12,11 @@ import com.zte.message.domain.Message;
 public interface MessageService extends BaseService<Message>{
 	public int insert(Message message);
 
-	public List<Message> getMessageList(Map<String,Object> map);
+	public List<Map<String,Object>> getMessageList(Map<String,Object> map);
 
-	public int getMessageCount(Map<String,Object> map);
+	public int getMessageCount(Map<String,Object> parameter);
 	
-	public List<Message> findMessageListByPage(Map<String,Object> map);
+	public List<Map<String,Object>> findMessageListByPage(Map<String,Object> map);
 
 	public int updateMessageIsRead(Map<String, Object> map);
 
