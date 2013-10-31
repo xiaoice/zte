@@ -13,8 +13,8 @@
 	</static-files>
     -->
     <sessions-enabled>true</sessions-enabled>
-    <!-- <session-config>
-	    <session-timeout>120</session-timeout>
-	</session-config> -->
+    <session-config>
+	    <session-timeout>600</session-timeout>
+	</session-config>
 
 </du-web-app>

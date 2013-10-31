@@ -4,7 +4,7 @@
   	<div class="col-md-12">
 		<nav class="navbar navbar-default" role="navigation">
 		  <div class="navbar-header">
-		    <a class="navbar-brand" href="#">JSPJS</a>
+		    <a class="navbar-brand" href="${base}">JSPJS</a>
 		  </div>
 		
 		  <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">

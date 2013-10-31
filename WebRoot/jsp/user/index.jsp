@@ -7,7 +7,9 @@
 <title>主界面</title>
 <!-- Bootstrap -->
 <%@include file="/jsp/common/bootstrap.jsp"%>
-<link type="text/css" href="css/chat.css" rel="stylesheet" />
+<link type="text/css" href="${base}css/chat.css" rel="stylesheet" />
+<link type="text/css" href="${base}js/plugins/message/message.css" rel="stylesheet" />
+<script src="${base}js/plugins/message/message.js"></script>
 </head>
 <body>
 	<input id="username" type="hidden" value="${user.username}"/>
@@ -28,7 +30,7 @@
 						<span class="glyphicon glyphicon-dashboard"></span>
 						<span class="caret"></span>
 					</div>
-					<s:textarea name="user.name" id="content" cssClass="form-control reply_content"></s:textarea>
+					<textarea id="content" class="form-control reply_content"></textarea>
 					<div class="send_panel clearfix">
 						<button id="input_ok" type="button" class="btn btn-primary btn-xs pull-right">发送消息</button>
 					</div>
@@ -49,7 +51,7 @@
 						<a class="btn btn-default btn-xs">标为已读</a>
 					</div>
 					<div class="list-group chat_user_list">
-						<div class="chat_user_group clearfix">
+						<div class="chat_user_group clearfix chat_user_group_active">
 							<div class="chat_user_group_head"><em class="ui-icon ui-icon-triangle-1-e chat_user_group_dot"></em>我的好友</div>
 							<div class="chat_user_group_body">
 							  <s:iterator value="userList" var="t">
@@ -125,7 +127,6 @@ var service={
 				"parameter.friendId":$("#friendId").val()
 			};
 			$.post("${base}message/send.action",option).done(function(result){
-				console.log(result.data);
 				$out.append(service.getOneself(result.data));
 				service.scrollEnd();
 			});
@@ -218,13 +219,14 @@ var service={
 		timer:function(){
 			return setInterval(function(){
 				service.getNewMessageList();
-			},5000);
+			},2000);
 		},
 		//滚屏置底
 		scrollEnd:function(){
 			$out.scrollTop(99999);
 		},
 		clear:function(){
+			$("#content").val("");
 			$out.empty();
 		},
 		waitShow:function(){
@@ -294,15 +296,15 @@ var service={
 		 		});
 		 		
 		 		if(friendIds.length==0){
-		 			return alert("添加失败，请先选中要添加的好友！");
+		 			return message.warn("请先选中要添加的好友！");
 		 		}
 		 		$.post("${base}user/saveUserFriend.action",{"parameter.friendId":friendIds.join(",")},function(result){
 					 if(typeof result=="object"&&result.recode==1){
-						 alert(result.message);
+						 message.ok("操作完毕！");
 						 window.location.reload();
 					 }
 					 else{
-						 alert("添加失败！");
+						 message.error("添加失败！");
 					 }
 		 		 });
 		 		$(this).dialog("close");
@@ -341,7 +343,8 @@ var service={
 					 }
 					 $(".dialog_search_user_row").html(userArray.join(""));
 				 }else{
-					 $(".dialog_search_user_row").html("没有找到用户！");
+					 message.info("没有找到用户！");
+					 //$(".dialog_search_user_row").html("没有找到用户！");
 				 }
 			 }
 		 });
@@ -352,5 +355,20 @@ var service={
 		 var $this=$(this);
 		 $this.toggleClass("checked");
 	 });
+	 
+	 //失去焦点
+	 window.onblur = function(){
+		 if(timer_user!=null){
+			clearInterval(timer_user);
+		 }
+     };
+	 
+	 //得到焦点
+     window.onfocus = function(){
+    	 if(timer_user!=null){
+    		 message.info("欢迎回来！");
+    	 }
+    	 timer_user=service.timer();
+     };
 	 
 </script>

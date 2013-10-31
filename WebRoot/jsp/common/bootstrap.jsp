@@ -27,6 +27,7 @@
 <script>
 var isLogin="${tip}";
 if(isLogin!=""){
+	//console.log(isLogin);
 	alert(isLogin);
 }
 </script>

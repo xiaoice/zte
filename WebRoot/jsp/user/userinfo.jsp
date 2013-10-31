@@ -8,6 +8,8 @@
 <!-- Bootstrap -->
 <%@include file="/jsp/common/bootstrap.jsp"%>
 <link type="text/css" href="css/chat.css" rel="stylesheet" />
+<link type="text/css" href="${base}js/plugins/message/message.css" rel="stylesheet" />
+<script src="${base}js/plugins/message/message.js"></script>
 </head>
 <body>
 	<div class="container">
@@ -87,7 +89,7 @@
 		 	"选择": function () {
 		 		var src = $(".dialog_search_user_row .checked img").attr("src");
 		 		if(!src){
-		 			return alert("请选择一个头像！");
+		 			return message.warn("请选择一个头像！");
 		 		}
 		 		$("#user_photo").val(src);
 		 		$("#user_photo_img").attr("src",src);

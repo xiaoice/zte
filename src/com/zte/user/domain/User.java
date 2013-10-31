@@ -1,9 +1,12 @@
 package com.zte.user.domain;
 
+import java.io.Serializable;
+
 import org.springframework.stereotype.Component;
 
 @Component
-public class User {
+public class User implements Serializable {
+	private static final long serialVersionUID = 5282119415543553733L;
 	private int id;
 	private String username;
 	private String password;
