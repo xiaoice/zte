@@ -6,6 +6,7 @@
 <struts>
 	<constant name="struts.i18n.encoding" value="utf-8"/>
 	<constant name="struts.devMode" value="true" />
+	<constant name="struts.configuration.xml.reload" value="true" />
 	<constant name="struts.ui.theme" value="simple" />
 	<package name="struts-intercept" abstract="true" extends="struts-default,json-default" namespace="/">
 		<!-- 拦截器 -->

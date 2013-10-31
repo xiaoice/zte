@@ -19,6 +19,11 @@
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
 	
+	<!-- OGNL会执行执行安全检测，但是并不被BAE所支持，解决方法是创建一个监听器，将安全检查处理器置空 -->
+    <listener>  
+        <listener-class>com.zte.framework.util.Struts2ListenerOnBAE</listener-class>  
+    </listener>
+	
 	<welcome-file-list>
 	  <welcome-file>/index.jsp</welcome-file>
 	</welcome-file-list>
