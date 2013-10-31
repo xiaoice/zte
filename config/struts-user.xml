@@ -29,5 +29,9 @@
 			<result name="json" type="json"><param name="root">ajaxUtil</param></result>
 		</action>
 		
+		<action name="saveUserFriend" class="userAction" method="saveUserFriend">
+			<result name="json" type="json"><param name="root">ajaxUtil</param></result>
+		</action>
+		
 	</package>
 </struts>

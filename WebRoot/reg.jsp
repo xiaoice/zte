@@ -7,28 +7,112 @@
 <title>注册界面</title>
 <!-- Bootstrap -->
 <%@include file="/jsp/common/bootstrap.jsp"%>
+<link type="text/css" href="css/chat.css" rel="stylesheet" />
 </head>
 <body>
 	<div class="container">
 		<%@include file="/jsp/common/header.jsp" %>
-		<h2>新用户注册</h2>
-		<s:form action="join.action" role="form-horizontal">
-			<div class="form-group">
-				<label for="user_username">用户名： </label> 
-				<input type="text" class="form-control" id="user_username" name="parameter.username" placeholder="请输入用户名">
+		<div class="panel panel-default">
+	  		<div class="panel-heading no_border">新用户注册</div>
+			<s:form action="join.action" role="form-horizontal">
+				<table class="table no_margin">
+					<tr>
+						<td width="100" align="right"><label for="user_username">用户名：</label></td>
+						<td width="300"><input type="text" class="form-control" id="user_username" name="parameter.username" placeholder="请输入用户名"></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td width="100" align="right"><label for="user_password">密码：</label></td>
+						<td width="300"><input type="password" class="form-control" id="user_password" name="parameter.password" placeholder="请输入密码"></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td width="100" align="right"><label for="user_password_two">确定密码：</label></td>
+						<td width="300"><input type="password" class="form-control" id="user_password_two" placeholder="请再次输入密码"></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td align="right"><label for="user_email">邮箱：</label></td>
+						<td><input type="email" class="form-control" id="user_email" name="parameter.email" placeholder="邮箱功能暂时未启用"></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td align="right"><label for="user_photo">头像：</label></td>
+						<td valign="top"><img id="user_photo_img" alt="头像" src="${user.photo}" onerror="this.onerror=null;this.src='images/github.png'" wdith="32" height="32"/> <a id="btn_change_photo" class="text-warning">更换头像</a></td>
+						<td><input id="user_photo" name="parameter.photo" type="hidden" value="${user.photo}"/></td>
+					</tr>
+					<tr>
+						<td align="right"><label for="user_name">昵称：</label></td>
+						<td><input type="text" class="form-control" value="${user.name}" id="user_name" name="parameter.name" placeholder="请输入昵称"></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td align="right"><label for="user_age">年龄：</label></td>
+						<td><input type="number" class="form-control" value="${user.age}" id="user_age" name="parameter.age" placeholder="请输入年龄"></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td colspan="2">
+							<button type="submit" class="btn btn-primary">保存</button>
+						</td>
+					</tr>
+				</table>
+			</s:form>
+		</div>
+	</div>
+	
+	<div id="dialog_search_user" title="<span class='glyphicon glyphicon-search'>更换头像</span>">
+		<div class="dialog_search_user_result">
+			<div class="row dialog_search_user_row">
+				<s:iterator begin="1" end="21" status="photo">
+					<div class="dialog_search_user_photo">
+						<a>
+							<i></i>
+					      	<img alt="头像${photo.index+1}" src="images/head_photo/user_${photo.index+1}.jpg" />
+					    </a>
+					</div>
+				</s:iterator>
 			</div>
-			<div class="form-group">
-				<label for="user_password">密码：</label>
-				<input type="password" class="form-control" id="user_password" name="parameter.password" placeholder="请输入密码">
-			</div>
-			<div class="form-group">
-				<label for="user_password">确定密码：</label>
-				<input type="password" class="form-control" id="user_password" placeholder="请再次输入密码">
-			</div>
-			<button type="submit" class="btn btn-primary">注册</button>
-			<button type="button" class="btn btn-default">取消</button>
-		</s:form>
+		</div>
 	</div>
 </body>
 </html>
+
+
+<script type="text/javascript">
+	$('#dialog_search_user').dialog({
+		 autoOpen: false,
+		 resizable :false,
+		 modal:true,
+		 width: 755,
+		 height:"auto",
+		 buttons: {
+		 	"选择": function () {
+		 		var src = $(".dialog_search_user_row .checked img").attr("src");
+		 		if(!src){
+		 			return alert("请选择一个头像！");
+		 		}
+		 		$("#user_photo").val(src);
+		 		$("#user_photo_img").attr("src",src);
+		 		$(this).dialog("close");
+		 	},
+		 	"取消": function () {
+		 		$(this).dialog("close");
+		 	}
+		 }
+	});
+	
+	//点击添加好友按钮
+	$( "#btn_change_photo").click(function() {
+		 $( "#dialog_search_user" ).dialog( "open" );
+	});
+	
+	//点击选中头像
+	$(".dialog_search_user_row").on("click","a",function(){
+		 var $this=$(this);
+		 $(".dialog_search_user_row .checked").removeClass("checked");
+		 $this.addClass("checked");
+	});
+</script>
 

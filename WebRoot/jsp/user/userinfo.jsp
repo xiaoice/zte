@@ -29,7 +29,7 @@
 					</tr>
 					<tr>
 						<td align="right"><label>邮箱：</label></td>
-						<td>137743212@qq.com  <a class="text-info">立即验证</a></td>
+						<td>  <a class="text-info">立即验证</a></td>
 						<td></td>
 					</tr>
 					<tr>

@@ -15,7 +15,7 @@ public interface UserDao {
 	User findUserByUsernameAndPwd(Map<String,String> parameter);
 	
 	/**
-	 * 根据用户名等条件进行分页查找列表数据
+	 * 根据朋友Id得到陌生人列表
 	 * @param parameter
 	 * @return
 	 */

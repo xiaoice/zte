@@ -55,9 +55,22 @@ public class UserAction extends AjaxAction{
 			User user=new User();
 			user.setUsername(parameter.get("username"));
 			user.setPassword(parameter.get("password"));
-			int result = userService.insert(user);
+			user.setName(parameter.get("name"));
+			user.setPhoto(parameter.get("photo"));
+			user.setAge(Integer.valueOf(parameter.get("age")));
+			int result =userService.insert(user);
 			if(result>0){
+				user.setPassword(null);
 				setSessionProperty("user", user);
+				
+				UserFriend userFriend = new UserFriend();
+				userFriend.setCreateBy(user.getUsername());
+				userFriend.setCreateTime(DateUtil.getCurrentDateTime());
+				userFriend.setFriendId(10000);
+				userFriend.setStatus("1");
+				userFriend.setUserId(user.getId());
+				userFriendService.insert(userFriend);
+				
 				return SUCCESS;
 			}
 		}
@@ -71,7 +84,9 @@ public class UserAction extends AjaxAction{
 			Map<String,Object> map=new HashMap<String, Object>();
 			map.put("userId", userId);
 			List<Map<String, Object>> userList = userFriendService.findByUserId(map);
+			List<Map<String, Object>> friendList = userFriendService.findByFriendId(map);
 			setContextProperty("userList", userList);
+			setContextProperty("friendList", friendList);
 		}
 		return SUCCESS;
 	}
@@ -80,7 +95,8 @@ public class UserAction extends AjaxAction{
 	public String findListByPage(){
 		if(!(parameter!=null&&parameter.containsKey("pageIndex")&&StringUtils.isNotBlank(parameter.get("pageIndex")) 
 							&& parameter.containsKey("pageSize")&&StringUtils.isNotBlank(parameter.get("pageSize"))
-							&&parameter.containsKey("name")&&StringUtils.isNotBlank(parameter.get("name")))){
+							//&&parameter.containsKey("name")&&StringUtils.isNotBlank(parameter.get("name")
+							)){
 			return ajaxUtil.setFail("参数错误！");
 		}
 		Map<String,Object> map=new HashMap<String, Object>();
@@ -119,18 +135,21 @@ public class UserAction extends AjaxAction{
 	
 	//加为好友
 	public String saveUserFriend(){
-		if(parameter==null){
+		if(!(parameter!=null&&parameter.containsKey("friendId")&&StringUtils.isNotBlank(parameter.get("friendId")))){
 			return ajaxUtil.setFail("参数错误！");
 		}
 		
-		int friendId=Integer.valueOf(parameter.get("friendId"));
-		UserFriend userFriend = new UserFriend();
-		userFriend.setCreateBy(getUser().getUsername());
-		userFriend.setCreateTime(DateUtil.getCurrentDateTime());
-		userFriend.setFriendId(friendId);
-		userFriend.setStatus("1");
-		userFriend.setUserId(getUserId());
-		userFriendService.insert(userFriend);
+		String friendId=parameter.get("friendId");
+		String[] friendIds=friendId.split(",");
+		for(String friendid : friendIds){
+			UserFriend userFriend = new UserFriend();
+			userFriend.setCreateBy(getUser().getUsername());
+			userFriend.setCreateTime(DateUtil.getCurrentDateTime());
+			userFriend.setFriendId(Integer.valueOf(friendid));
+			userFriend.setStatus("1");
+			userFriend.setUserId(getUserId());
+			userFriendService.insert(userFriend);
+		}
 		return ajaxUtil.setSuccess();
 	}
 

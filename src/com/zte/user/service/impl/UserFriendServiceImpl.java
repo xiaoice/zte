@@ -21,6 +21,10 @@ public class UserFriendServiceImpl extends BaseServiceImpl<User> implements User
 	public List<Map<String, Object>> findByUserId(Map<String, Object> parameter) {
 		return userFriendDao.findByUserId(parameter);
 	}
+	@Override
+	public List<Map<String, Object>> findByFriendId(Map<String, Object> parameter) {
+		return userFriendDao.findByFriendId(parameter);
+	}
 	
 	@Override
 	public int insert(UserFriend userFriend) {

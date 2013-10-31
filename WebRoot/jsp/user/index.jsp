@@ -67,6 +67,15 @@
 						<div class="chat_user_group clearfix">
 							<div class="chat_user_group_head"><em class="ui-icon ui-icon-triangle-1-e chat_user_group_dot"></em>陌生人</div>
 							<div class="chat_user_group_body">
+							  <s:iterator value="friendList" var="t">
+							  	 <a class="chat_user_item clearfix" friendId="${t.user.id}">
+							  	 	<img class="user_img pull-left" src="${t.user.photo}"/>
+							  	 	<div class="chat_user_item_name">
+							  	 		<div class="chat_user_group_title">${t.user.name}</div>
+							  	 		<div class="chat_user_group_history">127.0.0.1</div>
+							  	 	</div>
+							  	 </a>
+							  </s:iterator>
 							</div>
 						</div>
 					</div>
@@ -276,6 +285,26 @@ var service={
 		 height:"auto",
 		 buttons: {
 		 	"加为好友": function () {
+		 		var friendIds=[];
+		 		$(".dialog_search_user_photo .checked").each(function(){
+		 			var friendId=$(this).attr("friendId");
+		 			if(typeof friendId!="undefined" && friendId!="" && friendId!="null"){
+		 				friendIds.push(friendId);
+		 			}
+		 		});
+		 		
+		 		if(friendIds.length==0){
+		 			return alert("添加失败，请先选中要添加的好友！");
+		 		}
+		 		$.post("${base}user/saveUserFriend.action",{"parameter.friendId":friendIds.join(",")},function(result){
+					 if(typeof result=="object"&&result.recode==1){
+						 alert(result.message);
+						 window.location.reload();
+					 }
+					 else{
+						 alert("添加失败！");
+					 }
+		 		 });
 		 		$(this).dialog("close");
 		 	},
 		 	"关闭": function () {
@@ -286,6 +315,8 @@ var service={
 	 
 	 //点击添加好友按钮
 	 $( ".chat_user_add").click(function() {
+		 $("#text_search_user").val("");
+		 $(".dialog_search_user_row").empty();
 		 $( "#dialog_search_user" ).dialog( "open" );
 	 });
 	 
@@ -293,16 +324,16 @@ var service={
 	 $("#btn_search_user").on("click",function(){
 		 var text_search=$("#text_search_user").val();
 		 if(text_search==""){
-			 return alert("请输入用户名！");
+			 //return alert("请输入用户名！");
 		 }
 		 $.post("${base}user/findListByPage.action",{"parameter.pageIndex":1,"parameter.pageSize":100,"parameter.name":text_search},function(result){
-			 if(typeof result=="object"&&result.data!=null&result.data.list!=null){
-				 if(result.data!=null&&result.data.list!=null&&result.data.list.length!=0){
+			 if(typeof result=="object"&&result.data!=null&&result.data.list!=null){
+				 if(result.data.list.length!=0){
 					 var data =result.data.list;
 					 var userArray=[];
 					 for(var i=0,j=data.length;i<j;i++){
 						 var item=data[i];
-						 var user='<div class="dialog_search_user_photo"><a userid="'+item.id+'">'
+						 var user='<div class="dialog_search_user_photo"><a friendid="'+item.id+'">'
 								+'<em class="checked"></em>'
 					      		+'<img src="'+item.photo+'" alt="头像">'
 					      		+'<span>'+item.name+'</span></a></div>';

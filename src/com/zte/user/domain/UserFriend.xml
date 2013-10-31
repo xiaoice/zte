@@ -16,7 +16,14 @@
 		 select * from userFriend where userId=#{userId} and status=1
     </select>
     
+    <!-- 根据朋友Id得到陌生人列表-->
+	<select id="findByFriendId" resultMap="UserFriendMap" parameterType="hashMap">
+		select main.userid,main.friendId from userFriend main where main.friendId=#{userId}
+		and main.userId not in(select other.friendId from userFriend other where other.userid=#{userId})
+		and status=1
+    </select>
+    
 	<insert id="insert" parameterType="hashMap" useGeneratedKeys="true" keyProperty="id">
-		insert into user(userId,friendId,status,createTime,createBy) values(#{userId},#{friendId},#{status},#{createTime},#{createBy})
+		insert into userFriend(userId,friendId,status,createTime,createBy) values(#{userId},#{friendId},#{status},#{createTime},#{createBy})
     </insert>
 </mapper>

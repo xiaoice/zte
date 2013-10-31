@@ -14,6 +14,13 @@ public interface UserFriendDao {
 	 */
 	List<Map<String, Object>> findByUserId(Map<String,Object> parameter);
 	
+	/**
+	 * 根据用户名id得到好友列表
+	 * @param map
+	 * @return
+	 */
+	List<Map<String, Object>> findByFriendId(Map<String,Object> parameter);
+	
 	int insert(UserFriend userFriend);
 	
 }

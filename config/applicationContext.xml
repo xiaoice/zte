@@ -8,11 +8,11 @@
         http://www.springframework.org/schema/aop 
         http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
     
-	<bean id="sysCfgHelper" class="com.zte.framework.util.SysConfigHelper">
+<!-- 	<bean id="sysCfgHelper" class="com.zte.framework.util.SysConfigHelper">
 	    <property name="attributes">
 			<map><entry key="appName" value="BSM"/></map>
 	    </property>	    
-    </bean>
+    </bean> -->
     <context:component-scan base-package="com.zte"/>
     <context:property-placeholder location="classpath:jdbc.properties"/>
     
