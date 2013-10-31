@@ -24,6 +24,11 @@
         <listener-class>com.zte.framework.util.Struts2ListenerOnBAE</listener-class>  
     </listener>
 	
+	<!-- 设置session超时时间 -->
+	<session-config>
+	    <session-timeout>600</session-timeout>
+	</session-config>
+	
 	<welcome-file-list>
 	  <welcome-file>/index.jsp</welcome-file>
 	</welcome-file-list>

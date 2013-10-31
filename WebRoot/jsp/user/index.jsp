@@ -346,6 +346,8 @@ var service={
 					 message.info("没有找到用户！");
 					 //$(".dialog_search_user_row").html("没有找到用户！");
 				 }
+			 }else{
+				 message.error("系统错误！没有找到用户！");
 			 }
 		 });
 	 });
