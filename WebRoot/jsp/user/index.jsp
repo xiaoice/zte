@@ -7,9 +7,13 @@
 <title>主界面</title>
 <!-- Bootstrap -->
 <%@include file="/jsp/common/bootstrap.jsp"%>
-<link type="text/css" href="${base}css/chat.css" rel="stylesheet" />
+<link rel="stylesheet" href="${base}js/plugins/kindeditor/themes/default/default.css" />
+<script charset="utf-8" src="${base}js/plugins/kindeditor/kindeditor-min.js"></script>
+<script charset="utf-8" src="${base}js/plugins/kindeditor/lang/lang/zh_CN.js"></script>
 <link type="text/css" href="${base}js/plugins/message/message.css" rel="stylesheet" />
 <script src="${base}js/plugins/message/message.js"></script>
+<script src="${base}js/jquery/jquery.hotkeys.js"></script>
+<link type="text/css" href="${base}css/chat.css" rel="stylesheet" />
 </head>
 <body>
 	<input id="username" type="hidden" value="${user.username}"/>
@@ -30,9 +34,23 @@
 						<span class="glyphicon glyphicon-dashboard"></span>
 						<span class="caret"></span>
 					</div>
-					<textarea id="content" class="form-control reply_content"></textarea>
+					<!-- <textarea id="content" class="form-control reply_content"></textarea> -->
+					<div id="content" name="content" contenteditable="true" class="form-control reply_content"></div>
 					<div class="send_panel clearfix">
-						<button id="input_ok" type="button" class="btn btn-primary btn-xs pull-right">发送消息</button>
+						<div class="btn-group dropup pull-right">
+						  <button id="input_ok" type="button" class="btn btn-primary btn-xs">发送消息</button>
+						  <button type="button" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">
+						    <span class="caret"></span>
+						  </button>
+						  <ul class="dropdown-menu">
+						    <!-- Dropdown menu links -->
+						    <li><a href="#">按Enter发送消息</a></li>
+    						<li><a href="#">按Ctrl+Enter发送消息</a></li>
+						  </ul>
+						</div>
+
+						
+						
 					</div>
 				</div>
 			</div>
@@ -110,6 +128,18 @@
 
 <script type="text/javascript">
 
+KindEditor.ready(function(K) {
+	window.editor = K.create('#content', {
+		resizeType : 1,
+		allowPreviewEmoticons : false,
+		allowImageUpload : false,
+		resizeType:0,
+		newlineTag:"br",
+		items : [
+			'emoticons', '|','fontname', 'fontsize', 'forecolor', 'hilitecolor', 'bold', 'italic', 'underline']
+	});
+});
+
 //参数列表
 var page={
 	pageTotal:0,
@@ -122,13 +152,15 @@ var timer_user=null;
 var service={
 		//发送消息
 		sendMsg:function(item){
+			editor.sync();
 			var option={
-				"parameter.content":$("#content").val(),
+				"parameter.content":$("#content").html(),
 				"parameter.friendId":$("#friendId").val()
 			};
 			$.post("${base}message/send.action",option).done(function(result){
 				$out.append(service.getOneself(result.data));
 				service.scrollEnd();
+				editor.html("");
 			});
 		},
 		//刷新新消息列表
@@ -226,7 +258,7 @@ var service={
 			$out.scrollTop(99999);
 		},
 		clear:function(){
-			$("#content").val("");
+			$("#content").html("");
 			$out.empty();
 		},
 		waitShow:function(){
@@ -257,6 +289,7 @@ var service={
 		$blank.hide();
 		service.waitShow();
 		service.getNewMessageList();
+		page.pageIndex=1;
 		if(timer_user!=null){
 			clearInterval(timer_user);
 		}
@@ -267,6 +300,12 @@ var service={
 	$("#input_ok").on("click",function(){
 		service.sendMsg();
 	});
+	
+	//点击发送消息
+	$(".ke-edit-iframe").contents().find(".ke-content").bind("keydown", "return", function (ev) { 
+		service.sendMsg();
+	});
+	
 	
 	//点击加载更早记录
 	$more.on("click",function(){
@@ -368,7 +407,7 @@ var service={
 	 //得到焦点
      window.onfocus = function(){
     	 if(timer_user!=null){
-    		 message.info("欢迎回来！");
+    		 //message.info("欢迎回来！");
     	 }
     	 timer_user=service.timer();
      };
