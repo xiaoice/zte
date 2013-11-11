@@ -7,12 +7,10 @@
 <title>主界面</title>
 <!-- Bootstrap -->
 <%@include file="/jsp/common/bootstrap.jsp"%>
-<link rel="stylesheet" href="${base}js/plugins/kindeditor/themes/default/default.css" />
-<script charset="utf-8" src="${base}js/plugins/kindeditor/kindeditor-min.js"></script>
-<script charset="utf-8" src="${base}js/plugins/kindeditor/lang/lang/zh_CN.js"></script>
 <link type="text/css" href="${base}js/plugins/message/message.css" rel="stylesheet" />
 <script src="${base}js/plugins/message/message.js"></script>
 <script src="${base}js/jquery/jquery.hotkeys.js"></script>
+<script src="${base}js/editor.js"></script>
 <link type="text/css" href="${base}css/chat.css" rel="stylesheet" />
 </head>
 <body>
@@ -30,9 +28,9 @@
 						<div class="more_message">加载更早记录</div>
 						<ul class="chat_warp_out_ui"></ul>
 					</div>
+					
 					<div class="face_panel">
-						<span class="glyphicon glyphicon-dashboard"></span>
-						<span class="caret"></span>
+						<span id="tool_icon_qqfaces" class="glyphicon glyphicon-dashboard"></span>
 					</div>
 					<!-- <textarea id="content" class="form-control reply_content"></textarea> -->
 					<div id="content" name="content" contenteditable="true" class="form-control reply_content"></div>
@@ -121,24 +119,10 @@
 			<div class="row dialog_search_user_row"></div>
 		</div>
 	</div>
-	
 </body>
 </html>
 
-
 <script type="text/javascript">
-
-KindEditor.ready(function(K) {
-	window.editor = K.create('#content', {
-		resizeType : 1,
-		allowPreviewEmoticons : false,
-		allowImageUpload : false,
-		resizeType:0,
-		newlineTag:"br",
-		items : [
-			'emoticons', '|','fontname', 'fontsize', 'forecolor', 'hilitecolor', 'bold', 'italic', 'underline']
-	});
-});
 
 //参数列表
 var page={
@@ -152,7 +136,6 @@ var timer_user=null;
 var service={
 		//发送消息
 		sendMsg:function(item){
-			editor.sync();
 			var option={
 				"parameter.content":$("#content").html(),
 				"parameter.friendId":$("#friendId").val()
@@ -160,7 +143,7 @@ var service={
 			$.post("${base}message/send.action",option).done(function(result){
 				$out.append(service.getOneself(result.data));
 				service.scrollEnd();
-				editor.html("");
+				$("#content").html("");
 			});
 		},
 		//刷新新消息列表
