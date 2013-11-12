@@ -15,3 +15,5 @@
 
 
 .ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button{ font-size: 14px;}
+
+ [class*=" icon-"] {font-size: 14px;}

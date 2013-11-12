@@ -30,7 +30,7 @@
 					</div>
 					
 					<div class="face_panel">
-						<span id="tool_icon_qqfaces" class="glyphicon glyphicon-dashboard"></span>
+						<span class="icon-github-alt icon_qqfaces" title="表情"></span>
 					</div>
 					<!-- <textarea id="content" class="form-control reply_content"></textarea> -->
 					<div id="content" name="content" contenteditable="true" class="form-control reply_content"></div>
@@ -42,8 +42,8 @@
 						  </button>
 						  <ul class="dropdown-menu">
 						    <!-- Dropdown menu links -->
-						    <li><a href="#">按Enter发送消息</a></li>
-    						<li><a href="#">按Ctrl+Enter发送消息</a></li>
+						    <li><a class="icon-ok"> 按Enter发送消息</a></li>
+    						<li><a> 按Ctrl+Enter发送消息</a></li>
 						  </ul>
 						</div>
 
@@ -136,8 +136,13 @@ var timer_user=null;
 var service={
 		//发送消息
 		sendMsg:function(item){
+			var content=$("#content").html();
+			if(content==""){
+				$("#content").focus();
+				return message.warn("不能发送空消息");
+			}
 			var option={
-				"parameter.content":$("#content").html(),
+				"parameter.content":content,
 				"parameter.friendId":$("#friendId").val()
 			};
 			$.post("${base}message/send.action",option).done(function(result){
@@ -284,12 +289,6 @@ var service={
 		service.sendMsg();
 	});
 	
-	//点击发送消息
-	$(".ke-edit-iframe").contents().find(".ke-content").bind("keydown", "return", function (ev) { 
-		service.sendMsg();
-	});
-	
-	
 	//点击加载更早记录
 	$more.on("click",function(){
 		service.pageNext();
@@ -378,6 +377,12 @@ var service={
 	 $(".dialog_search_user_row").on("click","a",function(){
 		 var $this=$(this);
 		 $this.toggleClass("checked");
+	 });
+	 
+	 //选择发送方式
+	 $(".send_panel").on("click","a",function(){
+		 $(".send_panel a").removeClass("icon-ok");
+		 $(this).addClass("icon-ok");
 	 });
 	 
 	 //失去焦点
