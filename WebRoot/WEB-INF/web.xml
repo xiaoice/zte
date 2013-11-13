@@ -6,6 +6,17 @@
 		<param-value>classpath*:applicationContext.xml</param-value>
 	</context-param>
 	
+	
+	<servlet>
+		<servlet-name>ajax</servlet-name>
+		<servlet-class>com.zte.push.Ajax</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ajax</servlet-name>
+		<url-pattern>/ajax.do</url-pattern>
+	</servlet-mapping>
+	
+	
 	<filter>
 		<filter-name>struts2</filter-name>
 		<filter-class>org.apache.struts2.dispatcher.ng.filter.StrutsPrepareAndExecuteFilter</filter-class>
