@@ -10,6 +10,7 @@
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="${base}js/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
+<link href="${base}js/plugins/bootstrap/css/font-awesome.css" rel="stylesheet">
 <link type="text/css" href="${base}js/plugins/jquery-ui-bootstrap/css/custom-theme/jquery-ui-1.10.0.custom.css" rel="stylesheet" />
 <link href="${base}css/jspjs.css" rel="stylesheet" media="screen">
 <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->

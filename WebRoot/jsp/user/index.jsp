@@ -7,12 +7,10 @@
 <title>主界面</title>
 <!-- Bootstrap -->
 <%@include file="/jsp/common/bootstrap.jsp"%>
-<link rel="stylesheet" href="${base}js/plugins/kindeditor/themes/default/default.css" />
-<script charset="utf-8" src="${base}js/plugins/kindeditor/kindeditor-min.js"></script>
-<script charset="utf-8" src="${base}js/plugins/kindeditor/lang/lang/zh_CN.js"></script>
 <link type="text/css" href="${base}js/plugins/message/message.css" rel="stylesheet" />
 <script src="${base}js/plugins/message/message.js"></script>
 <script src="${base}js/jquery/jquery.hotkeys.js"></script>
+<script src="${base}js/editor.js"></script>
 <link type="text/css" href="${base}css/chat.css" rel="stylesheet" />
 </head>
 <body>
@@ -30,9 +28,9 @@
 						<div class="more_message">加载更早记录</div>
 						<ul class="chat_warp_out_ui"></ul>
 					</div>
+					
 					<div class="face_panel">
-						<span class="glyphicon glyphicon-dashboard"></span>
-						<span class="caret"></span>
+						<span class="icon-github-alt icon_qqfaces" title="表情"></span>
 					</div>
 					<!-- <textarea id="content" class="form-control reply_content"></textarea> -->
 					<div id="content" name="content" contenteditable="true" class="form-control reply_content"></div>
@@ -44,8 +42,8 @@
 						  </button>
 						  <ul class="dropdown-menu">
 						    <!-- Dropdown menu links -->
-						    <li><a href="#">按Enter发送消息</a></li>
-    						<li><a href="#">按Ctrl+Enter发送消息</a></li>
+						    <li><a class="icon-ok"> 按Enter发送消息</a></li>
+    						<li><a> 按Ctrl+Enter发送消息</a></li>
 						  </ul>
 						</div>
 
@@ -121,24 +119,10 @@
 			<div class="row dialog_search_user_row"></div>
 		</div>
 	</div>
-	
 </body>
 </html>
 
-
 <script type="text/javascript">
-
-KindEditor.ready(function(K) {
-	window.editor = K.create('#content', {
-		resizeType : 1,
-		allowPreviewEmoticons : false,
-		allowImageUpload : false,
-		resizeType:0,
-		newlineTag:"br",
-		items : [
-			'emoticons', '|','fontname', 'fontsize', 'forecolor', 'hilitecolor', 'bold', 'italic', 'underline']
-	});
-});
 
 //参数列表
 var page={
@@ -152,15 +136,19 @@ var timer_user=null;
 var service={
 		//发送消息
 		sendMsg:function(item){
-			editor.sync();
+			var content=$("#content").html();
+			if(content==""){
+				$("#content").focus();
+				return message.warn("不能发送空消息");
+			}
 			var option={
-				"parameter.content":$("#content").html(),
+				"parameter.content":content,
 				"parameter.friendId":$("#friendId").val()
 			};
 			$.post("${base}message/send.action",option).done(function(result){
 				$out.append(service.getOneself(result.data));
 				service.scrollEnd();
-				editor.html("");
+				$("#content").html("");
 			});
 		},
 		//刷新新消息列表
@@ -301,12 +289,6 @@ var service={
 		service.sendMsg();
 	});
 	
-	//点击发送消息
-	$(".ke-edit-iframe").contents().find(".ke-content").bind("keydown", "return", function (ev) { 
-		service.sendMsg();
-	});
-	
-	
 	//点击加载更早记录
 	$more.on("click",function(){
 		service.pageNext();
@@ -395,6 +377,12 @@ var service={
 	 $(".dialog_search_user_row").on("click","a",function(){
 		 var $this=$(this);
 		 $this.toggleClass("checked");
+	 });
+	 
+	 //选择发送方式
+	 $(".send_panel").on("click","a",function(){
+		 $(".send_panel a").removeClass("icon-ok");
+		 $(this).addClass("icon-ok");
 	 });
 	 
 	 //失去焦点
