@@ -11,6 +11,8 @@
 <script src="${base}js/plugins/message/message.js"></script>
 <script src="${base}js/jquery/jquery.hotkeys.js"></script>
 <script src="${base}js/editor.js"></script>
+<script src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/tripledes.js"></script>
+
 <link type="text/css" href="${base}css/chat.css" rel="stylesheet" />
 </head>
 <body>
@@ -42,8 +44,8 @@
 						  </button>
 						  <ul class="dropdown-menu">
 						    <!-- Dropdown menu links -->
-						    <li><a class="icon-ok"> 按Enter发送消息</a></li>
-    						<li><a> 按Ctrl+Enter发送消息</a></li>
+						    <li><a class="icon-ok" data-value="return"> 按Enter发送消息</a></li>
+    						<li><a data-value="Ctrl+return"> 按Ctrl+Enter发送消息</a></li>
 						  </ul>
 						</div>
 
@@ -132,7 +134,9 @@ var page={
 };
 var $out=$(".chat_warp_out_ui"),$more=$(".more_message"),$blank=$(".chat_blank"),$wait=$(".chat_wait");
 var timer_user=null;
-
+//轮询回调控制计数器
+var ajax_loop=0;
+var current_request=null;
 var service={
 		//发送消息
 		sendMsg:function(item){
@@ -152,7 +156,7 @@ var service={
 			});
 		},
 		//刷新新消息列表
-		getNewMessageList:function(){
+		getNewMessageList:function(callback){
 			$.get("message/getMessageList.action?parameter.friendId="+$("#friendId").val()).done(function(result){
 				$wait.hide();
 				if(typeof result=="object" && result.data!=null && result.data.length>0){
@@ -172,6 +176,44 @@ var service={
 					$out.append(msgListCache);
 					service.updateMsgRead(ids);
 					service.scrollEnd();
+					callback&&callback();
+				}
+			});
+		},
+		//轮询新消息
+		loopMessage:function(){
+			ajax_loop++;
+			if(current_request!=null){
+				current_request.abort();
+				ajax_loop--;
+			}
+			current_request=$.get("message/loopMessage.action?parameter.friendId="+$("#friendId").val()).done(function(result){
+				$wait.hide();
+				if(typeof result=="object"){
+					if(result.data!=null && result.data.length>0){
+						var ids=[],msgListCache=[],data=result.data;
+						for(var i=0,j=data.length;i<j;i++){
+							var item=result.data[i];
+							if($("#chat_"+item.id).size()==0){
+					    		if(item.createBy==$("#username").val()){
+					    			msgListCache.push(service.getOneself(item));
+								}
+								else{
+									msgListCache.push(service.getHimself(item));
+								}
+					    		ids.push(item.id);
+							}
+				    	}
+						$out.append(msgListCache);
+						service.updateMsgRead(ids);
+						service.scrollEnd();
+					}
+					if(ajax_loop>1){
+					}else{
+						//重新轮询
+						service.loopMessage(); 
+					}
+					ajax_loop--;
 				}
 			});
 		},
@@ -238,12 +280,12 @@ var service={
 		//循环获取消息
 		timer:function(){
 			return setInterval(function(){
-				service.getNewMessageList();
+				//service.getNewMessageList();
 			},2000);
 		},
 		//滚屏置底
 		scrollEnd:function(){
-			$out.scrollTop(99999);
+			$out.scrollTop(9999);
 		},
 		clear:function(){
 			$("#content").html("");
@@ -276,7 +318,7 @@ var service={
 		service.clear();
 		$blank.hide();
 		service.waitShow();
-		service.getNewMessageList();
+		service.getNewMessageList(service.loopMessage());
 		page.pageIndex=1;
 		if(timer_user!=null){
 			clearInterval(timer_user);
@@ -296,7 +338,7 @@ var service={
 	
 	//点击刷新消息
 	$("#btn_reload").on("click",function(){
-		service.getNewMessageList();
+		service.loopMessage();
 	});
 	
 	//初始化弹出框
@@ -385,6 +427,17 @@ var service={
 		 $(this).addClass("icon-ok");
 	 });
 	 
+	 $("#content").bind("keydown","return Ctrl+return",function(e){
+		 var value=$(".send_panel .icon-ok").attr("data-value");
+		 console.log(value,e.keyCode,e.ctrlKey);
+		 if(value=="return"&&e.keyCode==13 && !e.ctrlKey){
+			 service.sendMsg();
+		 }else if(value=="Ctrl+return"&&e.keyCode==13 && e.ctrlKey){
+			 service.sendMsg();
+		 }else{
+		 }
+	 });
+	 
 	 //失去焦点
 	 window.onblur = function(){
 		 if(timer_user!=null){
@@ -399,5 +452,18 @@ var service={
     	 }
     	 timer_user=service.timer();
      };
-	 
+     $.fn.editor();
+     
+     
+     //String data = "123 456";
+	 //String key = "wang!@#$%";
+     //var encrypted = CryptoJS.TripleDES.encrypt("123 456", "Secret Passphrase");
+     //var decrypted = CryptoJS.TripleDES.decrypt(encrypted, "Secret Passphrase");
+     
+     var encrypted = CryptoJS.DES.parse("Message");
+
+     //var decrypted = CryptoJS.DES.decrypt(encrypted);
+
+     console.log(encrypted,decrypted);
+
 </script>

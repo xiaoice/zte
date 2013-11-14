@@ -37,7 +37,7 @@
 	
 	<!-- 设置session超时时间 -->
 	<session-config>
-	    <session-timeout>600</session-timeout>
+	    <session-timeout>30</session-timeout>
 	</session-config>
 	
 	<welcome-file-list>

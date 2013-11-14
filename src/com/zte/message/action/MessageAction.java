@@ -1,5 +1,6 @@
 package com.zte.message.action;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
+import com.opensymphony.xwork2.ActionContext;
 import com.zte.framework.jdbc.MapUtil;
 import com.zte.framework.util.AjaxAction;
 import com.zte.framework.util.DateUtil;
@@ -56,18 +58,46 @@ public class MessageAction extends AjaxAction {
 		if(!(parameter!=null&&parameter.containsKey("friendId")&&StringUtils.isNotBlank(parameter.get("friendId")))){
 			return ajaxUtil.setFail("参数错误！");
 		}
-			
+		
 		Map<String,Object> map=new HashMap<String, Object>();
 		int friendId=Integer.valueOf(parameter.get("friendId"));
 		map.put("userId", friendId);
 		map.put("friendId", getUserId());
 		map.put("createBy", getUser().getUsername());
-		List<Map<String,Object>> list = messageService.getMessageList(map);
+		List<Map<String,Object>> list= messageService.getMessageList(map);
 		if(list.size()>0){
 			return ajaxUtil.setSuccess(list);
 		}
 		return ajaxUtil.setFail("暂无消息！");
 	}
+	
+	//获取未读的新消息列表
+	public String loopMessage() throws InterruptedException{
+		if(!(parameter!=null&&parameter.containsKey("friendId")&&StringUtils.isNotBlank(parameter.get("friendId")))){
+			return ajaxUtil.setFail("参数错误！");
+		}
+		
+		Map<String,Object> map=new HashMap<String, Object>();
+		int friendId=Integer.valueOf(parameter.get("friendId"));
+		map.put("userId", friendId);
+		map.put("friendId", getUserId());
+		map.put("createBy", getUser().getUsername());
+		List<Map<String,Object>> list=new ArrayList<Map<String,Object>>();
+		for(int i=0;i<5&&list.size()==0;i++){
+			System.out.println("用户 "+map.get("createBy")+" 第"+i+"次查询数据库！");
+			if(getUser()==null){
+				return ajaxUtil.setFail("请重新登录！");
+			}
+			list = messageService.getMessageList(map);
+			if(list.size()>0){
+				return ajaxUtil.setSuccess(list);
+			}
+			Thread.sleep(1000);
+		}
+		return ajaxUtil.setFail("暂无消息！");
+	}
+	
+	
 	
 /*	//获取消息总数
 	public String getMessageCount(){

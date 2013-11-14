@@ -19,6 +19,11 @@
 			<result name="json" type="json"><param name="root">ajaxUtil</param></result>
 		</action>
 		
+		<!-- 获取轮询未读的新消息 -->
+		<action name="loopMessage" class="messageAction" method="loopMessage">
+			<result name="json" type="json"><param name="root">ajaxUtil</param></result>
+		</action>
+		
 		<action name="getMessageCount" class="messageAction" method="getMessageCount">
 			<result name="json" type="json"><param name="root">ajaxUtil</param></result>
 		</action>
