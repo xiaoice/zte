@@ -23,22 +23,22 @@
 					<tr>
 						<td align="right"><label for="user_username">请输入用户名：</label></td>
 						<td><input type="text" class="form-control" id="user_username" name="parameter.username" placeholder="请输入用户名"></td>
-						<td><i class="icon-warning-sign text-warning"></i><span>用户名为4-16个文字</span></td>
+						<td></td>
 					</tr>
 					<tr>
 						<td align="right"><label for="user_password">请输入密码：</label></td>
 						<td><input type="password" class="form-control" id="user_password" name="parameter.password" placeholder="请输入密码"></td>
-						<td><i class="icon-ok-sign text-success"></i><span data-ajax="" data-validator="{min:4,max:6,error:'用户名为4-16个文字'}" data-success="正确">用户名为4-16个文字</span></td>
+						<td></td>
 					</tr>
 					<tr>
 						<td align="right"><label for="user_password_two">请输入确定密码：</label></td>
 						<td><input type="password" class="form-control" id="user_password_two" placeholder="请再次输入密码"></td>
-						<td><i class="icon-info-sign text-info"></i><span>用户名为4-16个文字</span></td>
+						<td></td>
 					</tr>
 					<tr>
 						<td width="240" align="right"><label for="user_name">请输入昵称：</label></td>
 						<td width="300"><input type="text" class="form-control" value="${user.name}" id="user_name" name="parameter.name" placeholder="请输入昵称"></td>
-						<td><i class="icon-remove-sign text-danger"></i><span>用户名为4-16个文字</span></td>
+						<td></td>
 					</tr>
 					<tr>
 						<td align="right"><label for="user_email">请输入邮箱：</label></td>
@@ -119,6 +119,10 @@
 		 $this.addClass("checked");
 	});
 	
-	$("#user_username").formValidator({focus:"用户名长度为4-16位",success:"正确",validator:{min:4,max:16,error:"用户名长度错误，应该为4-16位！"},ajax:{url:"",wait:"正在验证用户名是否可用",error:"用户名已经被使用！"}});
+	$("#user_username").formValidator({focus:"用户名长度为4-16位",success:"正确",validator:{min:4,max:16,error:"用户名长度错误，应该为4-16位！"},ajax:{url:"vali.js",wait:"正在验证用户名是否可用",error:"用户名已经被使用！"}});
+	$("#user_password").formValidator({focus:"密码长度为4-16位",success:"正确",validator:{min:4,max:16,error:"密码长度错误，应该为4-16位！"},concateCompare:"#user_password_two"});
+	$("#user_password_two").formValidator({focus:"确认密码长度为4-16位",success:"正确",validator:{min:4,max:16,error:"确认密码长度错误，应该为4-16位！"},compare:{target:"#user_password",regexp:"=",error:"二次密码输入不一致"}});
+	$("#user_age").formValidator({focus:"请输入数字，支持方向键↓↑",success:"正确",validator:{type:"number",spinner:true,max:120,error:"你输入的年龄有误，范围为0-120"}});
+	
 </script>
 

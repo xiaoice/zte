@@ -5,9 +5,16 @@
 .reg_table{margin: 0;}
 .reg_table td{vertical-align: middle !important; border-width:0 !important;}
 .reg_table img{border-radius:3px;}
-.reg_table i{ font-size: 14px;}
-.reg_table span{ font-size: 12px; padding-left: 5px;}
-.reg_table label{ font-weight: normal;}
+.reg_table i{font-size: 14px;}
+.reg_table span{font-size: 12px; padding-left: 5px;}
+.reg_table label{font-weight: normal;}
+.reg_table tr{border-bottom: 1px dashed #E5E5EF;}
+.reg_table tr:last-child{border-bottom-width: 0;}
+.reg_table td:first-child{padding-right: 0;}
+.reg_table td:last-child{padding-left: 0;}
+.reg_table .input_wait{border-color: #C09853;background-color: #FFF6E7;}
+.reg_table .input_success{border-color: #468847;background-color: #E3FFE3;}
+.reg_table .input_error{border-color: #B94A48;background-color: #FFE8E7;}
 
 
 
