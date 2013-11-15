@@ -83,7 +83,7 @@ public class MessageAction extends AjaxAction {
 		map.put("friendId", getUserId());
 		map.put("createBy", getUser().getUsername());
 		List<Map<String,Object>> list=new ArrayList<Map<String,Object>>();
-		for(int i=0;i<5&&list.size()==0;i++){
+		for(int i=0;i<20&&list.size()==0;i++){
 			System.out.println("用户 "+map.get("createBy")+" 第"+i+"次查询数据库！");
 			if(getUser()==null){
 				return ajaxUtil.setFail("请重新登录！");

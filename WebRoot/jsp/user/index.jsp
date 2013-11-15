@@ -11,8 +11,6 @@
 <script src="${base}js/plugins/message/message.js"></script>
 <script src="${base}js/jquery/jquery.hotkeys.js"></script>
 <script src="${base}js/editor.js"></script>
-<script src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/tripledes.js"></script>
-
 <link type="text/css" href="${base}css/chat.css" rel="stylesheet" />
 </head>
 <body>
@@ -454,16 +452,5 @@ var service={
      };
      $.fn.editor();
      
-     
-     //String data = "123 456";
-	 //String key = "wang!@#$%";
-     //var encrypted = CryptoJS.TripleDES.encrypt("123 456", "Secret Passphrase");
-     //var decrypted = CryptoJS.TripleDES.decrypt(encrypted, "Secret Passphrase");
-     
-     var encrypted = CryptoJS.DES.parse("Message");
-
-     //var decrypted = CryptoJS.DES.decrypt(encrypted);
-
-     console.log(encrypted,decrypted);
-
 </script>
+

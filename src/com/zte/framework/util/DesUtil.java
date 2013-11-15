@@ -13,8 +13,8 @@ import sun.misc.BASE64Encoder;
 public class DesUtil {
 	private final static String DES = "DES";
 	public static void main(String[] args) throws Exception {
-		String data = "123 456";
-		String key = "wang!@#$%";
+		String key = "123456789";
+		String data = "123456789";
 		System.err.println(encrypt(data, key));
 		System.err.println(decrypt(encrypt(data, key), key));
 	}
