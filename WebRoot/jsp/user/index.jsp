@@ -453,17 +453,4 @@ var service={
     	 timer_user=service.timer();
      };
      $.fn.editor();
-     
-     
-     //String data = "123 456";
-	 //String key = "wang!@#$%";
-     //var encrypted = CryptoJS.TripleDES.encrypt("123 456", "Secret Passphrase");
-     //var decrypted = CryptoJS.TripleDES.decrypt(encrypted, "Secret Passphrase");
-     
-     var encrypted = CryptoJS.DES.parse("Message");
-
-     //var decrypted = CryptoJS.DES.decrypt(encrypted);
-
-     console.log(encrypted,decrypted);
-
 </script>
