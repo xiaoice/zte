@@ -7,7 +7,9 @@
 <title>注册界面</title>
 <!-- Bootstrap -->
 <%@include file="/jsp/common/bootstrap.jsp"%>
-<link type="text/css" href="css/chat.css" rel="stylesheet" /><link type="text/css" href="${base}js/plugins/message/message.css" rel="stylesheet" />
+<link type="text/css" href="css/reg.css" rel="stylesheet" />
+<link type="text/css" href="${base}js/plugins/message/message.css" rel="stylesheet" />
+<script src="${base}js/form-validator.js"></script>
 <script src="${base}js/plugins/message/message.js"></script>
 
 </head>
@@ -17,26 +19,26 @@
 		<div class="panel panel-default">
 	  		<div class="panel-heading no_border">新用户注册</div>
 			<s:form action="join.action" role="form-horizontal">
-				<table class="table no_margin">
-					<tr>
-						<td width="300" align="right"><label for="user_name">请输入昵称：</label></td>
-						<td width="300"><input type="text" class="form-control" value="${user.name}" id="user_name" name="parameter.name" placeholder="请输入昵称"></td>
-						<td><div>用户名为4-16个文字</div></td>
-					</tr>
+				<table class="table reg_table">
 					<tr>
 						<td align="right"><label for="user_username">请输入用户名：</label></td>
 						<td><input type="text" class="form-control" id="user_username" name="parameter.username" placeholder="请输入用户名"></td>
-						<td></td>
+						<td><i class="icon-warning-sign text-warning"></i><span>用户名为4-16个文字</span></td>
 					</tr>
 					<tr>
 						<td align="right"><label for="user_password">请输入密码：</label></td>
-						<td ><input type="password" class="form-control" id="user_password" name="parameter.password" placeholder="请输入密码"></td>
-						<td></td>
+						<td><input type="password" class="form-control" id="user_password" name="parameter.password" placeholder="请输入密码"></td>
+						<td><i class="icon-ok-sign text-success"></i><span data-ajax="" data-validator="{min:4,max:6,error:'用户名为4-16个文字'}" data-success="正确">用户名为4-16个文字</span></td>
 					</tr>
 					<tr>
 						<td align="right"><label for="user_password_two">请输入确定密码：</label></td>
-						<td ><input type="password" class="form-control" id="user_password_two" placeholder="请再次输入密码"></td>
-						<td></td>
+						<td><input type="password" class="form-control" id="user_password_two" placeholder="请再次输入密码"></td>
+						<td><i class="icon-info-sign text-info"></i><span>用户名为4-16个文字</span></td>
+					</tr>
+					<tr>
+						<td width="240" align="right"><label for="user_name">请输入昵称：</label></td>
+						<td width="300"><input type="text" class="form-control" value="${user.name}" id="user_name" name="parameter.name" placeholder="请输入昵称"></td>
+						<td><i class="icon-remove-sign text-danger"></i><span>用户名为4-16个文字</span></td>
 					</tr>
 					<tr>
 						<td align="right"><label for="user_email">请输入邮箱：</label></td>
@@ -44,7 +46,7 @@
 						<td></td>
 					</tr>
 					<tr>
-						<td align="right"><label for="user_photo">请输入头像：</label></td>
+						<td align="right"><label for="user_photo">请选择头像：</label></td>
 						<td valign="top"><img id="user_photo_img" alt="头像" src="${user.photo}" onerror="this.onerror=null;this.src='images/github.png'" wdith="32" height="32"/> <a id="btn_change_photo" class="text-warning">更换头像</a></td>
 						<td><input id="user_photo" name="parameter.photo" type="hidden" value="${user.photo}"/></td>
 					</tr>
@@ -116,5 +118,7 @@
 		 $(".dialog_search_user_row .checked").removeClass("checked");
 		 $this.addClass("checked");
 	});
+	
+	$("#user_username").formValidator({focus:"用户名长度为4-16位",success:"正确",validator:{min:4,max:16,error:"用户名长度错误，应该为4-16位！"},ajax:{url:"",wait:"正在验证用户名是否可用",error:"用户名已经被使用！"}});
 </script>
 

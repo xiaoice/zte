@@ -451,6 +451,6 @@ var service={
     	 timer_user=service.timer();
      };
      $.fn.editor();
-     
 </script>
+
 
