@@ -427,7 +427,6 @@ var service={
 	 
 	 $("#content").bind("keydown","return Ctrl+return",function(e){
 		 var value=$(".send_panel .icon-ok").attr("data-value");
-		 console.log(value,e.keyCode,e.ctrlKey);
 		 if(value=="return"&&e.keyCode==13 && !e.ctrlKey){
 			 service.sendMsg();
 		 }else if(value=="Ctrl+return"&&e.keyCode==13 && e.ctrlKey){

@@ -52,7 +52,9 @@
 					</tr>
 					<tr>
 						<td align="right"><label for="user_age">年龄：</label></td>
-						<td><input type="number" class="form-control" value="${user.age}" id="user_age" name="parameter.age" placeholder="请输入年龄"></td>
+						<td>
+							<input type="number" class="form-control" value="${user.age}" id="user_age" name="parameter.age" placeholder="请输入年龄">
+						</td>
 						<td></td>
 					</tr>
 					<tr>
@@ -122,7 +124,7 @@
 	$("#user_username").formValidator({focus:"用户名长度为4-16位",success:"正确",validator:{min:4,max:16,error:"用户名长度错误，应该为4-16位！"},ajax:{url:"vali.js",wait:"正在验证用户名是否可用",error:"用户名已经被使用！"}});
 	$("#user_password").formValidator({focus:"密码长度为4-16位",success:"正确",validator:{min:4,max:16,error:"密码长度错误，应该为4-16位！"},concateCompare:"#user_password_two"});
 	$("#user_password_two").formValidator({focus:"确认密码长度为4-16位",success:"正确",validator:{min:4,max:16,error:"确认密码长度错误，应该为4-16位！"},compare:{target:"#user_password",regexp:"=",error:"二次密码输入不一致"}});
-	$("#user_age").formValidator({focus:"请输入数字，支持方向键↓↑",success:"正确",validator:{type:"number",spinner:true,max:120,error:"你输入的年龄有误，范围为0-120"}});
+	$("#user_age").formValidator({focus:"请输入数字，支持方向键↓↑",success:"正确",validator:{type:"number",spinner:true,max:120,error:"你输入的年龄有误，必须为数字且范围为0-120"}});
 	
 </script>
 
