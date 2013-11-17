@@ -41,13 +41,39 @@ public class UserAction extends AjaxAction{
 		return INPUT;
 	}
 	
+	//登录AJAX方式
+	public String loginAjax(){
+		User user = userService.findUserByUsernameAndPwd(parameter);
+		if(user!=null){
+			user.setPassword(null);
+			setSessionProperty("user", user);
+			return ajaxUtil.setSuccess(user);
+		}
+		return ajaxUtil.setFail("用户名或者密码错误！");
+	}
+	
 	//注销
 	public String logout(){
 		removeSessionProperty("user");
 		return SUCCESS;
 	}
 	
-	//登录
+	//检查用户名是否存在
+	public String checkByUsername(){
+		if(!(parameter!=null&&parameter.containsKey("username")&&StringUtils.isNotBlank(parameter.get("username")))){
+			return ajaxUtil.setFail("参数错误！");
+		}
+		Map<String,Object> map=new HashMap<String, Object>();
+		map.put("username", parameter.get("username"));
+		boolean result= userService.checkByUsername(map)==0;
+		if(result){
+			return ajaxUtil.setSuccess(result);
+		}else{
+			return ajaxUtil.setFail(result);
+		}
+	}
+	
+	//注册
 	public String join(){
 		if(parameter==null){
 			return INPUT;

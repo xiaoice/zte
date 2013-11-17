@@ -53,6 +53,16 @@
 		<action name="join" class="userAction" method="join">
 			<result name="success" type="redirectAction">reg_success</result>
 		</action>
+		
+		<!-- 检查用户名是否存在 -->
+		<action name="checkByUsername" class="userAction" method="checkByUsername">
+			<result name="json" type="json"><param name="root">ajaxUtil</param></result>
+		</action>
+		
+		<!-- 登录-AJAX -->
+		<action name="loginAjax" class="userAction" method="loginAjax">
+			<result name="json" type="json"><param name="root">ajaxUtil</param></result>
+		</action>
 	</package>
 
 	<include file="struts-user.xml" />

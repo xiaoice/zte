@@ -21,6 +21,11 @@
 	<select id="findUserByUsernameAndPwd" resultType="User" parameterType="hashMap">
 		select * from user where username=#{username} and password=#{password} 
     </select>
+    
+   <!-- 根据用户名、密码登录 -->
+	<select id="checkByUsername" resultType="int" parameterType="hashMap">
+		select count(1) from user where username=#{username}
+    </select>
 	
 	<!-- 根据用户名分页查询用户信息 -->
 	<select id="findListByPage" parameterType="hashMap" resultType="hashMap">

@@ -30,4 +30,6 @@ public interface UserDao {
 	
 	int insert(User user);
 	int update(User user);
+	
+	int checkByUsername(Map<String,Object> parameter);
 }

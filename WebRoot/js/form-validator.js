@@ -27,7 +27,7 @@ $.fn.formValidator=function(options){
 		validator:{type:"string",spinner:false,min:0,max:1000,error:""},
 		compare:{target:null,regexp:null,error:""},
 		concateCompare:null,
-		ajax:{url:null,wait:"",error:""}
+		ajax:{url:null,success:"",wait:"",error:""}
 	};
 	var option=$.extend({},defaults,options);
 	option.validator=$.extend({},defaults.validator,options.validator);
@@ -38,8 +38,8 @@ $.fn.formValidator=function(options){
 	//服务层
 	var service={
 		//封装html文字
-		html:function(icon,text,$that){
-			var html_icon='<i class="'+icon+'"></i>';
+		html:function(ico,text,$that){
+			var html_icon='<i class="'+ico+'"></i>';
 			var html_text='<span>'+text+'</span>';
 			$that||$target.html(html_icon+html_text);
 		},
@@ -58,8 +58,20 @@ $.fn.formValidator=function(options){
 				$this.removeClass("input_error").addClass("input_wait");
 				//取消掉上次等待中的AJAX请求
 				temp.ajaxHandle&&temp.ajaxHandle.abort();
-				temp.ajaxHandle=$.get(option.ajax.url,function(data){
-					
+				temp.ajaxHandle=$.get(option.ajax.url+value,function(data){
+					if(typeof data=="object"){
+						if(data.recode==1&&data.data){
+							$this.removeClass("input_wait").addClass("input_success");
+							isSubmit=true;
+							return service.html(icon.ok,option.ajax.success);
+						}else{
+							$this.removeClass("input_wait").addClass("input_error");
+							return service.html(icon.error,option.ajax.error);
+						}
+					}else{
+						$this.removeClass("input_wait").addClass("input_error");
+						return service.html(icon.error,"验证失败，服务器出现错误！");
+					}
 				});
 				return this.html(icon.wait,option.ajax.wait);
 			}else{
@@ -135,8 +147,8 @@ $.fn.formValidator=function(options){
 				});
 				if(option.validator.spinner){
 					$this.wrap("<div class='relative'></div>");
-					$('<i class="icon-sort-up spinner_up" type="button">').insertAfter($this).on("click",that.spinnerUp);
-					$('<i class="icon-sort-down spinner_down" type="button"></i>').insertAfter($this).on("click",that.spinnerDown);
+					$('<i class="icon-sort-up spinner_up"></i>').insertAfter($this).on("click",that.spinnerUp);
+					$('<i class="icon-sort-down spinner_down"></i>').insertAfter($this).on("click",that.spinnerDown);
 				}
 				$this.attr("maxlength",option.validator.max.toString().length);
 			}else{

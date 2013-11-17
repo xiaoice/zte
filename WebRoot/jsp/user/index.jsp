@@ -30,7 +30,7 @@
 					</div>
 					
 					<div class="face_panel">
-						<span class="icon-github-alt icon_qqfaces" title="表情"></span>
+						<span class="icon-heart icon_qqfaces" title="表情"></span>
 					</div>
 					<!-- <textarea id="content" class="form-control reply_content"></textarea> -->
 					<div id="content" name="content" contenteditable="true" class="form-control reply_content"></div>

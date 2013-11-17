@@ -41,5 +41,10 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
 	public int update(User user) {
 		return this.update("com.zte.user.dao.UserDao.update", user);
 	}
+
+	@Override
+	public int checkByUsername(Map<String, Object> parameter) {
+		return userDao.checkByUsername(parameter);
+	}
 	
 }

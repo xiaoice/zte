@@ -74,11 +74,10 @@ $.fn.editor=function(options){
 	//点击QQ表情
 	$document.on("click",option.handle,function(){
 		$(".panel_qqfaces").toggleClass("qqfaces_offset");
-		
 		//点击空白地方，隐藏表情面板
 		$document.one("click",function(e){
-			$(".panel_qqfaces").removeClass("qqfaces_offset");
-		})
+			$(option.handle)[0]!=e.target&&$(".panel_qqfaces").removeClass("qqfaces_offset");
+		});
 	});
 	
 	//悬浮QQ表情上面
@@ -88,14 +87,9 @@ $.fn.editor=function(options){
 		var y=$this.parent("ul").index(".panel_qqfaces ul");
 		var index=y*15+x;
 		
-		var pos={top:0};
-		if(x<8){
-			pos.right=0;
-		}else{
-			pos.left=0;
-		}
+		var pos={top:y*26-1,left:x*28-1};
+		$(".panel_qqfaces img").attr("src","images/qqfaces/"+index+".gif?t="+new Date().getTime());
 		$(".panel_qqfaces_focus").removeAttr("style").show().css(pos);
-		$(".panel_qqfaces img").attr("src","images/qqfaces/"+index+".gif");
 	});
 	
 	//鼠标移出QQ表情面板
@@ -104,8 +98,9 @@ $.fn.editor=function(options){
 	});
 	
 	//点击QQ表情上面
-	$document.on("click",".panel_qqfaces li",function(){
-		var img=$(".panel_qqfaces_focus").html();
+	$document.on("click",".panel_qqfaces_focus",function(){
+		var img=$(this).html();
+		console.log(img);
 		$(".panel_qqfaces").removeClass("qqfaces_offset");
 		$(option.content).append(img);
 	});

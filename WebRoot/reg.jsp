@@ -47,8 +47,8 @@
 					</tr>
 					<tr>
 						<td align="right"><label for="user_photo">请选择头像：</label></td>
-						<td valign="top"><img id="user_photo_img" alt="头像" src="${user.photo}" onerror="this.onerror=null;this.src='images/github.png'" wdith="32" height="32"/> <a id="btn_change_photo" class="text-warning">更换头像</a></td>
-						<td><input id="user_photo" name="parameter.photo" type="hidden" value="${user.photo}"/></td>
+						<td valign="top"><input id="user_photo" name="parameter.photo" type="hidden" value="${user.photo}"/><img id="user_photo_img" class="user_photo_img" alt="头像" src="${user.photo}" onerror="this.onerror=null;this.src='images/github.png'"/> <a class="text-warning user_photo_img">更换头像</a></td>
+						<td></td>
 					</tr>
 					<tr>
 						<td align="right"><label for="user_age">年龄：</label></td>
@@ -60,7 +60,7 @@
 					<tr>
 						<td></td>
 						<td colspan="2">
-							<button type="submit" class="btn btn-primary">保存</button>
+							<button type="submit" class="btn btn-success">保存</button>
 						</td>
 					</tr>
 				</table>
@@ -87,6 +87,9 @@
 
 
 <script type="text/javascript">
+	
+	$(":hidden").val("");
+	
 	$('#dialog_search_user').dialog({
 		 autoOpen: false,
 		 resizable :false,
@@ -99,7 +102,7 @@
 		 		if(!src){
 		 			return message.warn("请选择一个头像！");
 		 		}
-		 		$("#user_photo").val(src);
+		 		$("#user_photo").val(src).blur();
 		 		$("#user_photo_img").attr("src",src);
 		 		$(this).dialog("close");
 		 	},
@@ -110,7 +113,7 @@
 	});
 	
 	//点击添加好友按钮
-	$( "#btn_change_photo").click(function() {
+	$( ".user_photo_img").click(function() {
 		 $( "#dialog_search_user" ).dialog( "open" );
 	});
 	
@@ -121,10 +124,11 @@
 		 $this.addClass("checked");
 	});
 	
-	$("#user_username").formValidator({focus:"用户名长度为4-16位",success:"正确",validator:{min:4,max:16,error:"用户名长度错误，应该为4-16位！"},ajax:{url:"vali.js",wait:"正在验证用户名是否可用",error:"用户名已经被使用！"}});
+	$("#user_username").formValidator({focus:"用户名长度为4-16位",success:"正确",validator:{min:4,max:16,error:"用户名长度错误，应该为4-16位！"},ajax:{url:"${base}checkByUsername?parameter.username=",success:"恭喜你，用户名可以使用！",wait:"正在验证用户名是否可用",error:"用户名已经被使用！"}});
 	$("#user_password").formValidator({focus:"密码长度为4-16位",success:"正确",validator:{min:4,max:16,error:"密码长度错误，应该为4-16位！"},concateCompare:"#user_password_two"});
-	$("#user_password_two").formValidator({focus:"确认密码长度为4-16位",success:"正确",validator:{min:4,max:16,error:"确认密码长度错误，应该为4-16位！"},compare:{target:"#user_password",regexp:"=",error:"二次密码输入不一致"}});
+	$("#user_password_two").formValidator({focus:"确认密码长度为4-16位",success:"正确",validator:{min:4,max:16,error:"确认密码长度错误，应该为4-16位！"},compare:{target:"#user_password",regexp:"=",error:"二次输入的密码不一致"}});
 	$("#user_age").formValidator({focus:"请输入数字，支持方向键↓↑",success:"正确",validator:{type:"number",spinner:true,max:120,error:"你输入的年龄有误，必须为数字且范围为0-120"}});
+	$("#user_photo").formValidator({success:"正确",validator:{type:"string",min:0,error:"请选择头像！"}});
 	
 </script>
 
