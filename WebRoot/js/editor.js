@@ -32,41 +32,7 @@ $.fn.editor=function(options){
 				
 			},
 			service:{
-				getCurrentRange : function () {
-					var sel = window.getSelection();
-					if (sel.getRangeAt && sel.rangeCount) {
-						return sel.getRangeAt(0);
-					}
-				},
-				insertText:function(obj,str) {
-					if (document.selection) {
-						var sel = document.selection.createRange();
-						sel.text = str;
-					} else if (typeof obj.selectionStart === 'number' && typeof obj.selectionEnd === 'number') {
-						var startPos = obj.selectionStart,
-						endPos = obj.selectionEnd,
-						cursorPos = startPos,
-						tmpStr = obj.value;
-						obj.value = tmpStr.substring(0, startPos) + str + tmpStr.substring(endPos, tmpStr.length);
-						cursorPos += str.length;
-						obj.selectionStart = obj.selectionEnd = cursorPos;
-					} else {
-						obj.value += str;
-					}
-				},
-				moveEnd:function(obj){
-					obj.focus();
-					var val = obj.value||obj.innerHTML;
-					var len=val.length;
-					if (document.selection) {
-						var sel = obj.createTextRange();
-						sel.moveStart('character',len);
-						sel.collapse();
-						sel.select();
-					} else if (typeof obj.selectionStart == 'number' && typeof obj.selectionEnd == 'number') {
-						obj.selectionStart = obj.selectionEnd = len;
-					}
-				} 
+				
 			}
 	};
 	$(option.parent).append(editor.panel.faces());
@@ -82,6 +48,7 @@ $.fn.editor=function(options){
 	
 	//悬浮QQ表情上面
 	$document.on("mouseover",".panel_qqfaces li",function(){
+		$(".panel_qqfaces img").attr("src","");
 		var $this=$(this);
 		var x=$this.index();
 		var y=$this.parent("ul").index(".panel_qqfaces ul");
@@ -94,15 +61,17 @@ $.fn.editor=function(options){
 	
 	//鼠标移出QQ表情面板
 	$document.on("mouseleave",".panel_qqfaces",function(){
+		$(".panel_qqfaces_focus").removeAttr("src");
 		$(".panel_qqfaces").hide();
 	});
 	
 	//点击QQ表情上面
 	$document.on("click",".panel_qqfaces_focus",function(){
-		var img=$(this).html();
-		console.log(img);
+		var img=$(this).find("img").attr("src");
 		$(".panel_qqfaces").removeClass("qqfaces_offset");
-		$(option.content).append(img);
+		document.execCommand("InsertImage", false, img); 
+		$(option.content).focus();
+		//$(option.content).append(img);
 	});
 	
 }
