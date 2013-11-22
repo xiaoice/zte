@@ -80,3 +80,14 @@
 
 .icon_qqfaces{font-size: 18px;color:666;}
 
+.panel_editor {padding:10px;background-color: #eee;border:1px solid #ccc; border-radius:3px;}
+.panel_editor .panel_head{}
+.panel_editor button.btn:hover, .panel_editor button.btn:focus {background-color:#428bca; color: #fff; border-color:#357ebd; text-decoration: none;}
+.panel_editor .panel_body{border-bottom-width: 0;padding-top:10px;}
+.panel_editor .editor{border:1px solid #ccc; border-radius:3px;background-color: #fff; font-size: 12px;}
+.panel_editor .editor body{font-size: 12px;}
+.panel_editor .dropdown-menu {min-width: 30px;width:auto;padding:2px;}
+.panel_editor .dropdown-menu li{border-bottom: 1px dashed rgba(0, 0, 0, 0.15);}
+.panel_editor .dropdown-menu a{font-size: 12px; padding:2px 10px;}
+.panel_editor .dropdown-menu .divider{margin:2px 10px;}
+

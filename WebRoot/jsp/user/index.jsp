@@ -33,7 +33,7 @@
 						<span class="icon-heart icon_qqfaces" title="表情"></span>
 					</div>
 					<!-- <textarea id="content" class="form-control reply_content"></textarea> -->
-					<div id="content" name="content" contenteditable="true" class="form-control reply_content"></div>
+					<iframe id="content" class="editor" width="100%" height="86" frameborder="0" designMode="on"></iframe>
 					<div class="send_panel clearfix">
 						<div class="btn-group dropup pull-right">
 						  <button id="input_ok" type="button" class="btn btn-primary btn-xs">发送消息</button>
@@ -138,8 +138,8 @@ var current_request=null;
 var service={
 		//发送消息
 		sendMsg:function(item){
-			var content=$("#content").html();
-			if(content==""){
+			var content=$("#content").contents().find("body").html();
+			if(content==""||content=="<br>"){
 				$("#content").focus();
 				return message.warn("不能发送空消息");
 			}
@@ -150,7 +150,7 @@ var service={
 			$.post("${base}message/send.action",option).done(function(result){
 				$out.append(service.getOneself(result.data));
 				service.scrollEnd();
-				$("#content").html("");
+				$("#content").contents().find("body").html("");
 			});
 		},
 		//刷新新消息列表
@@ -423,16 +423,6 @@ var service={
 	 $(".send_panel").on("click","a",function(){
 		 $(".send_panel a").removeClass("icon-ok");
 		 $(this).addClass("icon-ok");
-	 });
-	 
-	 $("#content").bind("keydown","return Ctrl+return",function(e){
-		 var value=$(".send_panel .icon-ok").attr("data-value");
-		 if(value=="return"&&e.keyCode==13 && !e.ctrlKey){
-			 service.sendMsg();
-		 }else if(value=="Ctrl+return"&&e.keyCode==13 && e.ctrlKey){
-			 service.sendMsg();
-		 }else{
-		 }
 	 });
 	 
 	 //失去焦点
