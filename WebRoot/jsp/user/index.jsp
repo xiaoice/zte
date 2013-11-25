@@ -226,23 +226,24 @@ var service={
 		//显示自己
 		getHimself:function(data){
 			var li ="<li id=\"chat_"+data.id+"\" class=\"chat_left\">"
-				+'<div class="left chat_user">'
-				+'<a href="javascript:;"><img class="border-radius-5 border-shadow-img user_img" src="${base}'+data.photo+'"/></a></div>'
-				+"<div class=\"left tip\"></div> <div class=\"border-radius-5 left chat_body\"> <a class=\"close\" href=\"javascript:;\">×</a> <p class= " 
-				+"\"content\">"+data.content+"</p> <p class=\"create_time\"><span class=\"user\"> " 
-				+"用户名："+data.sendUsername+"</span><span class=\"time\">"+data.createTime.replace("T"," ")+"</span><a href=\"javascript:;\" " 
-				+"class=\"reply hide\">回复</a></p> </div> </li>";
+				+"<div class=\"left chat_user\"><a><img class=\"border-radius-5 border-shadow-img user_img\" src=\"${base}"+data.photo+"\"/></a></div>"
+				+"<div class=\"left tip\"></div>"
+				+"<div class=\"border-radius-5 left chat_body\">"
+				+"<a class=\"close\" href=\"javascript:;\">×</a>" 
+				+"<div class=\"content\">"+data.content+"</div>" 
+				+"<div class=\"create_time\"><span class=\"user\">用户名："+data.sendUsername+"</span><span class=\"time\">"+data.createTime.replace("T"," ")+"</span><a class=\"reply hide\">回复</a></div>" 
+				+"</div></li>";
 			return li;
 		},
 		//显示他人
 		getOneself:function(data){
 			var li ="<li id=\"chat_"+data.id+"\" class=\"chat_right\">" 
-				+'<div class="right chat_user">'
-				+'<a href="javascript:;"><img class="border-radius-5 border-shadow-img user_img" src="${base}'+data.photo+'"/></a></div>'
-				+"<div class=\"right tip\"></div><div class=\"border-radius-5 right chat_body\"> <a class=\"close\" href=\"javascript:;\">×</a> <p class= " 
-				+"\"content\">"+data.content+"</p> <p class=\"create_time\"><span class=\"user\"> " 
-				+"用户名："+data.sendUsername+"</span><span class=\"time\">"+data.createTime.replace("T"," ")+"</span><a href=\"javascript:;\" " 
-				+"class=\"reply hide\">回复</a></p> </div> </li>";
+				+"<div class=\"right chat_user\"><a><img class=\"border-radius-5 border-shadow-img user_img\" src=\"${base}"+data.photo+"\"/></a></div>"
+				+"<div class=\"right tip\"></div>"
+				+"<div class=\"border-radius-5 right chat_body\"><a class=\"close\">×</a>" 
+				+"<div class=\"content\">"+data.content+"</div>" 
+				+"<div class=\"create_time\"><span class=\"user\">用户名："+data.sendUsername+"</span><span class=\"time\">"+data.createTime.replace("T"," ")+"</span><a class=\"reply hide\">回复</a></div>" 
+				+"</div></li>";
 			return li;
 		},
 		pageNext:function(){

@@ -30,6 +30,7 @@
 .chat_body .content{font-size: 12px; line-height: 24px;word-wrap: break-word;}
 .chat_body .content img,.chat_body .content iframe{width:auto;height:auto; max-width:300px; max-height:300px; border-width:0; }
 .chat_body .content ul{width:auto;height:auto;}
+.chat_body .content p{padding: 0;line-height: 18px;}
 .chat_body .create_time{padding-top: 10px;text-align: right;font-family: "宋体",Arial,Helvetica,STHeiti;font-size: 12px;}
 .chat_body .user{color: #AEAEAE; padding-right: 15px;}
 .chat_body .time{color: #AEAEAE;}
