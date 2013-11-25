@@ -4,20 +4,30 @@
  */
 
 $.fn.editor=function(options){
-	var pos,node;
+	var $this=$(this),$iframe=$this.contents(),iframe=$iframe[0];
 	var defaults={
 		parent:".chat_warp",
-		content:"#content",
 		handle:".icon_qqfaces"
 	};
 	var option=$.extend({},defaults,options);
 	var $document=$(document);
 	
-	var $iframe=$("#content").contents(),iframe=$iframe[0];
     iframe.designMode = 'on';
     iframe.open();
    	iframe.write('<link href="css/editor.css" type="text/css" rel="stylesheet" />');
+   	iframe.write('');
     iframe.close();
+    
+	//选择发送方式
+	$(".send_panel").on("click","a",function(){
+		$(".send_panel a").removeClass("icon-ok");
+		$(this).addClass("icon-ok");
+	});
+	
+	//点击发送消息
+	$("#input_ok").on("click",function(){
+		service.sendMsg();
+	});
     
     //发送消息
     $iframe.on("keydown","body",function(e){
@@ -27,14 +37,14 @@ $.fn.editor=function(options){
 			service.sendMsg();
 			return false;
 		}else if(value=="return"&&e.keyCode==13 && e.ctrlKey){
-			$("#content").focus();
+			$this.focus();
 			iframe.execCommand('InsertHtml', "", "<p></p>");
 			return false;
 		}else if(value=="Ctrl+return"&&e.keyCode==13 && e.ctrlKey){
 			service.sendMsg();
 			return false;
 		}else if(value=="Ctrl+return"&&e.keyCode==13 && !e.ctrlKey){
-			$("#content").focus();
+			$this.focus();
 			iframe.execCommand('InsertHtml', "", "<p></p>");
 			return false;
 		}else{
@@ -97,38 +107,6 @@ $.fn.editor=function(options){
 		var img=$(this).attr("url");
 		$(".panel_qqfaces").removeClass("qqfaces_offset");
 		iframe.execCommand('InsertImage', false, img);
-		$("#content").focus();
+		$this.focus();
 	});
-	
-	//获取光标
-	function getCursortPosition (ctrl,d) {
-		var CaretPos = 0;	// IE Support
-		if (d.selection) {
-			ctrl.focus ();
-			var Sel = d.selection.createRange ();
-			Sel.moveStart ('character', -ctrl.value.length);
-			CaretPos = Sel.text.length;
-		}
-		// Firefox support
-		else if (ctrl.selectionStart || ctrl.selectionStart == '0')
-			CaretPos = ctrl.selectionStart;
-		return (CaretPos);
-	}
-	
-	//设置光标
-	function setCaretPosition(ctrl, pos){
-		if(ctrl.setSelectionRange)
-		{
-			ctrl.focus();
-			ctrl.setSelectionRange(pos,pos);
-		}
-		else if (ctrl.createTextRange) {
-			var range = ctrl.createTextRange();
-			range.collapse(true);
-			range.moveEnd('character', pos);
-			range.moveStart('character', pos);
-			range.select();
-		}
-	}
-	
-}
+};

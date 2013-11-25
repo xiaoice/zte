@@ -16,6 +16,15 @@
 		<url-pattern>/ajax.do</url-pattern>
 	</servlet-mapping>
 	
+	<servlet>
+		<servlet-name>thread</servlet-name>
+		<servlet-class>com.zte.framework.thread.TestSingleThreadExecutor</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>thread</servlet-name>
+		<url-pattern>/thread.htm</url-pattern>
+	</servlet-mapping>
+	
 	
 	<filter>
 		<filter-name>struts2</filter-name>

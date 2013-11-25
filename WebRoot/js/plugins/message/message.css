@@ -1,7 +1,7 @@
 @CHARSET "UTF-8";
 
 .message_box,.message_box_small{position:absolute; z-index:99999; background-color:#EDF3FF; border: 1px solid #91B5D6;border-radius:5px;box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.2);}
-.message_box{padding:20px 10px; width:180px; max-width:280px;}
+.message_box{padding:20px 10px; min-width:180px; max-width:280px;}
 .message_box_small{padding:15px 7px; width:160px; max-width:280px;}
 .message_box .message_content{position:relative; font-weight:bolder;padding-left: 32px;padding-top:4px;*padding-top:6px; height: auto; min-height:24px;}
 .message_box .message_content_wait{padding-left: 0px;padding-top:8px;*padding-top:10px;text-align: center;min-height:20px;}

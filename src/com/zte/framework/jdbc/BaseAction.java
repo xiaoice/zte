@@ -1,5 +1,7 @@
 package com.zte.framework.jdbc;
 
+import java.util.Map;
+
 import org.springframework.context.ApplicationContext;
 
 import com.opensymphony.xwork2.ActionContext;
@@ -8,6 +10,7 @@ import com.zte.framework.util.SysConfigHelper;
 import com.zte.user.domain.User;
 
 public class BaseAction extends ActionSupport {
+	protected Map<String,String> parameter;
 	
 	/**
 	 * 获取服务器目录
@@ -93,6 +96,14 @@ public class BaseAction extends ActionSupport {
 	 */
 	public ApplicationContext getApplicationContext(){
 		return SysConfigHelper.getAppContext();
+	}
+
+	public Map<String, String> getParameter() {
+		return parameter;
+	}
+
+	public void setParameter(Map<String, String> parameter) {
+		this.parameter = parameter;
 	}
 	
 }
