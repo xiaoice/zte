@@ -9,7 +9,6 @@
 <%@include file="/jsp/common/bootstrap.jsp"%>
 <link type="text/css" href="${base}js/plugins/message/message.css" rel="stylesheet" />
 <script src="${base}js/plugins/message/message.js"></script>
-<script src="${base}js/jquery/jquery.hotkeys.js"></script>
 <script src="${base}js/editor.js"></script>
 <link type="text/css" href="${base}css/chat.css" rel="stylesheet" />
 </head>
@@ -69,32 +68,12 @@
 					<div class="list-group chat_user_list">
 						<div class="chat_user_group clearfix chat_user_group_active">
 							<div class="chat_user_group_head"><em class="ui-icon ui-icon-triangle-1-e chat_user_group_dot"></em>我的好友</div>
-							<div class="chat_user_group_body">
-							  <s:iterator value="userList" var="t">
-							  	 <a class="chat_user_item clearfix" friendId="${t.friend.id}">
-							  	 	<img class="user_img pull-left" src="${t.friend.photo}"/>
-							  	 	<div class="chat_user_item_name">
-							  	 		<div class="chat_user_group_title">${t.friend.name}</div>
-							  	 		<div class="chat_user_group_history">127.0.0.1</div>
-							  	 	</div>
-							  	 </a>
-							  </s:iterator>
-							</div>
+							<div id="userList" class="chat_user_group_body"></div>
 						</div>
 						
 						<div class="chat_user_group clearfix">
 							<div class="chat_user_group_head"><em class="ui-icon ui-icon-triangle-1-e chat_user_group_dot"></em>陌生人</div>
-							<div class="chat_user_group_body">
-							  <s:iterator value="friendList" var="t">
-							  	 <a class="chat_user_item clearfix" friendId="${t.user.id}">
-							  	 	<img class="user_img pull-left" src="${t.user.photo}"/>
-							  	 	<div class="chat_user_item_name">
-							  	 		<div class="chat_user_group_title">${t.user.name}</div>
-							  	 		<div class="chat_user_group_history">127.0.0.1</div>
-							  	 	</div>
-							  	 </a>
-							  </s:iterator>
-							</div>
+							<div id="friendList" class="chat_user_group_body"></div>
 						</div>
 					</div>
 
@@ -131,7 +110,6 @@ var page={
 	pageSize:10		//每页显示10条
 };
 var $out=$(".chat_warp_out_ui"),$more=$(".more_message"),$blank=$(".chat_blank"),$wait=$(".chat_wait");
-var timer_user=null;
 //轮询回调控制计数器
 var ajax_loop=0;
 var current_request=null;
@@ -275,11 +253,29 @@ var service={
 				}
 			});
 		},
-		//循环获取消息
-		timer:function(){
-			return setInterval(function(){
-				//service.getNewMessageList();
-			},2000);
+		//查找用户列表信息
+		findUserListAjax:function(){
+			$.get("user/findUserListAjax.action",function(result){
+				$("#userList").html(service.createUserDiv(result.data.userList));
+				$("#friendList").html(service.createUserDiv(result.data.friendList));
+			});
+		},
+		//创建用户列表信息
+		createUserDiv:function(data){
+			var div="";
+			if(typeof data=="object"){
+				for(var i=0,j=data.length;i<j;i++){
+					var item=data[i];
+					div+="<a class=\"chat_user_item clearfix\" friendId="+item.friend.id+">";
+					div+="<img class=\"user_img pull-left\" src=\""+item.friend.photo+"\"/>";
+					div+="<div class=\"chat_user_item_name\">";
+					div+="	<div class=\"chat_user_group_title\">"+item.friend.name+"</div>";
+					div+="<div class=\"chat_user_group_history\">127.0.0.1</div>";
+			  	 	div+="</div>";
+			  	 	div+="</a>";
+				}
+			}
+		  	return div;
 		},
 		//滚屏置底
 		scrollEnd:function(){
@@ -305,7 +301,7 @@ var service={
 	});
 	
 	//单击用户
-	$(".chat_user_item").on("click",function(){
+	$(".chat_user_group_body").on("click",".chat_user_item",function(){
 		var $this=$(this);
 		var friendId=$this.attr("friendId"),
 			friendName=$this.find(".chat_user_group_title").html();
@@ -318,15 +314,6 @@ var service={
 		service.waitShow();
 		service.getNewMessageList(service.loopMessage());
 		page.pageIndex=1;
-		if(timer_user!=null){
-			clearInterval(timer_user);
-		}
-		timer_user=service.timer();
-	});
-	
-	//点击发送消息
-	$("#input_ok").on("click",function(){
-		service.sendMsg();
 	});
 	
 	//点击加载更早记录
@@ -419,27 +406,9 @@ var service={
 		 $this.toggleClass("checked");
 	 });
 	 
-	 //选择发送方式
-	 $(".send_panel").on("click","a",function(){
-		 $(".send_panel a").removeClass("icon-ok");
-		 $(this).addClass("icon-ok");
-	 });
-	 
-	 //失去焦点
-	 window.onblur = function(){
-		 if(timer_user!=null){
-			clearInterval(timer_user);
-		 }
-     };
-	 
-	 //得到焦点
-     window.onfocus = function(){
-    	 if(timer_user!=null){
-    		 //message.info("欢迎回来！");
-    	 }
-    	 timer_user=service.timer();
-     };
-     $.fn.editor();
+	 service.findUserListAjax();
+	 //启用编辑器组件
+	 $("#content").editor();
 </script>
 
 

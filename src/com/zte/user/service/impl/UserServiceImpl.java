@@ -28,13 +28,13 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
 	}
 
 	@Override
-	public List<Map<String, String>> findListByPage(Map<String, Object> parameter) {
-		return userDao.findListByPage(parameter);
+	public List<Map<String, String>> findPageListByname(Map<String, Object> parameter) {
+		return userDao.findPageListByname(parameter);
 	}
 
 	@Override
-	public int findListCountByPage(Map<String, Object> parameter) {
-		return userDao.findListCountByPage(parameter);
+	public int findPageListCountByname(Map<String, Object> parameter) {
+		return userDao.findPageListCountByname(parameter);
 	}
 
 	@Override

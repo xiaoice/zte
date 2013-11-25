@@ -5,31 +5,34 @@
 	
 <struts>
 	<package name="struts-user" extends="struts-intercept" namespace="/user">
-		<!-- <action name="user_*" class="userAction" method="{1}">
-			<result name="index" type="dispatcher">/jsp/user/index.jsp</result>
-			<result name="reg" type="dispatcher">/jsp/user/reg.jsp</result>
-			<result name="login" type="dispatcher">/jsp/user/login.jsp</result>
-		</action>
 
-		-->
-		
 		<action name="user_*">
 			<result type="dispatcher">/jsp/user/{1}.jsp</result>
 		</action>
 		
-		<action name="index" class="userAction" method="index">
-			<result type="dispatcher">/jsp/user/index.jsp</result>
-		</action>
+		<!-- 修改用户信息 -->
 		<action name="updateUserinfo" class="userAction" method="updateUserinfo">
 			<result name="success" type="redirectAction">user_update_success</result>
 			<result name="error" type="dispatcher">/jsp/user/userinfo.jsp</result>
 		</action>
 		
-		<action name="findListByPage" class="userAction" method="findListByPage">
+		<!-- 根据用户名分页查找信息 -->
+		<action name="findPageListByname" class="userAction" method="findListByPage">
 			<result name="json" type="json"><param name="root">ajaxUtil</param></result>
 		</action>
 		
-		<action name="saveUserFriend" class="userAction" method="saveUserFriend">
+		<!-- 用户中心首页 -->
+		<action name="index" class="userFriendAction" method="userIndex">
+			<result type="dispatcher">/jsp/user/index.jsp</result>
+		</action>
+		
+		<!-- 加为好友 -->
+		<action name="saveUserFriend" class="userFriendAction" method="saveUserFriend">
+			<result name="json" type="json"><param name="root">ajaxUtil</param></result>
+		</action>
+		
+		<!-- 用户中心首页 -->
+		<action name="findUserListAjax" class="userFriendAction" method="findUserListAjax">
 			<result name="json" type="json"><param name="root">ajaxUtil</param></result>
 		</action>
 		

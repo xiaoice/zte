@@ -13,8 +13,6 @@ import org.springframework.stereotype.Controller;
 import com.zte.framework.util.AjaxAction;
 import com.zte.framework.util.DateUtil;
 import com.zte.framework.util.Page;
-import com.zte.message.domain.Message;
-import com.zte.message.util.MessageConstant;
 import com.zte.user.domain.User;
 import com.zte.user.domain.UserFriend;
 import com.zte.user.service.UserFriendService;
@@ -27,7 +25,6 @@ public class UserAction extends AjaxAction{
 	private UserService userService;
 	@Resource(name="userFriendServiceImpl")
 	private UserFriendService userFriendService;
-	Map<String,String> parameter;
 	
 	//登录
 	public String session(){
@@ -103,22 +100,8 @@ public class UserAction extends AjaxAction{
 		return INPUT;
 	}
 	
-	//用户消息中心
-	public String index(){
-		Integer userId=getUserId();
-		if(userId!=null){
-			Map<String,Object> map=new HashMap<String, Object>();
-			map.put("userId", userId);
-			List<Map<String, Object>> userList = userFriendService.findByUserId(map);
-			List<Map<String, Object>> friendList = userFriendService.findByFriendId(map);
-			setContextProperty("userList", userList);
-			setContextProperty("friendList", friendList);
-		}
-		return SUCCESS;
-	}
-	
-	//根据条件进行分页
-	public String findListByPage(){
+	//根据用户名分页-查找好友
+	public String findPageListByname(){
 		if(!(parameter!=null&&parameter.containsKey("pageIndex")&&StringUtils.isNotBlank(parameter.get("pageIndex")) 
 							&& parameter.containsKey("pageSize")&&StringUtils.isNotBlank(parameter.get("pageSize"))
 							//&&parameter.containsKey("name")&&StringUtils.isNotBlank(parameter.get("name")
@@ -132,8 +115,8 @@ public class UserAction extends AjaxAction{
 		map.put("name", parameter.get("name"));
 		map.put("startNum", Page.getStartNum(pageIndex, pageSize));
 		map.put("endNum",Page.getEndNum(pageIndex, pageSize));
-		List<Map<String,String>> list =userService.findListByPage(map);
-		int pageTotal = userService.findListCountByPage(map);
+		List<Map<String,String>> list =userService.findPageListByname(map);
+		int pageTotal = userService.findPageListCountByname(map);
 		Page<Map<String,String>> page=new Page<Map<String,String>>(pageIndex,pageSize,list,pageTotal);
 		return ajaxUtil.setSuccess(page);
 	}
@@ -157,33 +140,5 @@ public class UserAction extends AjaxAction{
 			setContextProperty("result_tip", ERROR);
 			return ERROR;
 		}
-	}
-	
-	//加为好友
-	public String saveUserFriend(){
-		if(!(parameter!=null&&parameter.containsKey("friendId")&&StringUtils.isNotBlank(parameter.get("friendId")))){
-			return ajaxUtil.setFail("参数错误！");
-		}
-		
-		String friendId=parameter.get("friendId");
-		String[] friendIds=friendId.split(",");
-		for(String friendid : friendIds){
-			UserFriend userFriend = new UserFriend();
-			userFriend.setCreateBy(getUser().getUsername());
-			userFriend.setCreateTime(DateUtil.getCurrentDateTime());
-			userFriend.setFriendId(Integer.valueOf(friendid));
-			userFriend.setStatus("1");
-			userFriend.setUserId(getUserId());
-			userFriendService.insert(userFriend);
-		}
-		return ajaxUtil.setSuccess();
-	}
-
-	public Map<String, String> getParameter() {
-		return parameter;
-	}
-
-	public void setParameter(Map<String, String> parameter) {
-		this.parameter = parameter;
 	}
 }

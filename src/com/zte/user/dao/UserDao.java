@@ -19,14 +19,14 @@ public interface UserDao {
 	 * @param parameter
 	 * @return
 	 */
-	List<Map<String,String>> findListByPage(Map<String,Object> parameter);
+	List<Map<String,String>> findPageListByname(Map<String,Object> parameter);
 	
 	/**
 	 * 根据用户名等条件进行分页查找总数
 	 * @param parameter
 	 * @return
 	 */
-	int findListCountByPage(Map<String,Object> parameter);
+	int findPageListCountByname(Map<String,Object> parameter);
 	
 	int insert(User user);
 	int update(User user);
