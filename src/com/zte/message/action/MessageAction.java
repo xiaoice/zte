@@ -5,13 +5,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.sf.json.JSONObject;
+
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.zte.framework.jdbc.MapUtil;
+import com.zte.framework.cache.CacheMessage;
 import com.zte.framework.util.AjaxAction;
 import com.zte.framework.util.DateUtil;
 import com.zte.framework.util.Page;
@@ -44,9 +45,11 @@ public class MessageAction extends AjaxAction {
 			message.setFriendId(friendId);
 			message.setCreateTime(DateUtil.getCurrentDateTime());
 			messageService.insert(message);
-			Map<String,Object> map =MapUtil.fromObject(message);
-			map.put("photo", user.getPhoto());
-			ajaxUtil.setSuccess("发送成功！",map);
+			//Map<String,Object> map =MapUtil.fromObject(message);
+			JSONObject jo=JSONObject.fromObject(message);
+			jo.accumulate("photo", user.getPhoto());
+			CacheMessage.putCache(friendId, jo);
+			ajaxUtil.setSuccess("发送成功！",jo);
 		}else{
 			ajaxUtil.setFail("发送失败！");
 		}
@@ -78,19 +81,20 @@ public class MessageAction extends AjaxAction {
 		}
 		
 		Map<String,Object> map=new HashMap<String, Object>();
-		int friendId=Integer.valueOf(parameter.get("friendId"));
+		int userId=getUserId(),friendId=Integer.valueOf(parameter.get("friendId"));
 		map.put("userId", friendId);
-		map.put("friendId", getUserId());
+		map.put("friendId", userId);
 		map.put("createBy", getUser().getUsername());
 		List<Map<String,Object>> list=new ArrayList<Map<String,Object>>();
 		for(int i=0;i<20&&list.size()==0;i++){
-			System.out.println("用户 "+map.get("createBy")+" 第"+i+"次查询数据库！");
 			if(getUser()==null){
 				return ajaxUtil.setFail("请重新登录！");
 			}
-			list = messageService.getMessageList(map);
-			if(list.size()>0){
-				return ajaxUtil.setSuccess(list);
+			//list = messageService.getMessageList(map);
+			List<JSONObject> chcheMessageList=CacheMessage.getCache(userId);
+			if(chcheMessageList!=null&&chcheMessageList.size()>0){
+				CacheMessage.remove(userId);
+				return ajaxUtil.setSuccess(chcheMessageList);
 			}
 			Thread.sleep(1000);
 		}
