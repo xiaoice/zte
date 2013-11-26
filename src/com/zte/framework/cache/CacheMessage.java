@@ -55,4 +55,22 @@ public class CacheMessage {
 	public static void remove(Integer key){
 		remove(String.valueOf(key));
 	}
+	
+	public static void removeCache(Integer key,String strIds){
+		removeCache(String.valueOf(key), strIds);
+	}
+	public static void removeCache(String key,String strIds){
+		List<JSONObject> list= getCache(key);
+		String[] ids=strIds.split(",");
+		if(list!=null){
+			for(int i=0;i<list.size();i++){
+				String j_id=String.valueOf(list.get(i).get("id"));
+				for(String id:ids){
+					if(j_id.equals(id)){
+						list.remove(i);
+					}
+				}
+			}
+		}
+	}
 }

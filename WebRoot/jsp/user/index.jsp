@@ -184,9 +184,9 @@ var service={
 						service.updateMsgRead(ids);
 						service.scrollEnd();
 					}
-					if(ajax_loop>1){
-					}else{
-						//重新轮询
+					
+					//递归-重新轮询
+					if(ajax_loop<=1){
 						service.loopMessage(); 
 					}
 					ajax_loop--;

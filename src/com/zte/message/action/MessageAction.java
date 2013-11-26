@@ -93,7 +93,6 @@ public class MessageAction extends AjaxAction {
 			//list = messageService.getMessageList(map);
 			List<JSONObject> chcheMessageList=CacheMessage.getCache(userId);
 			if(chcheMessageList!=null&&chcheMessageList.size()>0){
-				CacheMessage.remove(userId);
 				return ajaxUtil.setSuccess(chcheMessageList);
 			}
 			Thread.sleep(1000);
@@ -146,11 +145,14 @@ public class MessageAction extends AjaxAction {
 		else if(!parameter.containsKey("ids")){
 			return ajaxUtil.setFail("参数错误！");
 		}
+		Integer userId=user.getId();
+		String ids=parameter.get("ids");
 		Map<String,Object> map=new HashMap<String, Object>();
 		
-		map.put("friendId", user.getId());
-		map.put("ids", parameter.get("ids"));
+		map.put("friendId", userId);
+		map.put("ids", ids);
 		try{
+			CacheMessage.removeCache(userId, ids);
 			int result =messageService.updateMessageIsRead(map);
 			if(result==0){
 				return ajaxUtil.setFail("数据更新完成，但均未成功！");
