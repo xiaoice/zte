@@ -28,7 +28,7 @@
     </select>
 	
 	<!-- 根据用户名分页查询用户信息 -->
-	<select id="findListByPage" parameterType="hashMap" resultType="hashMap">
+	<select id="findPageListByname" parameterType="hashMap" resultType="hashMap">
 		select id,username,name,photo,age from user u where u.id not in (
 			select f.friendid from userFriend f where f.userid=#{userId} 
 		) and u.id !=#{userId}
@@ -39,7 +39,7 @@
     </select>
     
     <!-- 根据用户名分页查询用户总数 -->
-	<select id="findListCountByPage" parameterType="hashMap" resultType="int">
+	<select id="findPageListCountByname" parameterType="hashMap" resultType="int">
 		select count(1) from user u where u.id not in (
 			select f.friendid from userFriend f where f.userid=#{userId} 
 		) and u.id !=#{userId}

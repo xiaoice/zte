@@ -395,8 +395,9 @@ var service={
 		 		}
 		 		$.post("${base}user/saveUserFriend.action",{"parameter.friendId":friendIds.join(",")},function(result){
 					 if(typeof result=="object"&&result.recode==1){
-						 message.ok("操作完毕！");
-						 window.location.reload();
+						 message.ok("操作成功！");
+						 service.findUserListAjax();
+						 //window.location.reload();
 					 }
 					 else{
 						 message.error("添加失败！");
@@ -423,7 +424,7 @@ var service={
 		 if(text_search==""){
 			 //return alert("请输入用户名！");
 		 }
-		 $.post("${base}user/findListByPage.action",{"parameter.pageIndex":1,"parameter.pageSize":100,"parameter.name":text_search},function(result){
+		 $.post("${base}user/findPageListByname.action",{"parameter.pageIndex":1,"parameter.pageSize":100,"parameter.name":text_search},function(result){
 			 if(typeof result=="object"&&result.data!=null&&result.data.list!=null){
 				 if(result.data.list.length!=0){
 					 var data =result.data.list;

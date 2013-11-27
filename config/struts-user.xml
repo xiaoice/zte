@@ -17,7 +17,7 @@
 		</action>
 		
 		<!-- 根据用户名分页查找信息 -->
-		<action name="findPageListByname" class="userAction" method="findListByPage">
+		<action name="findPageListByname" class="userAction" method="findPageListByname">
 			<result name="json" type="json"><param name="root">ajaxUtil</param></result>
 		</action>
 		
