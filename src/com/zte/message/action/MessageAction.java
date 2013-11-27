@@ -79,6 +79,9 @@ public class MessageAction extends AjaxAction {
 		if(!(parameter!=null&&parameter.containsKey("friendId")&&StringUtils.isNotBlank(parameter.get("friendId")))){
 			return ajaxUtil.setFail("参数错误！");
 		}
+		if(getUser()==null){
+			return ajaxUtil.setFail("请重新登录！");
+		}
 		
 		Map<String,Object> map=new HashMap<String, Object>();
 		int userId=getUserId(),friendId=Integer.valueOf(parameter.get("friendId"));
@@ -86,47 +89,24 @@ public class MessageAction extends AjaxAction {
 		map.put("friendId", userId);
 		map.put("createBy", getUser().getUsername());
 		List<Map<String,Object>> list=new ArrayList<Map<String,Object>>();
+		List<Map<String, String>> unReadMessageCount=messageService.getUnReadMessageCount(map);
 		for(int i=0;i<20&&list.size()==0;i++){
-			if(getUser()==null){
-				return ajaxUtil.setFail("请重新登录！");
-			}
+			JSONObject jo=new JSONObject();
+			jo.accumulate("COUNT", unReadMessageCount);
 			//list = messageService.getMessageList(map);
-			List<JSONObject> chcheMessageList=CacheMessage.getCache(userId);
+			List<JSONObject> chcheMessageList=CacheMessage.getCache(userId,friendId);
 			if(chcheMessageList!=null&&chcheMessageList.size()>0){
 				CacheMessage.removeCacheTimeOut(userId);
-				return ajaxUtil.setSuccess(formatMessageList(chcheMessageList, String.valueOf(userId)));
+				jo.accumulate("DATA", chcheMessageList);
+				return ajaxUtil.setSuccess(jo);
+			}
+			if(i%8==7&&unReadMessageCount!=null&&unReadMessageCount.size()>0){
+				return ajaxUtil.setSuccess(jo);
 			}
 			Thread.sleep(1000);
 		}
 		return ajaxUtil.setFail("暂无消息！");
 	}
-	
-	/**
-	 * 格式化缓存的消息列表
-	 * @param chcheMessageList
-	 * @return
-	 */
-	private JSONObject formatMessageList(List<JSONObject> list,String jsonName){
-		JSONObject jo=new JSONObject();
-		Map<String,List<JSONObject>> map=new HashMap<String, List<JSONObject>>();
-		for(JSONObject json :list){
-			String key=String.valueOf(json.get("friendId"));
-			if(!map.containsKey(key)){
-				map.put(key,new ArrayList<JSONObject>());
-			}
-			map.get(key).add(json);
-		}
-		for(String key : map.keySet()){
-			if(!key.equals(jsonName)){
-				jo.accumulate(key, map.get(key).size());
-			}
-			else{
-				jo.accumulate(key, map.get(key));
-			}
-		}
-		return jo;
-	}
-	
 	
 	
 /*	//获取消息总数

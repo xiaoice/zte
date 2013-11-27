@@ -113,7 +113,7 @@ var page={
 var $out=$(".chat_warp_out_ui"),$more=$(".more_message"),$blank=$(".chat_blank"),$wait=$(".chat_wait");
 //轮询回调控制计数器
 var ajax_loop=0;
-var current_request=null;
+var current_request=null,index_request=null,index_request_stop=false;
 var service={
 		//发送消息
 		sendMsg:function(item){
@@ -136,41 +136,11 @@ var service={
 		getNewMessageList:function(callback){
 			$.get("message/getMessageList.action?parameter.friendId="+$("#friendId").val()).done(function(result){
 				$wait.hide();
-				if(typeof result=="object" && result.data!=null && result.data.length>0){
-					var ids=[],msgListCache=[],data=result.data;
-					for(var i=0,j=data.length;i<j;i++){
-						var item=result.data[i];
-						if($("#chat_"+item.id).size()==0){
-				    		if(item.createBy==$("#username").val()){
-				    			msgListCache.push(service.getOneself(item));
-							}
-							else{
-								msgListCache.push(service.getHimself(item));
-							}
-				    		ids.push(item.id);
-						}
-			    	}
-					$out.append(msgListCache);
-					service.updateMsgRead(ids);
-					service.scrollEnd();
-					callback&&callback();
-				}
-			});
-		},
-		//轮询新消息
-		loopMessage:function(){
-			ajax_loop++;
-			if(current_request!=null){
-				current_request.abort();
-				ajax_loop--;
-			}
-			current_request=$.get("message/loopMessage.action?parameter.friendId="+$("#friendId").val()).done(function(result){
-				$wait.hide();
 				if(typeof result=="object"){
-					var userid=$("#userid").val(),ids=[],msgListCache=[],data=!!result.data?result.data[userid]:[];
-					if(!!data&&data.length>0){
+					if(result.data!=null && result.data.length>0){
+						var ids=[],msgListCache=[],data=result.data;
 						for(var i=0,j=data.length;i<j;i++){
-							var item=data[i];
+							var item=result.data[i];
 							if($("#chat_"+item.id).size()==0){
 					    		if(item.createBy==$("#username").val()){
 					    			msgListCache.push(service.getOneself(item));
@@ -184,6 +154,49 @@ var service={
 						$out.append(msgListCache);
 						service.updateMsgRead(ids);
 						service.scrollEnd();
+					}else{
+						callback&&callback();
+					}
+				}
+			});
+		},
+		//轮询新消息
+		loopMessage:function(){
+			ajax_loop++;
+			if(current_request!=null){
+				current_request.abort();
+				ajax_loop--;
+			}
+			current_request=$.get("message/loopMessage.action?parameter.friendId="+$("#friendId").val()).done(function(result){
+				$wait.hide();
+				if(typeof result=="object"){
+					var userid=$("#userid").val(),ids=[],msgListCache=[],DATA=!!result.data?result.data.DATA:[],COUNT=!!result.data?result.data.COUNT:[];
+					if(!!DATA&&DATA.length>0){
+						for(var i=0,j=DATA.length;i<j;i++){
+							var item=DATA[i];
+							if($("#chat_"+item.id).size()==0){
+					    		if(item.createBy==$("#username").val()){
+					    			msgListCache.push(service.getOneself(item));
+								}
+								else{
+									msgListCache.push(service.getHimself(item));
+								}
+					    		ids.push(item.id);
+							}
+				    	}
+						$out.append(msgListCache);
+						service.updateMsgRead(ids);
+						service.scrollEnd();
+					}
+					for(var i in COUNT){
+						var count=COUNT[i].count,friendId=COUNT[i].friendId;
+						var $user=$("#user_"+friendId),$friend=$("#user_"+$("#friendId").val());
+						if($user.size()>0){
+							$user.html(count).show();
+						}else{
+							$user.hide();
+						}
+						$friend.hide();
 					}
 					
 					//递归-重新轮询
@@ -257,9 +270,27 @@ var service={
 		},
 		//查找用户列表信息
 		findUserListAjax:function(){
-			$.get("user/findUserListAjax.action",function(result){
+			if(index_request!=null){
+				index_request.abort();
+			}
+			index_request=$.get("user/findUserListAjax.action",function(result){
 				$("#friendList").html(service.createFriendDiv(result.data.friendList));
 				$("#stranger").html(service.createStrangerDiv(result.data.stranger));
+				var COUNT=result.data.count;
+				for(var i in COUNT){
+					var count=COUNT[i].count,friendId=COUNT[i].friendId;
+					var $user=$("#user_"+friendId);
+					if($user.size()>0){
+						$user.html(count).show();
+					}else{
+						$user.hide();
+					}
+				}
+				if(!index_request_stop){
+					setTimeout(function(){
+						service.findUserListAjax();
+					},5000);
+				}
 			});
 		},
 		//创建用户列表信息
@@ -274,7 +305,7 @@ var service={
 					div+="<div class=\"chat_user_group_title\">"+item[type].name+"</div>";
 					div+="<div class=\"chat_user_group_history\">127.0.0.1</div>";
 			  	 	div+="</div>";
-			  	 	div+="<div class=\"chat_user_group_count\">12</div>";
+			  	 	div+="<span id=\"user_"+item[type].id+"\" class=\"chat_user_group_count\">0</span>";
 			  	 	div+="</a>";
 				}
 			}
@@ -317,13 +348,18 @@ var service={
 		var friendId=$this.attr("friendId"),
 			friendName=$this.find(".chat_user_group_title").html();
 		$(".chat_user_group_body .chat_user_item").removeClass("chat_user_item_focus");
+		$this.find(".chat_user_group_count").hide();
 		$this.addClass("chat_user_item_focus");
 		$("#friendId").val(friendId);
 		$("#chat_title").html("我与"+friendName+"的聊天");
 		service.clear();
 		$blank.hide();
 		service.waitShow();
-		service.getNewMessageList(service.loopMessage());
+		service.getNewMessageList(function(){
+			service.loopMessage();
+			index_request.abort();
+			index_request_stop=true;//停止主定时器
+		});
 		page.pageIndex=1;
 	});
 	

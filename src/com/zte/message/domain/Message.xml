@@ -31,6 +31,11 @@
 		select count(1) from message where (userId=#{userId} and friendId=#{friendId} or (userId=#{friendId} and friendId=#{userId} and isRead=#{isRead})) and isDel=0
     </select>
     
+    <!-- 获取未读的新消息列表总数 -->
+	<select id="getUnReadMessageCount" resultType="hashMap" parameterType="hashMap">
+		select userId as friendId,count(userId) as count from message where friendId=#{friendId} and isRead=0 and isDel=0 GROUP BY userId 
+    </select>
+    
     <!-- 分页获取消息列表 -->
     <select id="findMessageListByPage" resultType="hashMap" parameterType="hashMap">
 		select m.*,u.photo from message m,user u where u.id=m.userid and (userId=#{userId} and friendId=#{friendId} or (userId=#{friendId} and friendId=#{userId} and isRead=#{isRead})) and isDel=0 

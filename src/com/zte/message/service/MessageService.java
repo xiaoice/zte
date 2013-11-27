@@ -19,5 +19,7 @@ public interface MessageService extends BaseService<Message>{
 	public List<Map<String,Object>> findMessageListByPage(Map<String,Object> map);
 
 	public int updateMessageIsRead(Map<String, Object> map);
-
+	
+	//获取未读的新消息列表总数
+	public List<Map<String,String>> getUnReadMessageCount(Map<String, Object> map);
 }

@@ -19,7 +19,7 @@ public class CacheMessage {
 	}
 	
 	public static void putCache(String key,JSONObject message){
-		if(cacheMessageList.containsKey(key)){
+		if(cacheMessageList.containsKey(key)&&cacheMessageList.get(key)!=null){
 			cacheMessageList.get(key).add(message);
 		}else{
 			List<JSONObject> list=new ArrayList<JSONObject>();
@@ -28,17 +28,52 @@ public class CacheMessage {
 		}
 	}
 	
-	public static List<JSONObject> getCache(Integer key){
-		return getCache(String.valueOf(key));
+	public static List<JSONObject> getCache(int userId,int friendId){
+		return getCache(String.valueOf(userId), String.valueOf(friendId));
 	}
 	
-	public static List<JSONObject> getCache(String key){
-		if(cacheMessageList.containsKey(key)){
-			List<JSONObject> list=cacheMessageList.get(key);
+	public static List<JSONObject> getCache(int userId){
+		return getCache(String.valueOf(userId));
+	}
+	
+	/**
+	 * 用户ID，指定的朋友Id
+	 * @param userId
+	 * @param friendId
+	 * @return
+	 */
+	public static List<JSONObject> getCache(String userId,String friendId){
+		if(cacheMessageList.containsKey(userId)){
+			List<JSONObject> list=cacheMessageList.get(userId);
 			List<JSONObject> resultList=new ArrayList<JSONObject>();
 			if(list!=null){
 				for(JSONObject jo:list){
-					System.out.println(jo);
+					if(String.valueOf(jo.get("userId")).equals(friendId)){
+						if(jo.containsKey("TIMEOUT")){
+							long timeout = Long.valueOf(String.valueOf(jo.get("TIMEOUT")));
+							System.out.println(timeout+"|"+new Date().getTime());
+							if(timeout<new Date().getTime()){
+								jo.remove("TIMEOUT");
+								resultList.add(jo);
+							}
+						}else{
+							resultList.add(jo);
+						}
+					}
+				}
+			}
+			return resultList;
+		}else{
+			return null;
+		}
+	}
+	
+	public static List<JSONObject> getCache(String userId){
+		if(cacheMessageList.containsKey(userId)){
+			List<JSONObject> list=cacheMessageList.get(userId);
+			List<JSONObject> resultList=new ArrayList<JSONObject>();
+			if(list!=null){
+				for(JSONObject jo:list){
 					if(jo.containsKey("TIMEOUT")){
 						long timeout = Long.valueOf(String.valueOf(jo.get("TIMEOUT")));
 						System.out.println(timeout+"|"+new Date().getTime());
