@@ -29,10 +29,10 @@ public class UserFriendAction extends AjaxAction{
 		if(userId!=null){
 			Map<String,Object> map=new HashMap<String, Object>();
 			map.put("userId", userId);
-			List<Map<String, Object>> userList = userFriendService.findByUserId(map);
-			List<Map<String, Object>> friendList = userFriendService.findByFriendId(map);
-			setContextProperty("userList", userList);
+			List<Map<String, Object>> friendList = userFriendService.findByUserId(map);
+			List<Map<String, Object>> stranger = userFriendService.findByFriendId(map);
 			setContextProperty("friendList", friendList);
+			setContextProperty("stranger", stranger);
 		}
 		return SUCCESS;
 	}
@@ -44,10 +44,10 @@ public class UserFriendAction extends AjaxAction{
 		if(userId!=null){
 			Map<String,Object> map=new HashMap<String, Object>();
 			map.put("userId", userId);
-			List<Map<String, Object>> userList = userFriendService.findByUserId(map);
-			List<Map<String, Object>> friendList = userFriendService.findByFriendId(map);
-			jo.accumulate("userList", userList);
+			List<Map<String, Object>> friendList = userFriendService.findByUserId(map);
+			List<Map<String, Object>> stranger = userFriendService.findByFriendId(map);
 			jo.accumulate("friendList", friendList);
+			jo.accumulate("stranger", stranger);
 			return ajaxUtil.setSuccess(jo);
 		}
 		return ajaxUtil.setFail(jo);

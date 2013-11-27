@@ -13,6 +13,7 @@
 <link type="text/css" href="${base}css/chat.css" rel="stylesheet" />
 </head>
 <body>
+	<input id="userid" type="hidden" value="${user.id}"/>
 	<input id="username" type="hidden" value="${user.username}"/>
 	<input id="friendId" type="hidden" value="10000"/>
 	<div class="container">
@@ -68,12 +69,12 @@
 					<div class="list-group chat_user_list">
 						<div class="chat_user_group clearfix chat_user_group_active">
 							<div class="chat_user_group_head"><em class="ui-icon ui-icon-triangle-1-e chat_user_group_dot"></em>我的好友</div>
-							<div id="userList" class="chat_user_group_body"></div>
+							<div id="friendList" class="chat_user_group_body"></div>
 						</div>
 						
 						<div class="chat_user_group clearfix">
 							<div class="chat_user_group_head"><em class="ui-icon ui-icon-triangle-1-e chat_user_group_dot"></em>陌生人</div>
-							<div id="friendList" class="chat_user_group_body"></div>
+							<div id="stranger" class="chat_user_group_body"></div>
 						</div>
 					</div>
 
@@ -166,10 +167,10 @@ var service={
 			current_request=$.get("message/loopMessage.action?parameter.friendId="+$("#friendId").val()).done(function(result){
 				$wait.hide();
 				if(typeof result=="object"){
-					if(result.data!=null && result.data.length>0){
-						var ids=[],msgListCache=[],data=result.data;
+					var userid=$("#userid").val(),ids=[],msgListCache=[],data=!!result.data?result.data[userid]:[];
+					if(!!data&&data.length>0){
 						for(var i=0,j=data.length;i<j;i++){
-							var item=result.data[i];
+							var item=data[i];
 							if($("#chat_"+item.id).size()==0){
 					    		if(item.createBy==$("#username").val()){
 					    			msgListCache.push(service.getOneself(item));
@@ -257,26 +258,35 @@ var service={
 		//查找用户列表信息
 		findUserListAjax:function(){
 			$.get("user/findUserListAjax.action",function(result){
-				$("#userList").html(service.createUserDiv(result.data.userList));
-				$("#friendList").html(service.createUserDiv(result.data.friendList));
+				$("#friendList").html(service.createFriendDiv(result.data.friendList));
+				$("#stranger").html(service.createStrangerDiv(result.data.stranger));
 			});
 		},
 		//创建用户列表信息
-		createUserDiv:function(data){
+		createUserDiv:function(data,type){
 			var div="";
 			if(typeof data=="object"){
 				for(var i=0,j=data.length;i<j;i++){
 					var item=data[i];
-					div+="<a class=\"chat_user_item clearfix\" friendId="+item.friend.id+">";
-					div+="<img class=\"user_img pull-left\" src=\""+item.friend.photo+"\"/>";
+					div+="<a class=\"chat_user_item clearfix\" friendId="+item[type].id+">";
+					div+="<img class=\"user_img pull-left\" src=\""+item[type].photo+"\"/>";
 					div+="<div class=\"chat_user_item_name\">";
-					div+="	<div class=\"chat_user_group_title\">"+item.friend.name+"</div>";
+					div+="<div class=\"chat_user_group_title\">"+item[type].name+"</div>";
 					div+="<div class=\"chat_user_group_history\">127.0.0.1</div>";
 			  	 	div+="</div>";
+			  	 	div+="<div class=\"chat_user_group_count\">12</div>";
 			  	 	div+="</a>";
 				}
 			}
 		  	return div;
+		},
+		//好友列表信息
+		createFriendDiv:function(data){
+		  	return service.createUserDiv(data,"friend");
+		},
+		//创建陌生人列表信息
+		createStrangerDiv:function(data){
+		  	return service.createUserDiv(data,"user");
 		},
 		//滚屏置底
 		scrollEnd:function(){
