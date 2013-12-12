@@ -126,10 +126,11 @@ var service={
 				"parameter.content":content,
 				"parameter.friendId":$("#friendId").val()
 			};
+			var $li=$(service.getOneself({content:content,createTime:""})).appendTo($out);
 			$.post("${base}message/send.action",option).done(function(result){
-				$out.append(service.getOneself(result.data));
 				service.scrollEnd();
 				$("#content").contents().find("body").html("");
+				$li.find(".wait").hide(1000);
 			});
 		},
 		//刷新新消息列表
@@ -235,7 +236,7 @@ var service={
 				+"<div class=\"border-radius-5 right chat_body\"><a class=\"close\">×</a>" 
 				+"<div class=\"content\">"+data.content+"</div>" 
 				+"<div class=\"create_time\"><span class=\"user\">用户名："+data.sendUsername+"</span><span class=\"time\">"+data.createTime.replace("T"," ")+"</span><a class=\"reply hide\">回复</a></div>" 
-				+"</div></li>";
+				+"</div><div class=\"wait\"><i class=\"icon-spinner icon-spin text_wait\"></i></div></li>";
 			return li;
 		},
 		pageNext:function(){
@@ -299,6 +300,9 @@ var service={
 			if(typeof data=="object"){
 				for(var i=0,j=data.length;i<j;i++){
 					var item=data[i];
+					if( item[type] == undefined){
+						continue;
+					}
 					div+="<a class=\"chat_user_item clearfix\" friendId="+item[type].id+">";
 					div+="<img class=\"user_img pull-left\" src=\""+item[type].photo+"\"/>";
 					div+="<div class=\"chat_user_item_name\">";
