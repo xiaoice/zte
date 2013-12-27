@@ -9,11 +9,13 @@ import javax.annotation.Resource;
 import net.sf.json.JSONObject;
 
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import com.zte.framework.util.AjaxAction;
 import com.zte.framework.util.DateUtil;
+import com.zte.message.service.MessageService;
 import com.zte.user.domain.UserFriend;
 import com.zte.user.service.UserFriendService;
 
@@ -22,6 +24,8 @@ import com.zte.user.service.UserFriendService;
 public class UserFriendAction extends AjaxAction{
 	@Resource(name="userFriendServiceImpl")
 	private UserFriendService userFriendService;
+	@Autowired
+	private MessageService messageService;
 	
 	//用户消息中心
 	public String userIndex(){
@@ -44,10 +48,13 @@ public class UserFriendAction extends AjaxAction{
 		if(userId!=null){
 			Map<String,Object> map=new HashMap<String, Object>();
 			map.put("userId", userId);
+			map.put("friendId", userId);
 			List<Map<String, Object>> friendList = userFriendService.findByUserId(map);
 			List<Map<String, Object>> stranger = userFriendService.findByFriendId(map);
+			List<Map<String, String>> unReadMessageCount=messageService.getUnReadMessageCount(map);
 			jo.accumulate("friendList", friendList);
 			jo.accumulate("stranger", stranger);
+			jo.accumulate("count", unReadMessageCount);
 			return ajaxUtil.setSuccess(jo);
 		}
 		return ajaxUtil.setFail(jo);

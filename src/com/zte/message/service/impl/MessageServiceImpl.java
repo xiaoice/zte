@@ -39,4 +39,9 @@ public class MessageServiceImpl extends BaseServiceImpl<Message> implements Mess
 	public int insert(Message message) {
 		return this.insert("messageService.insert", message);
 	}
+
+	@Override
+	public List<Map<String, String>> getUnReadMessageCount(Map<String, Object> map) {
+		return this.selectList("messageService.getUnReadMessageCount");
+	}
 }
