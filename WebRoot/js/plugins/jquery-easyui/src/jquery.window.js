@@ -4,7 +4,7 @@
  * Copyright (c) 2009-2013 www.jeasyui.com. All rights reserved.
  *
  * Licensed under the GPL or commercial licenses
- * To use it on other terms please contact us: jeasyui@gmail.com
+ * To use it on other terms please contact us: info@jeasyui.com
  * http://www.gnu.org/licenses/gpl.txt
  * http://www.jeasyui.com/license_commercial.php
  * 
@@ -18,10 +18,11 @@
 	function setSize(target, param){
 		var opts = $.data(target, 'window').options;
 		if (param){
-			if (param.width) opts.width = param.width;
-			if (param.height) opts.height = param.height;
-			if (param.left != null) opts.left = param.left;
-			if (param.top != null) opts.top = param.top;
+			$.extend(opts, param);
+//			if (param.width) opts.width = param.width;
+//			if (param.height) opts.height = param.height;
+//			if (param.left != null) opts.left = param.left;
+//			if (param.top != null) opts.top = param.top;
 		}
 		$(target).panel('resize', opts);
 	}

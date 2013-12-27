@@ -28,7 +28,6 @@ var message={
 		return this.self;
 	},
 	setOffset:function(){
-		this.create();
 		var documentWidth = $(document).width();
 		var documentHeight = $(document).height();
 		var width=this.self.outerWidth();
@@ -39,28 +38,28 @@ var message={
 		return this.self;
 	},
 	setContent:function(text,icon){
-		var icon=icon||"ok";
+		this.create();
 		if($(".message_content").hasClass("message_content_wait")){
 			$(".message_content_wait").removeClass("message_content_wait");
 		}
-		$(".message_icon").removeClass().addClass("message_icon icon_message_"+icon);
+		$(".message_icon").removeAttr("class").addClass("message_icon icon_message_"+icon);
 		$(".message_text").text(text).css("color",this.color);
+		this.setOffset();
 		if(this.small==true){
-			this.self.removeClass().addClass("message_box_small");
+			this.self.removeAttr("class").addClass("message_box_small");
 		}else{
-			this.self.removeClass().addClass("message_box");
+			this.self.removeAttr("class").addClass("message_box");
 		}
 		return this.self;
 	},
 	show:function(text,icon,timeout){
-		this.setOffset();
-		this.setContent(text,icon).slideDown("fast");
+		this.setContent(text,icon).fadeIn("fast");
 		processor.process(function(){
 			message.hide();
 		},timeout||2000);
 	},
 	hide:function(){
-		this.self.slideUp("fast");
+		this.self.fadeOut("slow");
 	},
 	ok:function(text,timeout){
 		this.color="green";

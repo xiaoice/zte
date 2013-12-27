@@ -6,7 +6,7 @@
 	<link rel="stylesheet" type="text/css" href="../../themes/default/easyui.css">
 	<link rel="stylesheet" type="text/css" href="../../themes/icon.css">
 	<link rel="stylesheet" type="text/css" href="../demo.css">
-	<script type="text/javascript" src="../../jquery-1.8.0.min.js"></script>
+	<script type="text/javascript" src="../../jquery.min.js"></script>
 	<script type="text/javascript" src="../../jquery.easyui.min.js"></script>
 </head>
 <body>
@@ -18,7 +18,8 @@
 	<input class="easyui-combobox" 
 			name="language"
 			data-options="
-					url:'../combobox/combobox_data1.json',
+					url:'combobox_data1.json',
+					method:'get',
 					valueField:'id',
 					textField:'text',
 					multiple:true,

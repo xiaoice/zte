@@ -4,7 +4,7 @@
  * Copyright (c) 2009-2013 www.jeasyui.com. All rights reserved.
  *
  * Licensed under the GPL or commercial licenses
- * To use it on other terms please contact us: jeasyui@gmail.com
+ * To use it on other terms please contact us: info@jeasyui.com
  * http://www.gnu.org/licenses/gpl.txt
  * http://www.jeasyui.com/license_commercial.php
  * 
@@ -14,11 +14,12 @@
 	function setSize(target){
 		var opts = $.data(target, 'calendar').options;
 		var t = $(target);
-		if (opts.fit == true){
-			var p = t.parent();
-			opts.width = p.width();
-			opts.height = p.height();
-		}
+//		if (opts.fit == true){
+//			var p = t.parent();
+//			opts.width = p.width();
+//			opts.height = p.height();
+//		}
+		opts.fit ? $.extend(opts, t._fit()) : t._fit(false);
 		var header = t.find('.calendar-header');
 		t._outerWidth(opts.width);
 		t._outerHeight(opts.height);
@@ -26,7 +27,7 @@
 	}
 	
 	function init(target){
-		$(target).addClass('calendar').wrapInner(
+		$(target).addClass('calendar').html(
 				'<div class="calendar-header">' +
 					'<div class="calendar-prevmonth"></div>' +
 					'<div class="calendar-nextmonth"></div>' +

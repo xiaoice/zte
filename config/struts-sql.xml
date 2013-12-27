@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.1.7//EN"
+	"http://struts.apache.org/dtds/struts-2.1.7.dtd">
+
+<struts>
+	<package name="struts-sql" extends="json-default" namespace="/sql">
+	
+		<action name="index" class="sqlAction" method="index">
+			<result name="input">/jsp/sql/main.jsp</result>
+		</action>
+		
+		<!-- test -->
+		<action name="show" class="sqlAction" method="show">
+			<result name="json" type="json"><param name="root">ajaxUtil</param></result>
+		</action>
+		
+		<!-- 测试数据库是否连接成功 -->
+		<action name="testCon" class="sqlAction" method="testConnection">
+			<result name="json" type="json"><param name="root">ajaxUtil</param></result>
+		</action>
+		
+		<!-- 获取库中所有的表 -->
+		<action name="getTable" class="sqlAction" method="getTable">
+			<result name="json" type="json"><param name="root">ajaxUtil</param></result>
+		</action>
+		
+		<!-- 获取表中所有的数据 -->
+		<action name="findTableData" class="sqlAction" method="findTableData">
+			<result name="json" type="json"><param name="root">ajaxUtil</param></result>
+		</action>
+		
+	</package>
+</struts>

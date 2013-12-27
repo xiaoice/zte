@@ -66,6 +66,25 @@ public class AjaxUtil {
 		return setFail(Message.fail);
 	}
 	
+	/**
+	 * 根据参数自动输出success或者fail
+	 * @param result
+	 * @return
+	 */
+	public String setResult(boolean result){
+		return result?setSuccess(Message.success):setFail(Message.fail);
+	}
+	
+	/**
+	 * 根据参数自动输出success或者fail
+	 * @param result
+	 * @param data
+	 * @return
+	 */
+	public String setResult(boolean result,Object data){
+		return result?setSuccess(Message.success,data):setFail(Message.fail,data);
+	}
+	
 	
 	/**
 	 * 构建一个操作成功的方法
@@ -122,6 +141,9 @@ public class AjaxUtil {
 	public static JSONObject success(String message){
 		return success(message,null);
 	}
+	public static JSONObject success(Object data){
+		return success(Message.success,data);
+	}
 	
 	public static JSONObject fail(String message,Object data){
 		return message(message,Recode.fail,data);
@@ -129,6 +151,9 @@ public class AjaxUtil {
 	
 	public static JSONObject fail(String message){
 		return fail(message,null);
+	}
+	public static JSONObject fail(Object data){
+		return fail(Message.fail,data);
 	}
 	
 	public String getMessage() {

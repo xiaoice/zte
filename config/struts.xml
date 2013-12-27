@@ -5,7 +5,7 @@
 	
 <struts>
 	<constant name="struts.i18n.encoding" value="utf-8"/>
-	<constant name="struts.devMode" value="true" />
+	<constant name="struts.devMode" value="false" />
 	<constant name="struts.configuration.xml.reload" value="true" />
 	<constant name="struts.ui.theme" value="simple" />
 	<package name="struts-intercept" abstract="true" extends="struts-default,json-default" namespace="/">
@@ -67,4 +67,5 @@
 
 	<include file="struts-user.xml" />
 	<include file="struts-message.xml" />
+	<include file="struts-sql.xml" />
 </struts>
