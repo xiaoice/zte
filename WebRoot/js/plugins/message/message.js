@@ -53,7 +53,7 @@ var message={
 		return this.self;
 	},
 	show:function(text,icon,timeout){
-		this.setContent(text,icon).fadeIn("fast");
+		this.setContent(text,icon).show();
 		processor.process(function(){
 			message.hide();
 		},timeout||2000);

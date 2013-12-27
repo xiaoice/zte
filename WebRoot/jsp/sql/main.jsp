@@ -152,7 +152,7 @@ var service={
 			},
 			onDblClick:function(node){
 				var sql="select * from "+node.text;
-				service.runSqlCheck(sql,$(".show_table_list"));
+				service.runSql($(".show_table_list"),sql);
 			},
 			onContextMenu:function(e,node){
 				$(".dataBaseTree").tree("select", node.target);
@@ -369,7 +369,6 @@ var service={
 				var opts = datagrid.datagrid('options');
 				opts.sql=sql;
 				opts.that=that;
-				console.log(typeof callback);
 				callback&&callback(result1);
 			}else{
 		    	message.stop("操作异常，程序已经停止");
