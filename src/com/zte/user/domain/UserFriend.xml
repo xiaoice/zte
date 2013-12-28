@@ -13,7 +13,7 @@
     
     <!-- 根据用户名Id得到列表-->
 	<select id="findByUserId" resultMap="UserFriendMap" parameterType="hashMap">
-		 select * from userFriend where userId=#{userId} and status=1
+		 select userid,friendId from userFriend where userId=#{userId} and status=1
     </select>
     
     <!-- 根据朋友Id得到陌生人列表-->

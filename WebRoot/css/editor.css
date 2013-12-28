@@ -14,4 +14,5 @@ span[lang]{font-style:italic;}
 .contents_ltr blockquote{padding-left:20px;padding-right:8px;border-left-width:5px;}
 .contents_rtl blockquote{padding-left:8px;padding-right:20px;border-right-width:5px;}
 .marker{background-color:Yellow;}
+.img_border{border:1px solid #333;}
 

@@ -56,6 +56,10 @@ public class SqlConnection {
 	    return null;
 	}
 	
+	//获取Ibatis连接
+	public Connection getConnection(){
+		return getSqlSession().getConnection();
+	}
 	//关闭JDBC连接
 	public void closeConnection(Connection conn){
 		if(isConnected(conn)){

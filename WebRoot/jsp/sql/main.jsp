@@ -21,7 +21,7 @@
 		    <a href="javascript:void(0)" id="menu_top_file" class="easyui-menubutton" data-options="menu:'#menu_down_file'">文件</a>
 		    <a href="javascript:void(0)" id="menu_top_tool" class="easyui-menubutton">工具</a>
 		    <div id="menu_down_file" style="width:150px;">
-			    <div data-options="iconCls:'icon-add'" onclick="$('#menu_create_connection_box').window('open');fillValue();">新建连接</div>
+			    <div data-options="iconCls:'icon-add'" onclick="$('#window_create_connection').window('open');fillValue();">新建连接</div>
 			    <div class="menu-sep"></div>
 			    <div>导入SQL文件</div>
 			    <div>导出Excel</div>
@@ -52,70 +52,58 @@
 		</div>
 	</div>
 	
-	
-	<div id="context_table1" class="menu_tree menu_tree_schema">
-        <div iconCls="icon-add" id="menu_create_table" onclick='$("#panel_create_table").dialog("open");'>创建表</div>
-        <div class="menu-sep"></div>
-        <div iconCls="icon-reload" class="desk_icon_reload">刷新</div>
-    </div>
-    
-    <div id="panel_create_table" class="panel_create_table" title="创建表" resizable="true" iconCls="icon-table" >
-		<iframe frameborder="0" width="100%" height="100%" src="${base}jsp/conn/create_table.jsp"></iframe>
-	</div>
-	
-	
 	<div class="hidden">
-    
-    <!-- 表节点上面点击右键菜单 -->
-	<div id="context_table" class="easyui-menu">
-        <div iconCls="icon-search" id="context_table_open">打开表</div>
-        <div iconCls="icon-edit" id="context_table_edit" onclick='message.info("正在开发，敬请期待！");'>修改表</div>
-        <div class="menu-sep"></div>
-        <div iconCls="icon-reload" class="context_table_reload">刷新</div>
-    </div>
-    
-	<!-- 菜单-文件 -->
-	<div id="menu_create_connection" class="panel_create_table" title="创建新连接" resizable="true" iconCls="icon-table" >
-		<iframe frameborder="0" width="100%" height="100%" src="${base}jsp/conn/create_table.jsp"></iframe>
-	</div>
-	
-	<!-- 菜单-文件 -创建新连接按钮 -->
-	<div id="menu_create_connection_box" class="menu_create_connection_box easyui-window" title="创建新连接" 
-		 data-options="iconCls:'icon-save',closed:true,collapsible:false,maximizable:false,minimizable:false" >
-		<table class="edit_table">
-			<tr>
-				<td class="tdLabel">数据库类型:</td>
-				<td>MYSQL</td>
-			</tr>
-			<tr>
-				<td class="tdLabel">IP:</td>
-				<td><input id="input_con_ip" class="easyui-validatebox" type="text"></input></td>
-			</tr>
-			<tr>
-				<td class="tdLabel">数据库名称:</td>
-				<td><input id="input_con_database" class="easyui-validatebox" type="text"></input></td>
-			</tr>
-			<tr>
-				<td class="tdLabel">端口:</td>
-				<td><input id="input_con_port" class="easyui-validatebox" type="text"></input></td>
-			</tr>
-			<tr>
-				<td class="tdLabel">登录名:</td>
-				<td><input id="input_con_user" class="easyui-validatebox" type="text"></input></td>
-			</tr>
-			<tr>
-				<td class="tdLabel">口令:</td>
-				<td><input id="input_con_password" class="easyui-validatebox" type="text"></input></td>
-			</tr>
-			<tr>
-				<td colspan="2" class="text-center">
-					<a id="bt_login_in" class="easyui-linkbutton">连接</a>
-					<a id="bt_login_cancel" class="easyui-linkbutton">取消</a>
-					<a id="bt_login_test" class="easyui-linkbutton">测试连接</a>
-				</td>
-			</tr>
-		</table>
-	</div>
+	    <!-- 表节点上面点击右键菜单 -->
+		<div id="context_table" class="easyui-menu">
+	        <div iconCls="icon-search" id="context_table_open">打开表</div>
+	        <div iconCls="icon-edit" id="context_table_edit">修改表</div>
+	        <div class="menu-sep"></div>
+	        <div iconCls="icon-reload" class="context_table_reload">刷新</div>
+	    </div>
+	    
+		<!-- 菜单-文件 -创建新连接按钮 -->
+		<div id="window_create_connection" class="window_create_connection easyui-window" title="创建新连接" 
+			 data-options="iconCls:'icon-save',closed:true,collapsible:false,maximizable:false,minimizable:false,resizable:false" >
+			<table class="edit_table">
+				<tr>
+					<td class="tdLabel">数据库类型:</td>
+					<td>MYSQL</td>
+				</tr>
+				<tr>
+					<td class="tdLabel">IP:</td>
+					<td><input id="input_con_ip" class="easyui-validatebox" type="text"></input></td>
+				</tr>
+				<tr>
+					<td class="tdLabel">数据库名称:</td>
+					<td><input id="input_con_database" class="easyui-validatebox" type="text"></input></td>
+				</tr>
+				<tr>
+					<td class="tdLabel">端口:</td>
+					<td><input id="input_con_port" class="easyui-validatebox" type="text"></input></td>
+				</tr>
+				<tr>
+					<td class="tdLabel">登录名:</td>
+					<td><input id="input_con_user" class="easyui-validatebox" type="text"></input></td>
+				</tr>
+				<tr>
+					<td class="tdLabel">口令:</td>
+					<td><input id="input_con_password" class="easyui-validatebox" type="text"></input></td>
+				</tr>
+				<tr>
+					<td colspan="2" class="text-center">
+						<a id="bt_login_in" class="easyui-linkbutton">连接</a>
+						<a id="bt_login_cancel" class="easyui-linkbutton">取消</a>
+						<a id="bt_login_test" class="easyui-linkbutton">测试连接</a>
+					</td>
+				</tr>
+			</table>
+		</div>
+		
+		<!-- 菜单-文件 -创建新连接按钮 -->
+		<div id="window_edit_table" class="window_edit_table easyui-window" title="修改表结构" 
+		 	data-options="iconCls:'icon-edit',closed:true,collapsible:false,maximizable:false,minimizable:false,resizable:false,width:'1000',height:'400'" >
+	 	    <span class="datagrid"></span>
+		 </div>
 	</div>
 	
 </body>
@@ -166,50 +154,6 @@ var service={
 			},
 			onLoadSuccess:function(node, data){
 				message.hide();
-				if(node==null){
-					
-				    /* $(data.target).bind('contextmenu',function(e){
-				    	e.preventDefault();
-				    	$('#context_table').menu('show', {
-				    		left: e.pageX,
-				    		top: e.pageY
-				    	});
-				    }); */
-				}else if(node.id){
-					
-				}
-				
-				/* //颜色控制，图标控制
-				if(node==null){
-					$(".dataBaseTree .tree-folder").addClass("icon-user-man");
-					$(".dataBaseTree .tree-title").addClass("gray");
-					service.menuTree(".dataBaseTree .tree-node",".menu_tree_schema");
-				}
-				else if(node.id){
-					var ids=node.id.split('＿');
-					if(ids.length==1){
-						$(node.target).next().find(".tree-title").addClass("gray");
-						service.menuTree($(node.target).next().find(".tree-node"),".menu_tree_table");
-					}
-					$(node.target).find(".tree-title").removeClass("gray").addClass("black");
-				} */
-			},
-			onSelect:function(node){
-				/* if(node==null){
-					
-				}
-				else if(node.id){
-					var ids=node.id.split('＿');
-					if(ids.length==2){
-						var sql="select * from "+ids[0]+"."+ids[1];
-						service.runSql(node,sql,$(".show_table_list"));
-						$('.conn_content').tabs("select","列表展示");
-					}
-					else{
-						
-					}
-					$(node.target).find(".tree-title").removeClass("gray").addClass("black");
-				} */
 			}
 		});
 	},
@@ -249,8 +193,8 @@ var service={
 		var pager = dg.datagrid('getPager');
 		pager.pagination({
 			onSelectPage:function(pageNum, pageSize){
-				opts.pageNumber = pageNum;
-				opts.pageSize = pageSize;
+				//opts.pageNumber = pageNum;
+				//opts.pageSize = pageSize;
 				pager.pagination('refresh',{
 					pageNumber:pageNum,
 					pageSize:pageSize
@@ -278,7 +222,6 @@ var service={
 	        height:$(that).height(),
 	        remoteSort:false,
 	        loadMsg:"正在加载，请稍后...",
-	        showHeader:false,
 	        pageSize:20,
 	        pageList: [20,50,100,200],
 	        loadFilter: function(result){
@@ -310,7 +253,7 @@ var service={
 	//执行SQL
 	exeSql:function(that,sql,pageIndex,pageSize,callback){
 		//var sql=sqlcode||service.getRangeById("sql_text");
-		$.post("sql/findTableData.action",{"parameter.sql":sql,"page":pageIndex||"1","rows":pageSize||"20"},function(result){
+		$.post("sql/findTableData.action",{"parameter.sql":sql,"page":pageIndex||"1","rows":pageSize||"500"},function(result){
 			if(typeof result=="object" && typeof result.data=="object"){
 				if(that.find(".table_datagrid").size()==0){
 					that.find(".result_table").html(service.createTable());
@@ -340,10 +283,28 @@ var service={
 			        height:$(that).height(),
 			        remoteSort:false,
 			        loadMsg:"正在加载，请稍后...",
-			        showHeader:true,
-			        pageSize:20,
-			        pageList: [20,50,100,200],
-			        loadFilter:service.pagerFilter,
+			        pageSize:500,
+			        pageList: [500],
+			        loadFilter:function(data){
+			    		var opts = datagrid.datagrid('options');
+			    		var pager = datagrid.datagrid('getPager');
+			    		pager.pagination({
+			    			onSelectPage:function(pageNum, pageSize){
+			    				opts.pageNumber = pageNum;
+			    				opts.pageSize = pageSize;
+			    				pager.pagination('refresh',{
+			    					pageNumber:pageNum,
+			    					pageSize:pageSize
+			    				});
+			    				message.wait("正在加载，请稍后...");
+			    				service.exeSql(that,sql,pageNum,pageSize,function(result){
+			    					message.hide();
+			    					datagrid.datagrid('loadData',result);
+			    				});
+			    			}
+			    		});
+			    		return data;
+			    	},
 			        onLoadSuccess: function(result){
 			        	if(result.total==0){
 			        		that.find(".result_table").html("<div class=\"no-result\">表中没有数据！</div>");
@@ -356,19 +317,9 @@ var service={
 			    	}
 			    }).datagrid('loadData', result1);
 				datagrid.datagrid('getPager').pagination({
-					layout:['list','sep','first','prev','sep',"links",'sep','next','last','sep','refresh','sep','manual'],
-					 beforePageText:'跳转：第',
-					 afterPageText:'页'
+					layout:['list','sep','prev','sep','next','sep','refresh'],
+					displayMsg:"当前第[{from}-{to}]条 共[{total}]条"
 				});
-
-				
-				/* table.datagrid({
-					//loadFilter:service.pagerFilter,
-					height:$(that).height()
-				}).datagrid('loadData', result); */
-				var opts = datagrid.datagrid('options');
-				opts.sql=sql;
-				opts.that=that;
 				callback&&callback(result1);
 			}else{
 		    	message.stop("操作异常，程序已经停止");
@@ -376,48 +327,93 @@ var service={
 		});
 	},
 	bindDom:function(){
-		service.bindTree();
-		$('.menu_tree_schema,.menu_tree_table').menu();//初始化右键菜单
-		$(document).on("click",".icon-run",service.runSql);
-		$('#panel_create_table').dialog({
-			width:616,
-			height:394,
-		    modal:true,
-		    closed:true
-		}).show();
-		
-		$(".sql_text").keypress(function(e){
-			if(e.ctrlKey && e.which == 13 || e.which == 10) { 
-				service.runSql();
-			}
-		});
-		
-		$(document).on("click","#desk_icon_select",function(e){
-			$('.conn_content').tabs("select","命令提示行");
-			var node = $('.dataBaseTree').tree("getSelected");
-			if(node!=null){
-				var ids=node.id.split('＿');
-				if(ids.length==2){
-					var sql="select * from "+ids[0]+"."+ids[1];
-					$("#sql_text").val(sql);
-					service.runSql(e,sql,$(".result_list"));
+		var $document=$(document);
+		//登录、测试连接
+		$document.on("click","#bt_login_test,#bt_login_in",function(e){
+			var id=$(this).attr("id");
+			var data={
+				"parameter.driver":"com.mysql.jdbc.Driver",
+				"parameter.ip":$("#input_con_ip").val(),
+				"parameter.port":$("#input_con_port").val(),
+				"parameter.database":$("#input_con_database").val(),
+				"parameter.user":$("#input_con_user").val(),
+				"parameter.password":$("#input_con_password").val()
+			};
+			message.wait("正在测试");
+			$.post("sql/testCon.action",data,function(result){
+				if(typeof result=="object"){
+					if(id=="bt_login_in"){
+						service.bindTree();
+						$('#window_create_connection').window('close');
+					}else{
+						if(result.recode==1){
+							message.ok("连接成功！");
+						}else{
+							message.error("连接失败！");
+						}
+					}
+				}else{
+					console.error("连接失败！");
 				}
-			}
-			else{
-				message.stop("请先选中树节点！");
-			}
+			});
 		});
 		
-		$(document).on("click",".desk_icon_reload",function(e){
-			var node=$('.dataBaseTree').tree("getSelected");
-			if(node!=null){
-				$('.dataBaseTree').tree("reload",node.target);
+		//运行Sql
+		$document.on("click","#btn_run",function(e){
+			var sql=$("#sql_text").val();
+			if(sql==""){
+				return message.error("系统提示：请输入sql语句");
 			}
-			else{
-				message.stop("请先选中树节点！");
-			}
+			service.exeSql($(".exe_result_list"),sql);
 		});
-
+		
+		//右键-修改表
+		$document.on("click","#context_table_edit",function(e){
+			var datagrid=$("#window_edit_table .datagrid").empty();
+			var treeTable=$('.dataBaseTree').tree("getSelected");
+			var data=[];
+			for(var i in treeTable.children){
+				data.push(treeTable.children[i].attributes);
+			}
+			datagrid.datagrid({
+				width:"100%",
+				rownumbers:true,
+				singleSelect:true,
+				toolbar:[{
+					text:'Add',
+					iconCls:'icon-add',
+					handler:function(){alert('add')}
+					},{
+					text:'Cut',
+					iconCls:'icon-cut',
+					handler:function(){alert('cut')}
+					},'-',
+					{
+					text:'Save',
+					iconCls:'icon-save',
+					handler:function(){alert('save')}
+				}],
+		        columns:[[
+			        {field:'Field',title:'字段名',width:150},
+			        {field:'Type',title:'字段类型',width:90,align:"center"},
+			        {field:'Extra',title:'自增',width:100,align:"center"},
+			        {field:'Null',title:'可空',width:40,align:"center"},
+			        {field:'Collation',title:'Collation',width:100,align:"center",formatter:formatNull},
+			        {field:'Key',title:'键约束',width:50,align:"center"},
+			        {field:'Privileges',title:'权限',width:190,align:"center"},
+			        {field:'Default',title:'默认值',width:100,align:"center",formatter:formatNull},
+			        {field:'Comment',title:'注释',width:121}
+		        ]]
+		    }).datagrid('loadData', data);
+			$("#window_edit_table").window("open");
+		});
+		
+		//点击运行按钮
+		$document.on("click","#context_table_open",function(e){
+			var table=$($('.dataBaseTree').tree("getSelected").target).find(".tree-title").text();
+			var sql="select * from "+table;
+			service.runSql($(".show_table_list"),sql);
+		});
 	},
 	init:function(){
 		message.small=true;//使用小图标提示
@@ -425,62 +421,20 @@ var service={
 	}
 };
 
-function close(){
-	$('#panel_create_table').dialog("close");
-}
-
 $(function(){
-	//service.init();
-	message.small=true;
+	service.init();
 });
 
-
-
-
-
-
-var $document=$(document);
-$document.on("click","#bt_login_test,#bt_login_in",function(e){
-	var id=$(this).attr("id");
-	var data={
-		"parameter.driver":"com.mysql.jdbc.Driver",
-		"parameter.ip":$("#input_con_ip").val(),
-		"parameter.port":$("#input_con_port").val(),
-		"parameter.database":$("#input_con_database").val(),
-		"parameter.user":$("#input_con_user").val(),
-		"parameter.password":$("#input_con_password").val()
-	};
-	$.post("sql/testCon.action",data,function(result){
-		if(typeof result=="object"){
-			if(id=="bt_login_in"){
-				service.bindTree();
-				$('#menu_create_connection_box').window('close');
-			}else{
-				message.ok("连接成功！");
-			}
-		}else{
-			console.error("连接失败！");
-		}
-	});
-});
-
-//右键-打开表
-$document.on("click","#btn_run",function(e){
-	var sql=$("#sql_text").val();
-	if(sql==""){
-		return message.error("系统提示：请输入sql语句");
+//格式化空对象
+function formatNull(value){
+	console.log($.isEmptyObject(value));
+	if($.isEmptyObject(value)){
+		return "<i>null</i>";
+	}else{
+		return value;
 	}
-	service.exeSql($(".exe_result_list"),sql);
-});
-
-//点击运行按钮
-$document.on("click","#context_table_open",function(e){
-	var table=$($('.dataBaseTree').tree("getSelected").target).find(".tree-title").text();
-	var sql="select * from "+table;
-	service.runSql($(".show_table_list"),sql);
-});
-
-function fillValue1(){
+}
+function fillValue(){
 	$("#input_con_ip").val("localhost");
 	$("#input_con_port").val("3306");
 	$("#input_con_database").val("test");
@@ -488,7 +442,7 @@ function fillValue1(){
 	$("#input_con_password").val("root");
 }
 
-function fillValue(){
+function fillValue1(){
 	$("#input_con_ip").val("10.17.82.155");
 	$("#input_con_port").val("3306");
 	$("#input_con_database").val("newest_edu3");

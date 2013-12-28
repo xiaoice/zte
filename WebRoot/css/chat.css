@@ -18,6 +18,8 @@
 .chat_warp_out li:after{clear: both;content: " ";display: block;height: 0;}
 .chat_warp_out li.chat_left .chat_user{margin-right: 10px;padding-top: 15px;}
 .chat_warp_out li.chat_right .chat_user{margin-left: 10px;padding-top: 15px;}
+.chat_warp_out li.chat_right .wait{float: right;margin-right: 10px;padding-top: 23px;}
+.chat_warp_out li.chat_right .wait .text_wait{color:#FF8700;}
 .chat_warp_out li .user_img{width:40px; height:40px; border-width:0px;border:1px solid #ccc;padding:2px; border-radius:3px;}
 .chat_warp_out li.chat_left .user_img:hover{border:2px solid #3D6FBE;padding:1px;}
 .chat_warp_out li.chat_right .user_img:hover{border:2px solid #D7AA78;padding:1px;}

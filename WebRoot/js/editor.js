@@ -13,6 +13,7 @@ $.fn.editor=function(options){
 	var $document=$(document);
 	
     iframe.designMode = 'on';
+    iframe.execCommand('enableObjectResizing', false, 'false');
     iframe.open();
    	iframe.write('<link href="css/editor.css" type="text/css" rel="stylesheet" />');
    	iframe.write('');
@@ -51,6 +52,13 @@ $.fn.editor=function(options){
 		}
     });
     
+    //点击图片
+    $iframe.on("click","img",function(){
+    	$iframe.find("img").removeClass();
+    	var $this=$(this);
+    	$this.addClass("img_border");
+    });
+    
 	var editor={
 			panel:{
 				faces:function(){
@@ -67,12 +75,6 @@ $.fn.editor=function(options){
 					div+='</div>';
 					return div;
 				}
-			},
-			icon:{
-				
-			},
-			service:{
-				
 			}
 	};
 	$(option.parent).append(editor.panel.faces());

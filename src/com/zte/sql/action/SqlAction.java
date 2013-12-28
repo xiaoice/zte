@@ -125,8 +125,9 @@ public class SqlAction extends AjaxAction {
         String url="jdbc:mysql://"+parameter.get("ip")+":"+parameter.get("port")+"/"+parameter.get("database");
         String user=parameter.get("user");
         String password=parameter.get("password");
-		conn = mySqlConnection.getConnection(driver, url, user, password);
-		return ajaxUtil.setResult(mySqlConnection.isConnected(conn));
+        //conn = mySqlConnection.getConnection(driver, url, user, password);
+        conn = mySqlConnection.getConnection();
+        return ajaxUtil.setResult(mySqlConnection.isConnected(conn));
 	}
 	
 	//获取数据库中所有的表、表中所有的列
@@ -141,16 +142,20 @@ public class SqlAction extends AjaxAction {
 	public String findTableData(){
 		HttpServletRequest request=ServletActionContext.getRequest();
 		String sql=parameter.get("sql");
+		sql="select * from ("+sql+") as temp";
 		String sqlCount="select count(1) from ("+sql+") as temp";
 		int pageIndex=Integer.valueOf(request.getParameter("page"));
 		int pageSize=Integer.valueOf(request.getParameter("rows"));
 		sql+=" limit "+(pageIndex-1)*pageSize+","+pageSize;
 		try{
-			JSONArray array = mySqlConnection.findTableDatas(conn, sql);
-			String result = mySqlConnection.findTableResult(conn, sqlCount);
+			String total = mySqlConnection.findTableResult(conn, sqlCount);
+			JSONArray rows = mySqlConnection.findTableDatas(conn, sql);
+			if(Integer.valueOf(total)>500){
+				rows.subList(0, 500);
+			}
 			JSONObject j=new JSONObject();
-			j.accumulate("rows", array);
-			j.accumulate("total", result);
+			j.accumulate("rows", rows);
+			j.accumulate("total", total);
 			return ajaxUtil.setSuccess(j);
 		}catch (SQLException e) {
 			e.printStackTrace();

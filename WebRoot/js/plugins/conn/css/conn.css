@@ -56,7 +56,8 @@
 .menu_tool a{overflow: hidden;}
 .menu_tool a:hover{background-color: #7d7d7d;}
 .menu{border-color:#999;box-shadow: 1px 1px 2px #888888;}
-.menu_create_connection_box{padding:10px;}
+.window_create_connection{padding:10px;}
+.window_edit_table{padding:2px;}
 .dataBaseTree{padding:10px;}
 .dataBaseTree .tree-folder-open ,.dataBaseTree .tree-folder,.dataBaseTree .tree-file{background-image: none;}
 .dataBaseTree .tree-file{color:#86E05D;}
