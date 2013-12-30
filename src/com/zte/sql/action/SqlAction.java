@@ -163,30 +163,38 @@ public class SqlAction extends AjaxAction {
 	public String selectQuerySql(){
 		HttpServletRequest request=ServletActionContext.getRequest();
 		String sql=parameter.get("sql");
-		String sqlTemp="select * from ("+sql+") as temp limit 1";
 		Integer pageIndex=Integer.valueOf(request.getParameter("page"));
 		Integer pageSize=Integer.valueOf(request.getParameter("rows"));
-		try{
-			
-			JSONObject result=new JSONObject();
-			JSONObject resultSql = mySqlConnection.executeSql(conn, sql,pageIndex,pageSize);
-			if("select".equals(resultSql.get("type"))){
+		JSONObject result=new JSONObject();
+		if(pageIndex>1){
+			try {
 				String sqlCount="select count(1) from ("+sql+") as temp";
 				Integer total = mySqlConnection.findTableCount(conn, sqlCount);
-				/*if(total>pageSize){
+				if(total>pageSize){
 					sql="select * from ("+sql+") as temp limit "+(pageIndex-1)*pageSize+","+pageSize;
 				}
-				JSONArray rows = mySqlConnection.findTableDatas(conn, sql);*/
-				result.accumulate("rows", resultSql.get("data"));
+				JSONArray rows = mySqlConnection.findTableDatas(conn, sql);
+				result.accumulate("rows", rows);
 				result.accumulate("total", total);
-			}else{
-				result.accumulate("count", resultSql.get("data"));
+				return ajaxUtil.setSuccess(result);
+			} catch (SQLException e) {
+				e.printStackTrace();
 			}
-			return ajaxUtil.setSuccess(result);
-		}catch (SQLException e) {
-			e.printStackTrace();
-			return ajaxUtil.setFail(e.getMessage());
 		}
+		
+		JSONObject resultSql = mySqlConnection.executeSql(conn, sql,pageIndex,pageSize);
+		if("select".equals(resultSql.get("type"))){
+			List<JSONObject> list = (List<JSONObject>) resultSql.get("data");
+			if(list.size()>100){
+				result.accumulate("rows", list.subList(0, 100));
+			}else{
+				result.accumulate("rows", list);
+			}
+			result.accumulate("total", list.size());
+		}else{
+			result.accumulate("count", resultSql.get("data"));
+		}
+		return ajaxUtil.setSuccess(result);
 	}
 	
 	//格式化tables

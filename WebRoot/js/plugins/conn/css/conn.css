@@ -57,15 +57,16 @@
 .menu_tool a:hover{background-color: #7d7d7d;}
 .menu{border-color:#999;box-shadow: 1px 1px 2px #888888;}
 .window_create_connection{padding:10px;}
-.window_edit_table{padding:2px;}
 .dataBaseTree{padding:10px;}
 .dataBaseTree .tree-folder-open ,.dataBaseTree .tree-folder,.dataBaseTree .tree-file{background-image: none;}
 .dataBaseTree .tree-file{color:#86E05D;}
 .dataBaseTree .tree-title{-moz-user-select:none;-khtml-user-select:none;user-select:none;}
 .pagination-loading,.datagrid-mask-msg{background-image: url('../../../../images/loading_black.gif');}
 .pagination-loading{ border-radius: 4px;}
-.panel-body-noheader1{border-top-width: 0 !important;}
 .panel-header{border-bottom-width: 0 !important;}
 .sql_text{width:100%; height:100%;}
 .cmd_toolBar .l-btn-icon-left{font-size:12px;padding: 0 !important;}
 .datagrid-wrap i{color:#ccc;}
+.window_edit_table{border: 1px solid #000 !important;}
+.window_edit_table .panel-body-noheader{border-width: 0 !important;}
+.window_edit_table .datagrid-body tr:last-child td{border-bottom-   width: 0 !important;}

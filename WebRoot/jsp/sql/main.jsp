@@ -41,7 +41,7 @@
         		<div class="easyui-layout" fit="true" >
 			    	<div region="north" split="true" style="overflow:hidden;height:140px;border-width:0;border-bottom-width: 1px;">
 						<div class="cmd_toolBar"><a class="easyui-linkbutton" plain="true" iconCls="icon-play" id="btn_run">&nbsp;运行</a></div>
-			    		<textarea id="sql_text" class="sql_text" rows="0" cols="0">select * from um_userinfo</textarea>
+			    		<textarea id="sql_text" class="sql_text" rows="0" cols="0">select * from um_usercourse</textarea>
 			    	</div>
 					<div region="center" border="false" class="exe_result_list">
 						<div class="msg_tip"></div>
@@ -99,9 +99,8 @@
 			</table>
 		</div>
 		
-		<!-- 菜单-文件 -创建新连接按钮 -->
-		<div id="window_edit_table" class="window_edit_table easyui-window" title="修改表结构" 
-		 	data-options="iconCls:'icon-edit',closed:true,collapsible:false,maximizable:false,minimizable:false,resizable:false,width:'1000',height:'400'" >
+		<!-- 菜单-文件 -修改表弹出框 -->
+		<div id="window_edit_table" class="window_edit_table">
 	 	    <span class="datagrid"></span>
 		 </div>
 	</div>
@@ -251,7 +250,6 @@ var service={
 	
 	//执行SQL
 	exeSql:function(that,sql,pageIndex,pageSize,callback){
-		pageSize=pageSize;
 		message.wait("正在运行sql，请稍后...");
 		$.post("sql/selectQuerySql.action",{"parameter.sql":sql,"page":pageIndex||"1","rows":pageSize},function(result){
 			if(typeof result=="object" && typeof result.data=="object"){
@@ -378,20 +376,6 @@ var service={
 				width:"100%",
 				rownumbers:true,
 				singleSelect:true,
-				toolbar:[{
-					text:'Add',
-					iconCls:'icon-add',
-					handler:function(){alert('add')}
-					},{
-					text:'Cut',
-					iconCls:'icon-cut',
-					handler:function(){alert('cut')}
-					},'-',
-					{
-					text:'Save',
-					iconCls:'icon-save',
-					handler:function(){alert('save')}
-				}],
 		        columns:[[
 			        {field:'Field',title:'字段名',width:150},
 			        {field:'Type',title:'字段类型',width:90,align:"center"},
@@ -401,7 +385,7 @@ var service={
 			        {field:'Key',title:'键约束',width:50,align:"center"},
 			        {field:'Privileges',title:'权限',width:190,align:"center"},
 			        {field:'Default',title:'默认值',width:100,align:"center",formatter:formatNull},
-			        {field:'Comment',title:'注释',width:121}
+			        {field:'Comment',title:'注释',width:108}
 		        ]]
 		    }).datagrid('loadData', data);
 			$("#window_edit_table").window("open");
@@ -422,6 +406,37 @@ var service={
 
 $(function(){
 	service.init();
+	
+	$('#window_edit_table').dialog({
+	    title: '修改表结构',
+	    cache: false,
+	    modal: true,
+	    iconCls:'icon-edit',
+	    closed:true,
+	    collapsible:false,
+	    maximizable:false,
+	    minimizable:false,
+	    resizable:false,
+	    width:'1000',
+	    height:$("body").height()-30,
+	    toolbar:[{
+			text:'增加',
+			handler:function(){
+				if (endEditing()){
+	                $('#dg').datagrid('appendRow',{status:'P'});
+	                editIndex = $('#dg').datagrid('getRows').length-1;
+	                $('#dg').datagrid('selectRow', editIndex)
+	                        .datagrid('beginEdit', editIndex);
+	            }
+			}
+			},'-',{
+			text:'修改',
+			handler:function(){alert('cut')}
+			},'-',
+			{text:'删除',
+			handler:function(){alert('save')}
+		}]
+	});
 });
 
 //格式化空对象
