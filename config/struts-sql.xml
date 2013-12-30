@@ -30,5 +30,10 @@
 			<result name="json" type="json"><param name="root">ajaxUtil</param></result>
 		</action>
 		
+		<!-- 执行Sql语句 -->
+		<action name="selectQuerySql" class="sqlAction" method="selectQuerySql">
+			<result name="json" type="json"><param name="root">ajaxUtil</param></result>
+		</action>
+		
 	</package>
 </struts>

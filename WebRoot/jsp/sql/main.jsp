@@ -212,7 +212,6 @@ var service={
 		if(that.find(".table_datagrid").size()==0){
 			that.find(".result_table").html(service.createTable());
 		}
-		//var sql=sqlcode||service.getRangeById("sql_text");
 		var datagrid=that.find(".table_datagrid");
 		var treeTable=$('.dataBaseTree').tree("getSelected");
 		datagrid.datagrid({
@@ -252,24 +251,23 @@ var service={
 	
 	//执行SQL
 	exeSql:function(that,sql,pageIndex,pageSize,callback){
-		//var sql=sqlcode||service.getRangeById("sql_text");
-		$.post("sql/findTableData.action",{"parameter.sql":sql,"page":pageIndex||"1","rows":pageSize||"500"},function(result){
+		pageSize=pageSize;
+		message.wait("正在运行sql，请稍后...");
+		$.post("sql/selectQuerySql.action",{"parameter.sql":sql,"page":pageIndex||"1","rows":pageSize},function(result){
 			if(typeof result=="object" && typeof result.data=="object"){
+				that.find(".msg_tip").html("");
+				that.find(".result_table").empty().show();
+				message.hide();
 				if(that.find(".table_datagrid").size()==0){
 					that.find(".result_table").html(service.createTable());
 				}
-				if(typeof result=="string"){
-					that.find(".result_table").hide();
-					return that.find(".msg_tip").show().html("程序出现错误！");
-				}else{
-					if(result.recode==0){
-						return that.find(".msg_tip").show().html(result.message);
-					}else if(result.data.total==0){
-						that.find(".msg_tip").show().html("该表为空表，查找不到数据！");
-					}else{
-						that.find(".msg_tip").html("").hide();
-						that.find(".result_table").show();
+				
+				if(result.recode==1){
+					if(result.data.total==0){
+						return that.find(".msg_tip").html("<div class=\"no-result\">表中没有数据！</div>");
 					}
+				}else{
+					return that.find(".msg_tip").html("<div class=\"no-result\">"+result.message+"</div>");
 				}
 				
 				var fields=[];
@@ -277,14 +275,14 @@ var service={
 					fields.push({field:field,title:field,width:100});
 				}
 				var datagrid=that.find(".table_datagrid");
-				var result1=result.data||result;
 				datagrid.datagrid({
 			        columns:[fields],
 			        height:$(that).height(),
 			        remoteSort:false,
 			        loadMsg:"正在加载，请稍后...",
-			        pageSize:500,
-			        pageList: [500],
+			        pageNumber:pageIndex,
+			        pageSize:pageSize,
+			        pageList: [pageSize],
 			        loadFilter:function(data){
 			    		var opts = datagrid.datagrid('options');
 			    		var pager = datagrid.datagrid('getPager');
@@ -315,14 +313,15 @@ var service={
 			        		that.find(".datagrid-pager").show();
 			        	}
 			    	}
-			    }).datagrid('loadData', result1);
+			    }).datagrid('loadData', result.data||result);
 				datagrid.datagrid('getPager').pagination({
-					layout:['list','sep','prev','sep','next','sep','refresh'],
+					layout:['sep','first','prev','sep',"links",'sep','next','last','sep','refresh'],
 					displayMsg:"当前第[{from}-{to}]条 共[{total}]条"
 				});
-				callback&&callback(result1);
+				callback&&callback(result.data||result);
 			}else{
-		    	message.stop("操作异常，程序已经停止");
+		    	message.stop("系统出现错误！");
+				return that.find(".msg_tip").show().html("<div class=\"no-result\">系统出现错误，"+result.message+"</div>");
 		    }
 		});
 	},
@@ -360,11 +359,11 @@ var service={
 		
 		//运行Sql
 		$document.on("click","#btn_run",function(e){
-			var sql=$("#sql_text").val();
+			var sql=service.getRangeById("sql_text")||$("#sql_text").val();
 			if(sql==""){
 				return message.error("系统提示：请输入sql语句");
 			}
-			service.exeSql($(".exe_result_list"),sql);
+			service.exeSql($(".exe_result_list"),sql,1,100);
 		});
 		
 		//右键-修改表
@@ -434,7 +433,7 @@ function formatNull(value){
 		return value;
 	}
 }
-function fillValue(){
+function fillValue1(){
 	$("#input_con_ip").val("localhost");
 	$("#input_con_port").val("3306");
 	$("#input_con_database").val("test");
@@ -442,7 +441,7 @@ function fillValue(){
 	$("#input_con_password").val("root");
 }
 
-function fillValue1(){
+function fillValue(){
 	$("#input_con_ip").val("10.17.82.155");
 	$("#input_con_port").val("3306");
 	$("#input_con_database").val("newest_edu3");

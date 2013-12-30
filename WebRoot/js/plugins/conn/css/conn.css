@@ -50,7 +50,7 @@
 .edit_table .combo-text{border-width: 0;}
 .edit_table .text_warn{color:#8f0000;padding:2px 5px;border-radius:3px;border:1px solid #8f0000;}
 
-.no-result{color: red;padding: 15px;margin-bottom: 20px;border:1px solid #C76B6B;border-radius: 4px;background-color: #FDD0D0;}
+.no-result{color: red;padding: 15px;height:100%;border:1px solid #C76B6B;background-color: #FDD0D0;}
 [class^="icon-"]:before, [class*=" icon-"]{color:#FF9800;line-height: 18px; text-align: center;-moz-user-select:none;-khtml-user-select:none;user-select:none;}
 .menu_tool{background-color: #6D6D6D;height:28px;overflow: hidden;}
 .menu_tool a{overflow: hidden;}
@@ -68,3 +68,4 @@
 .panel-header{border-bottom-width: 0 !important;}
 .sql_text{width:100%; height:100%;}
 .cmd_toolBar .l-btn-icon-left{font-size:12px;padding: 0 !important;}
+.datagrid-wrap i{color:#ccc;}

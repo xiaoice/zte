@@ -151,7 +151,7 @@ public class MySqlConnection extends SqlConnection{
 	}
 	
 	//获取表中返回的一条数据
-	public String findTableResult(Connection conn,String sql) throws SQLException {
+	public Integer findTableCount(Connection conn,String sql) throws SQLException {
 		String result=null;
 		Statement stmt=conn.createStatement();
 		ResultSet resultSet=stmt.executeQuery(sql);
@@ -161,6 +161,52 @@ public class MySqlConnection extends SqlConnection{
 		}
 		stmt.close();
 		resultSet.close();
+		return Integer.valueOf(result);
+	}
+	
+	/**
+	 * 执行Sql
+	 * @param conn
+	 * @param sql
+	 * @return type:[select:查询,返回list，update:增、删、改,返回int],data:返回的数据
+	 */
+	public JSONObject executeSql(Connection conn,String sql,Integer pageIndex,Integer pageSize) {
+		JSONObject result=new JSONObject();
+		try{
+			Statement stmt=conn.createStatement();
+			boolean isResultSet=stmt.execute(sql);
+			if(isResultSet){
+				String[] columns=findTableColumn(conn, sql);
+				List<JSONObject> resultList=new ArrayList<JSONObject>();
+				ResultSet resultSet = stmt.getResultSet();
+				// 获取集中数据  
+				while (resultSet.next()) {  
+					JSONObject jo=new JSONObject();
+					for (int i = 0; i < columns.length; i++) {
+						String key=columns[i], value=resultSet.getString(columns[i]);
+						if(value==null){
+							jo.accumulate(key,"<i>null<i>");
+						}else{
+							jo.accumulate(key,value);
+						}
+					}
+					resultList.add(jo);
+				}
+				stmt.close();
+				resultSet.close();
+				result.accumulate("type", "select");
+				result.accumulate("data", resultList);
+			}else{
+				int resultCount=stmt.getUpdateCount();
+				stmt.close();
+				result.accumulate("type", "update");
+				result.accumulate("data", resultCount);
+			}
+		}catch (SQLException e) {
+			e.printStackTrace();
+		}finally{
+			//this.closeConnection(conn);
+		}
 		return result;
 	}
 

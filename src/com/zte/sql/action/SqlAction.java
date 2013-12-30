@@ -125,8 +125,8 @@ public class SqlAction extends AjaxAction {
         String url="jdbc:mysql://"+parameter.get("ip")+":"+parameter.get("port")+"/"+parameter.get("database");
         String user=parameter.get("user");
         String password=parameter.get("password");
-        //conn = mySqlConnection.getConnection(driver, url, user, password);
-        conn = mySqlConnection.getConnection();
+        conn = mySqlConnection.getConnection(driver, url, user, password);
+        //conn = mySqlConnection.getConnection();
         return ajaxUtil.setResult(mySqlConnection.isConnected(conn));
 	}
 	
@@ -142,21 +142,47 @@ public class SqlAction extends AjaxAction {
 	public String findTableData(){
 		HttpServletRequest request=ServletActionContext.getRequest();
 		String sql=parameter.get("sql");
-		sql="select * from ("+sql+") as temp";
 		String sqlCount="select count(1) from ("+sql+") as temp";
-		int pageIndex=Integer.valueOf(request.getParameter("page"));
-		int pageSize=Integer.valueOf(request.getParameter("rows"));
+		Integer pageIndex=Integer.valueOf(request.getParameter("page"));
+		Integer pageSize=Integer.valueOf(request.getParameter("rows"));
 		sql+=" limit "+(pageIndex-1)*pageSize+","+pageSize;
 		try{
-			String total = mySqlConnection.findTableResult(conn, sqlCount);
+			Integer total = mySqlConnection.findTableCount(conn, sqlCount);
 			JSONArray rows = mySqlConnection.findTableDatas(conn, sql);
-			if(Integer.valueOf(total)>500){
-				rows.subList(0, 500);
-			}
 			JSONObject j=new JSONObject();
 			j.accumulate("rows", rows);
 			j.accumulate("total", total);
 			return ajaxUtil.setSuccess(j);
+		}catch (SQLException e) {
+			e.printStackTrace();
+			return ajaxUtil.setFail(e.getMessage());
+		}
+	}
+	
+	//获取表中数据
+	public String selectQuerySql(){
+		HttpServletRequest request=ServletActionContext.getRequest();
+		String sql=parameter.get("sql");
+		String sqlTemp="select * from ("+sql+") as temp limit 1";
+		Integer pageIndex=Integer.valueOf(request.getParameter("page"));
+		Integer pageSize=Integer.valueOf(request.getParameter("rows"));
+		try{
+			
+			JSONObject result=new JSONObject();
+			JSONObject resultSql = mySqlConnection.executeSql(conn, sql,pageIndex,pageSize);
+			if("select".equals(resultSql.get("type"))){
+				String sqlCount="select count(1) from ("+sql+") as temp";
+				Integer total = mySqlConnection.findTableCount(conn, sqlCount);
+				/*if(total>pageSize){
+					sql="select * from ("+sql+") as temp limit "+(pageIndex-1)*pageSize+","+pageSize;
+				}
+				JSONArray rows = mySqlConnection.findTableDatas(conn, sql);*/
+				result.accumulate("rows", resultSql.get("data"));
+				result.accumulate("total", total);
+			}else{
+				result.accumulate("count", resultSql.get("data"));
+			}
+			return ajaxUtil.setSuccess(result);
 		}catch (SQLException e) {
 			e.printStackTrace();
 			return ajaxUtil.setFail(e.getMessage());
