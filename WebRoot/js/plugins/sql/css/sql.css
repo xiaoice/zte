@@ -74,3 +74,4 @@
 .datagrid_input{background-color: #A9A9A9;border: 0px solid #CCCCCC;height: 24px;padding: 0;width: 100%;color:#00730E;}
 .datagrid_input:focus{background-color: #fff;color:#333;}
 .datagrid .icon-check-empty{color:#fff !important;}
+.body_loading{}
