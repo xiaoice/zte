@@ -448,7 +448,7 @@ function formatNull(value){
 		return value;
 	}
 }
-function fillValue1(){
+function fillValue(){
 	$("#input_con_ip").val("localhost");
 	$("#input_con_port").val("3306");
 	$("#input_con_database").val("test");
@@ -456,7 +456,7 @@ function fillValue1(){
 	$("#input_con_password").val("root");
 }
 
-function fillValue(){
+function fillValue1(){
 	$("#input_con_ip").val("10.17.82.155");
 	$("#input_con_port").val("3306");
 	$("#input_con_database").val("newest_edu3");
