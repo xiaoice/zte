@@ -4,30 +4,22 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<title>连接中心</title>
-	<!-- Bootstrap -->
-	<%@include file="/jsp/common/bootstrap.jsp"%>
-	
-	<script src="${base}js/plugins/jquery-easyui/jquery.easyui.min.js"></script>
-	<link href="${base}js/plugins/jquery-easyui/themes/black/easyui.css" rel="stylesheet" type="text/css">
-	
-	<link rel="stylesheet" href="js/plugins/message/message.css" type="text/css"></link>
-	<link type="text/css" href="js/plugins/conn/css/conn.css" rel="stylesheet" />
-	<script type="text/javascript" src="js/plugins/message/message.js"></script>
+	<%-- <%@include file="/jsp/common/easyui.jsp"%> --%>
 </head>
 <body class="easyui-layout">
 	<!-- <div region="south" split="true" style="height:0px;background:#cbcbcb;"></div> -->
 	<div region="west" split="true" style="width:260px;border-top-width:0;"><ul class="dataBaseTree" class="easyui-tree" ></ul></div>
 	<div region="north" class="menu_tool">
-		    <a href="javascript:void(0)" id="menu_top_file" class="easyui-menubutton" data-options="menu:'#menu_down_file'">文件</a>
-		    <a href="javascript:void(0)" id="menu_top_tool" class="easyui-menubutton">工具</a>
-		    <div id="menu_down_file" style="width:150px;">
-			    <div data-options="iconCls:'icon-add'" onclick="$('#window_create_connection').window('open');fillValue();">新建连接</div>
-			    <div class="menu-sep"></div>
-			    <div>导入SQL文件</div>
-			    <div>导出Excel</div>
-			    <div class="menu-sep"></div>
-			    <div>注销</div>
-		    </div>
+	    <a href="javascript:void(0)" id="menu_top_file" class="easyui-menubutton" data-options="menu:'#menu_down_file'">文件</a>
+	    <a href="javascript:void(0)" id="menu_top_tool" class="easyui-menubutton">工具</a>
+	    <div id="menu_down_file" style="width:150px;">
+		    <div data-options="iconCls:'icon-add'" onclick="$('#window_create_connection').window('open');fillValue();">新建连接</div>
+		    <div class="menu-sep"></div>
+		    <div>导入SQL文件</div>
+		    <div>导出Excel</div>
+		    <div class="menu-sep"></div>
+		    <div>注销</div>
+	    </div>
 	</div>
 	
 	<!-- <div region="east" title="数据库" split="true" style="width:180px;"></div> -->
@@ -40,7 +32,7 @@
 		    <div title="命令提示行" style="overflow:auto;">  
         		<div class="easyui-layout" fit="true" >
 			    	<div region="north" split="true" style="overflow:hidden;height:140px;border-width:0;border-bottom-width: 1px;">
-						<div class="cmd_toolBar"><a class="easyui-linkbutton" plain="true" iconCls="icon-play" id="btn_run">&nbsp;运行</a></div>
+						<div class="cmd_toolBar"><a title="因为浏览器性能限制，若查询语句未加分页，默认每100条数据进行分页" position="right" class="easyui-linkbutton easyui-tooltip" plain="true" iconCls="icon-play" id="btn_run">&nbsp;运行</a></div>
 			    		<textarea id="sql_text" class="sql_text" rows="0" cols="0">select * from um_usercourse</textarea>
 			    	</div>
 					<div region="center" border="false" class="exe_result_list">
@@ -52,7 +44,7 @@
 		</div>
 	</div>
 	
-	<div class="hidden">
+	<div id="base_data" class="hidden">
 	    <!-- 表节点上面点击右键菜单 -->
 		<div id="context_table" class="easyui-menu">
 	        <div iconCls="icon-search" id="context_table_open">打开表</div>
@@ -101,26 +93,17 @@
 		
 		<!-- 菜单-文件 -修改表弹出框 -->
 		<div id="window_edit_table" class="window_edit_table">
-	 	    <span class="datagrid"></span>
-		 </div>
+	 	    <span id="datagrid_edit_table" class="datagrid"></span>
+		</div>
 	</div>
 	
+	<div class="body_loading"></div>
 </body>
 </html>
-
+<script src="../js/sea-debug.js"></script>
 <script type="text/javascript">
 
 var service={
-	//将快捷菜单绑定到目标上
-	menuTree:function(source,target){
-		$(source).bind('contextmenu',function(e){
-		    e.preventDefault();
-		    $(target).menu('show', {  
-		    	left: e.pageX,  
-		        top: e.pageY
-		   	}); 
-		});
-	},
 	bindTree:function(){
 		//绑定数据到到左侧树上
 		$('.dataBaseTree').tree({
@@ -186,27 +169,6 @@ var service={
 		'</table>';
 		return $(table);
 	},
-	pagerFilter:function(data){
-		var dg = $(this);
-		var opts = dg.datagrid('options');
-		var pager = dg.datagrid('getPager');
-		pager.pagination({
-			onSelectPage:function(pageNum, pageSize){
-				//opts.pageNumber = pageNum;
-				//opts.pageSize = pageSize;
-				pager.pagination('refresh',{
-					pageNumber:pageNum,
-					pageSize:pageSize
-				});
-				message.wait("正在加载，请稍后...");
-				service.exeSql(opts.that,opts.sql,pageNum,pageSize,function(result){
-					message.hide();
-					dg.datagrid('loadData',result);
-				});
-			}
-		});
-		return data;
-	},
 	runSql:function(that,sql,callback){
 		if(that.find(".table_datagrid").size()==0){
 			that.find(".result_table").html(service.createTable());
@@ -239,6 +201,7 @@ var service={
 	        	}else{
 	        		that.find(".datagrid-pager").show();
 	        	}
+	        	$(".conn_content").tabs("select","列表展示");
 	    	}
 	    });
 		datagrid.datagrid('getPager').pagination({
@@ -366,7 +329,7 @@ var service={
 		
 		//右键-修改表
 		$document.on("click","#context_table_edit",function(e){
-			var datagrid=$("#window_edit_table .datagrid").empty();
+			var datagrid=$("#datagrid_edit_table").empty();
 			var treeTable=$('.dataBaseTree').tree("getSelected");
 			var data=[];
 			for(var i in treeTable.children){
@@ -379,13 +342,26 @@ var service={
 		        columns:[[
 			        {field:'Field',title:'字段名',width:150},
 			        {field:'Type',title:'字段类型',width:90,align:"center"},
-			        {field:'Extra',title:'自增',width:100,align:"center"},
-			        {field:'Null',title:'可空',width:40,align:"center"},
-			        {field:'Collation',title:'Collation',width:100,align:"center",formatter:formatNull},
+			        {field:'Extra',title:'自增',width:100,align:"center",formatter:function(val){return val=="auto_increment"?"<i class=\"icon-ok\"></i>":val;}},
+			        {field:'Null',title:'可空',width:40,align:"center",formatter:function(val){return val=="YES"?"<i class=\"icon-ok\"></i>":(val=="NO"?"":val);}},
+			        {field:'Collation',title:'Collation',width:100,align:"center",formatter:formatNull,hidden:true},
 			        {field:'Key',title:'键约束',width:50,align:"center"},
-			        {field:'Privileges',title:'权限',width:190,align:"center"},
+			        {field:'Privileges',title:'权限',width:190,align:"center",hidden:true},
 			        {field:'Default',title:'默认值',width:100,align:"center",formatter:formatNull},
-			        {field:'Comment',title:'注释',width:108}
+			        {field:'Comment',title:'注释',width:108},
+			        {field:'action',title:'操作',width:70,align:'center',    
+		                formatter:function(value,row,index){    
+		                    if (row.editing){    
+		                        var s = '<a href="#" onclick="saverow('+index+')">Save</a> ';    
+		                        var c = '<a href="#" onclick="cancelrow('+index+')">Cancel</a>';    
+		                        return s+c;    
+		                    } else {    
+		                        var e = '<a href="#" onclick="editrow('+index+')">Edit</a> ';
+		                        var d = '<a href="#" onclick="deleterow('+index+')">Delete</a>';
+		                        return e+d;
+		                    }    
+		                }    
+		            }
 		        ]]
 		    }).datagrid('loadData', data);
 			$("#window_edit_table").window("open");
@@ -401,53 +377,51 @@ var service={
 	init:function(){
 		message.small=true;//使用小图标提示
 		service.bindDom();
+		
+		$('#window_edit_table').dialog({
+		    title: '修改表结构',
+		    cache: false,
+		    modal: true,
+		    iconCls:'icon-edit',
+		    closed:true,
+		    collapsible:false,
+		    maximizable:false,
+		    minimizable:false,
+		    resizable:false,
+		    width:'1000',
+		    height:$("body").height()-30,
+		    toolbar:[{
+					text:'增加',
+					handler:function(){
+						var datagrid=$("#datagrid_edit_table");
+						var input="<input class=\"datagrid_input\" type=\"text\"/>";
+						//var column_type="<select class=\"datagrid_input\">"+$("#table_column_type").html()+"</select>";
+						$("#datagrid_edit_table").datagrid("appendRow", {Field:input,Type:input,Extra:input,Null:input,Collation:input,Key:input,Privileges:input,Default:input,Comment:input});
+					}
+				},'-',{
+					text:'修改',
+					handler:function(){alert('cut')}
+				},'-',{
+					text:'删除',
+					handler:function(){alert('save')}
+				}
+			]
+		});
+		
+		$("<div id=\"base_database_type\"></div>").appendTo("#base_data").load("jsp/sql/base_database_type.html");
 	}
 };
 
-$(function(){
-	service.init();
-	
-	$('#window_edit_table').dialog({
-	    title: '修改表结构',
-	    cache: false,
-	    modal: true,
-	    iconCls:'icon-edit',
-	    closed:true,
-	    collapsible:false,
-	    maximizable:false,
-	    minimizable:false,
-	    resizable:false,
-	    width:'1000',
-	    height:$("body").height()-30,
-	    toolbar:[{
-			text:'增加',
-			handler:function(){
-				if (endEditing()){
-	                $('#dg').datagrid('appendRow',{status:'P'});
-	                editIndex = $('#dg').datagrid('getRows').length-1;
-	                $('#dg').datagrid('selectRow', editIndex)
-	                        .datagrid('beginEdit', editIndex);
-	            }
-			}
-			},'-',{
-			text:'修改',
-			handler:function(){alert('cut')}
-			},'-',
-			{text:'删除',
-			handler:function(){alert('save')}
-		}]
-	});
-});
 
 //格式化空对象
 function formatNull(value){
-	console.log($.isEmptyObject(value));
 	if($.isEmptyObject(value)){
 		return "<i>null</i>";
 	}else{
 		return value;
 	}
 }
+
 function fillValue(){
 	$("#input_con_ip").val("localhost");
 	$("#input_con_port").val("3306");
@@ -464,4 +438,30 @@ function fillValue1(){
 	$("#input_con_password").val("Zte@ict2012");
 }
 
+
+seajs.config({
+  base: "../js",
+  paths: {
+	 'plugins': 'plugins',
+	 'sql': 'plugins/sql'
+  },
+  alias: {
+    "jquery": "jquery.min.js",
+    "bootstrapCss": "plugins/bootstrap/css/bootstrap.min.css",
+    "bootstrap": "plugins/bootstrap/js/bootstrap.min.js",
+    "font-awesome": "plugins/bootstrap/css/font-awesome.css",
+    "easyuiCss-black": "plugins/jquery-easyui/themes/black/easyui.css",
+    "easyui": "plugins/jquery-easyui/jquery.easyui.min.js",
+    "message": "plugins/message/message.js",
+    "messageCss": "plugins/message/message.css",
+    "sqlCss": "plugins/sql/css/sql.css",
+    "sql": "plugins/sql/js/sql.js",
+    "table": "plugins/sql/js/table.js"
+  }
+});
+
+// 加载入口模块
+seajs.use(["jquery","sql"],function(a,b){
+	console.log(a,b);
+});
 </script>
