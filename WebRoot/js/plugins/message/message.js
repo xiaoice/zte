@@ -82,7 +82,7 @@ var message={
 		this.show(text,"info",timeout);
 	},
 	wait:function(text,timeout){
-		this.color="#D86F29";
+		message.color="#D86F29";
 		this.show(text,"wait",timeout||30000);
 		$(".message_content").addClass("message_content_wait");
 	}
