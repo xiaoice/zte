@@ -14,7 +14,7 @@
 	<div class="body_loading"><div class="body_loading_box"><div class="body_loading_msg"><i class="icon_loading"></i><span>正在初始化，请稍后。。。</span></div></div></div>
 	<div class="body_layout">
 	<!-- <div region="south" split="true" style="height:0px;background:#cbcbcb;"></div> -->
-	<div region="west" split="true" style="width:260px;border-top-width:0;"><ul class="dataBaseTree" class="easyui-tree" ></ul></div>
+	<div region="west" split="true" style="width:260px;border-top-width:0;"><ul class="easyui-tree dataBaseTree" ></ul></div>
 	<div region="north" class="menu_tool">
 	    <a href="javascript:void(0)" id="menu_top_file" class="easyui-menubutton" data-options="menu:'#menu_down_file'">文件</a>
 	    <a href="javascript:void(0)" id="menu_top_tool" class="easyui-menubutton">工具</a>
