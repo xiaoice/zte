@@ -142,13 +142,13 @@ public class SqlAction extends AjaxAction {
 	public String findTableData(){
 		HttpServletRequest request=ServletActionContext.getRequest();
 		String sql=parameter.get("sql");
-		String sqlCount="select count(1) from ("+sql+") as temp";
+		String sqlCount="select count(1) from "+sql+" as temp";
 		Integer pageIndex=Integer.valueOf(request.getParameter("page"));
 		Integer pageSize=Integer.valueOf(request.getParameter("rows"));
 		sql+=" limit "+(pageIndex-1)*pageSize+","+pageSize;
 		try{
 			Integer total = mySqlConnection.findTableCount(conn, sqlCount);
-			JSONArray rows = mySqlConnection.findTableDatas(conn, sql);
+			JSONArray rows = mySqlConnection.findTableDatas(conn, "select * from "+sql);
 			JSONObject j=new JSONObject();
 			j.accumulate("rows", rows);
 			j.accumulate("total", total);
