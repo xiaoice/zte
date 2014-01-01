@@ -10,7 +10,13 @@ define(function(require,exports,module){
 	var $document=$(document);
 	
 	module.exports.target=$('.dataBaseTree');
+	var datagrid=$("#datagrid_edit_table");
 	module.exports.init=function(callback){
+		bindDomEvent();
+	};
+	
+	//绑定事件
+	function bindDomEvent(){
 		//绑定数据到到左侧树上
 		$('.dataBaseTree').tree({
 			checkbox: false,
@@ -44,15 +50,6 @@ define(function(require,exports,module){
 				sql.init();
 			}
 		});
-		
-		//格式化空对象
-		var formatNull=function(value){
-			if($.isEmptyObject(value)){
-				return "<i>null</i>";
-			}else{
-				return value;
-			}
-		}
 		
 		//右键-打开表
 		$document.on("click","#context_table_open",function(e){
@@ -93,7 +90,7 @@ define(function(require,exports,module){
 		
 		//右键-修改表
 		$document.on("click","#context_table_edit",function(e){
-			var datagrid=$("#datagrid_edit_table").empty();
+			datagrid.empty();
 			var treeTable=$('.dataBaseTree').tree("getSelected");
 			var data=[];
 			for(var i in treeTable.children){
@@ -103,16 +100,17 @@ define(function(require,exports,module){
 				width:"100%",
 				rownumbers:true,
 				singleSelect:true,
+				onClickRow: onClickRow,
 		        columns:[[
-			        {field:'Field',title:'字段名',width:150},
-			        {field:'Type',title:'字段类型',width:90,align:"center"},
-			        {field:'Extra',title:'自增',width:100,align:"center",formatter:function(val){return val=="auto_increment"?"<i class=\"icon-ok\"></i>":val;}},
-			        {field:'Null',title:'可空',width:40,align:"center",formatter:function(val){return val=="YES"?"<i class=\"icon-ok\"></i>":(val=="NO"?"":val);}},
+			        {field:'Field',title:'字段名',width:150,editor:'numberbox'},
+			        {field:'Type',title:'字段类型',width:90,align:"center",editor:'numberbox'},
+			        {field:'Extra',title:'自增',width:100,align:"center",formatter:function(val){return val=="auto_increment"?"<i class=\"icon-ok\"></i>":val;},editor:'numberbox'},
+			        {field:'Null',title:'可空',width:40,align:"center",formatter:function(val){return val=="YES"?"<i class=\"icon-ok\"></i>":(val=="NO"?"":val);},editor:'numberbox'},
 			        {field:'Collation',title:'Collation',width:100,align:"center",formatter:formatNull,hidden:true},
-			        {field:'Key',title:'键约束',width:50,align:"center"},
+			        {field:'Key',title:'键约束',width:50,align:"center",editor:'numberbox'},
 			        {field:'Privileges',title:'权限',width:190,align:"center",hidden:true},
-			        {field:'Default',title:'默认值',width:100,align:"center",formatter:formatNull},
-			        {field:'Comment',title:'注释',width:108},
+			        {field:'Default',title:'默认值',width:100,align:"center",formatter:formatNull,editor:'numberbox'},
+			        {field:'Comment',title:'注释',width:108,editor:'numberbox'},
 			        {field:'action',title:'操作',width:70,align:'center',    
 		                formatter:function(value,row,index){    
 		                    if (row.editing){    
@@ -130,5 +128,41 @@ define(function(require,exports,module){
 		    }).datagrid('loadData', data);
 			$("#window_edit_table").window("open");
 		});
+	}
+	
+	//格式化空对象
+	function formatNull(value){
+		if($.isEmptyObject(value)){
+			return "<i>null</i>";
+		}else{
+			return value;
+		}
+	};
+	
+	 var editIndex = undefined;
+	 function endEditing(){
+		if (editIndex == undefined){return true}
+		if (datagrid.datagrid('validateRow', editIndex)){
+			var ed = datagrid.datagrid('getEditor', {index:editIndex,field:'productid'});
+			//var productname = $(ed.target).combobox('getText');
+			//datagrid.datagrid('getRows')[editIndex]['productname'] = productname;
+			datagrid.datagrid('endEdit', editIndex);
+			editIndex = undefined;
+			return true;
+		 } else {
+			return false;
+		 }
+	 }
+	 
+	//双击datagrid单元行
+	function onClickRow(index){
+		 if (editIndex != index){
+			 if (endEditing()){
+				 datagrid.datagrid('selectRow', index).datagrid('beginEdit', index);
+				 editIndex = index;
+			 } else {
+				 datagrid.datagrid('selectRow', editIndex);
+			 }
+		 }
 	};
 });

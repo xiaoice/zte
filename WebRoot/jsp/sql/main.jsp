@@ -30,7 +30,7 @@
 		    <div title="命令提示行" style="overflow:auto;">  
         		<div class="easyui-layout" fit="true" >
 			    	<div region="north" split="true" style="overflow:hidden;height:140px;border-width:0;border-bottom-width: 1px;">
-						<div class="cmd_toolBar"><a title="因为浏览器性能限制，若查询语句未加分页，默认每100条数据进行分页" position="right" class="easyui-linkbutton easyui-tooltip" plain="true" iconCls="icon-play" id="btn_run">&nbsp;运行</a></div>
+						<div class="cmd_toolBar"><a class="easyui-linkbutton" plain="true" iconCls="icon-play" id="btn_run">&nbsp;运行</a></div>
 			    		<textarea id="sql_text" class="sql_text" rows="0" cols="0">select * from um_usercourse</textarea>
 			    	</div>
 					<div region="center" border="false" class="exe_result_list">
@@ -55,7 +55,7 @@
 	    </div>
 	    
 		<!-- 菜单-文件 -创建新连接按钮 -->
-		<div id="window_create_connection" class="window_create_connection easyui-window" title="创建新连接" 
+		<div id="window_create_connection" class="window_create_connection" title="创建新连接" 
 			 data-options="iconCls:'icon-retweet',closed:true,collapsible:false,maximizable:false,minimizable:false,resizable:false" >
 			<table class="edit_table">
 				<tr>

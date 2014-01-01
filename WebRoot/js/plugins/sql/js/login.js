@@ -10,7 +10,22 @@ define("login",[],function(require,exports,module){
 	module.exports.target=$('#window_create_connection');
 	module.exports.init=function(callback){
 		var $document=$(document);
-		//登录、测试连接
+		
+		//初始化登录弹出框
+	    $('#window_create_connection').window({
+	        iconCls:'icon-retweet',
+	        closed:false,
+	        collapsible:false,
+	        maximizable:false,
+	        minimizable:false,
+	        resizable:false,
+	        modal:true,
+	        onOpen:function(){
+	        	callback&&callback();
+	        }
+	    });
+	    
+		//点击登录、测试连接
 		$document.on("click","#bt_login_test,#bt_login_in",function(e){
 			var id=$(this).attr("id");
 			var data={
@@ -30,7 +45,6 @@ define("login",[],function(require,exports,module){
 					}else{
 						if(result.recode==1){
 							message.ok("连接成功！");
-							callback&&callback();
 						}else{
 							message.error("连接失败！");
 						}
@@ -41,9 +55,14 @@ define("login",[],function(require,exports,module){
 			});
 		});
 		
-		//登录、测试连接
+		//点击取消按钮
 		$document.on("click","#bt_login_cancel",function(e){
 			module.exports.target.window('close');
 		});
+	};
+	
+	//打开登录提示框
+	module.exports.open=function(){
+		$('#window_create_connection').window('open');
 	};
 });
