@@ -10,7 +10,6 @@ define(["easyui","bootstrap","message","util","menu","login","tree","sql"],funct
 	var login=require("login");
 	var $document=$(document);
 	module.exports.target=$(".body_layout").height($document.height()).show().layout();
-	$(".body_loading").fadeOut("fast");
 	function fillValue1(){
 		$("#input_con_ip").val("localhost");
 		$("#input_con_port").val("3306");
@@ -28,8 +27,11 @@ define(["easyui","bootstrap","message","util","menu","login","tree","sql"],funct
 	}
 	
 	menu.init();
-	login.init();
-	fillValue();
+	$(".body_loading").fadeOut("slow",function(){
+		login.init();
+		fillValue();
+	});
+	
 	
 	//当window窗体大小改变时候，重置layout
 	$(window).resize(function(){
