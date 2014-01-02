@@ -30,7 +30,14 @@
 		    <div title="命令提示行" style="overflow:auto;">  
         		<div class="easyui-layout" fit="true" >
 			    	<div region="north" split="true" style="overflow:hidden;height:140px;border-width:0;border-bottom-width: 1px;">
-						<div class="cmd_toolBar"><a class="easyui-linkbutton" plain="true" iconCls="icon-play" id="btn_run">&nbsp;运行</a></div>
+						<div class="cmd_toolBar">
+							<a class="easyui-linkbutton" plain="true" iconCls="icon-play" id="btn_run">&nbsp;运行</a>
+							<select class="easyui-combobox" data-options="panelHeight:'auto'">
+								<option value="">自动判断</option>
+								<option value="select">查询execumentQuery</option>
+								<option value="other">更新execumentUpdate</option>
+							</select>
+						</div>
 			    		<textarea id="sql_text" class="sql_text" rows="0" cols="0">select * from um_usercourse</textarea>
 			    	</div>
 					<div region="center" border="false" class="exe_result_list">
