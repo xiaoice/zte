@@ -85,8 +85,34 @@ define(function(require,exports,module){
 					text:'删除',
 					handler:function(){alert('save')}
 				}
-			]
+			],
+			buttons:[{
+				text:'预览Sql',
+				handler:function(){}
+			},{
+				text:'保存',
+				handler:function(){}
+			},{
+				text:'取消',
+				handler:function(){}
+			}]
 		});
+		
+		var formatUtil={
+			//是否自增
+			Extra:function(val){
+				return val=="auto_increment"?"<i class=\"icon-ok\"></i>":val;
+			},
+			//是否为空
+			Null:function(val){
+				return val=="YES"?"<i class=\"icon-ok\"></i>":(val=="NO"?"":val);
+			},
+			//复选框
+			checkbox:{
+				type:'checkbox',    
+				options:{on: "<i class=\"icon-ok\"></i>",off:""}
+			}
+		}
 		
 		//右键-修改表
 		$document.on("click","#context_table_edit",function(e){
@@ -100,19 +126,20 @@ define(function(require,exports,module){
 				width:"100%",
 				rownumbers:true,
 				singleSelect:true,
-				onClickRow: onClickRow,
+				onClickCell: onClickCell,
 		        columns:[[
-			        {field:'Field',title:'字段名',width:150,editor:'numberbox'},
-			        {field:'Type',title:'字段类型',width:90,align:"center",editor:'numberbox'},
-			        {field:'Extra',title:'自增',width:100,align:"center",formatter:function(val){return val=="auto_increment"?"<i class=\"icon-ok\"></i>":val;},editor:'numberbox'},
-			        {field:'Null',title:'可空',width:40,align:"center",formatter:function(val){return val=="YES"?"<i class=\"icon-ok\"></i>":(val=="NO"?"":val);},editor:'numberbox'},
+			        //{checkbox:true,width:32},
+			        {field:'Field',title:'字段名',width:150,editor:'text'},
+			        {field:'Type',title:'字段类型',width:90,align:"center",editor:'text'},
+			        {field:'Extra',title:'自增',width:100,align:"center",formatter:formatUtil.Extra,editor:formatUtil.checkbox},
+			        {field:'Null',title:'可空',width:40,align:"center",formatter:formatUtil.Null,editor:formatUtil.checkbox},
 			        {field:'Collation',title:'Collation',width:100,align:"center",formatter:formatNull,hidden:true},
-			        {field:'Key',title:'键约束',width:50,align:"center",editor:'numberbox'},
+			        {field:'Key',title:'键约束',width:50,align:"center",editor:'text'},
 			        {field:'Privileges',title:'权限',width:190,align:"center",hidden:true},
-			        {field:'Default',title:'默认值',width:100,align:"center",formatter:formatNull,editor:'numberbox'},
-			        {field:'Comment',title:'注释',width:108,editor:'numberbox'},
-			        {field:'action',title:'操作',width:70,align:'center',    
-		                formatter:function(value,row,index){    
+			        {field:'Default',title:'默认值',width:100,align:"center",formatter:formatNull,editor:'text'},
+			        {field:'Comment',title:'注释',width:108,editor:'text'},
+			        {field:'action',title:'操作',width:70,align:'center',
+		                formatter:function(value,row,index){
 		                    if (row.editing){    
 		                        var s = '<a href="#" onclick="saverow('+index+')">Save</a> ';    
 		                        var c = '<a href="#" onclick="cancelrow('+index+')">Cancel</a>';    
@@ -121,8 +148,8 @@ define(function(require,exports,module){
 		                        var e = '<a href="#" onclick="editrow('+index+')">Edit</a> ';
 		                        var d = '<a href="#" onclick="deleterow('+index+')">Delete</a>';
 		                        return e+d;
-		                    }    
-		                }    
+		                    }
+		                }
 		            }
 		        ]]
 		    }).datagrid('loadData', data);
@@ -139,10 +166,11 @@ define(function(require,exports,module){
 		}
 	};
 	
-	 var editIndex = undefined;
+	 
 	 function endEditing(){
 		if (editIndex == undefined){return true}
 		if (datagrid.datagrid('validateRow', editIndex)){
+			console.log(editIndex);
 			var ed = datagrid.datagrid('getEditor', {index:editIndex,field:'productid'});
 			//var productname = $(ed.target).combobox('getText');
 			//datagrid.datagrid('getRows')[editIndex]['productname'] = productname;
@@ -155,14 +183,48 @@ define(function(require,exports,module){
 	 }
 	 
 	//双击datagrid单元行
-	function onClickRow(index){
-		 if (editIndex != index){
+	function onClickRow(rowIndex, rowData){
+		/* if (editIndex != index){
 			 if (endEditing()){
 				 datagrid.datagrid('selectRow', index).datagrid('beginEdit', index);
 				 editIndex = index;
 			 } else {
 				 datagrid.datagrid('selectRow', editIndex);
 			 }
-		 }
+		 }*/
+		datagrid.datagrid('endEdit', rowIndex);
+		datagrid.datagrid('selectRow', rowIndex).datagrid('beginEdit', rowIndex);
+		var ed = $(this).datagrid('getEditor', {index:rowIndex,field:Field});
+		$(ed.target).focus();
 	};
+	
+	$.extend($.fn.datagrid.defaults.editors, {    
+	    checkbox1: {    
+	        init: function(container, options){    
+	            var input = $('<input type="text">').appendTo(container);    
+	            return input.numberspinner(options);    
+	        },    
+	        destroy: function(target){    
+	            $(target).numberspinner('destroy');    
+	        },    
+	        getValue: function(target){    
+	            return $(target).numberspinner('getValue');    
+	        },    
+	        setValue: function(target, value){    
+	            $(target).numberspinner('setValue',value);    
+	        },    
+	        resize: function(target, width){    
+	            $(target).numberspinner('resize',width);    
+	        }    
+	    }
+	}); 
+	
+	var editIndex = undefined;
+	function onClickCell(rowIndex, field, value){
+		datagrid.datagrid('endEdit', editIndex);
+		$("#datagrid_edit_table").datagrid('selectRow', rowIndex).datagrid('beginEdit', rowIndex);
+		editIndex=rowIndex;
+		//var ed = $(this).datagrid('getEditor', {index:rowIndex,field:field});
+		//$(ed.target).focus();
+	}
 });

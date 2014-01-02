@@ -51,6 +51,7 @@
 .edit_table .text_warn{color:#8f0000;padding:2px 5px;border-radius:3px;border:1px solid #8f0000;}
 
 body{overflow: hidden;}
+.gray{color: gray;}
 .no-result{color: red;padding: 15px;height:100%;border:1px solid #C76B6B;background-color: #FDD0D0;border-radius:3px;}
 [class^="icon-"]:before, [class*=" icon-"]{color:#FF9800;line-height: 18px; text-align: center;-moz-user-select:none;-khtml-user-select:none;user-select:none;}
 .menu_tool{background-color: #6D6D6D;height:28px;overflow: hidden;display: table;}
