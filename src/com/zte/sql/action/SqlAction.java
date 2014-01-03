@@ -1,6 +1,7 @@
 package com.zte.sql.action;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -125,8 +126,15 @@ public class SqlAction extends AjaxAction {
         String url="jdbc:mysql://"+parameter.get("ip")+":"+parameter.get("port")+"/"+parameter.get("database");
         String user=parameter.get("user");
         String password=parameter.get("password");
-        conn = mySqlConnection.getConnection(driver, url, user, password);
-        //conn = mySqlConnection.getConnection();
+        try {
+        	conn = mySqlConnection.getConnection(driver, url, user, password);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+			return ajaxUtil.setFail(e.getMessage());
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return ajaxUtil.setFail(e.getMessage());
+		}
         return ajaxUtil.setResult(mySqlConnection.isConnected(conn));
 	}
 	
@@ -142,13 +150,13 @@ public class SqlAction extends AjaxAction {
 	public String findTableData(){
 		HttpServletRequest request=ServletActionContext.getRequest();
 		String sql=parameter.get("sql");
-		String sqlCount="select count(1) from "+sql+" as temp";
-		Integer pageIndex=Integer.valueOf(request.getParameter("page"));
-		Integer pageSize=Integer.valueOf(request.getParameter("rows"));
-		sql+=" limit "+(pageIndex-1)*pageSize+","+pageSize;
 		try{
+			String sqlCount="select count(1) from "+sql+" as temp";
+			Integer pageIndex=Integer.valueOf(request.getParameter("page"));
+			Integer pageSize=Integer.valueOf(request.getParameter("rows"));
 			Integer total = mySqlConnection.findTableCount(conn, sqlCount);
-			JSONArray rows = mySqlConnection.findTableDatas(conn, "select * from "+sql);
+			sql="select * from "+sql+" limit "+(pageIndex-1)*pageSize+","+pageSize;
+			JSONArray rows = mySqlConnection.findTableDatas(conn, sql);
 			JSONObject j=new JSONObject();
 			j.accumulate("rows", rows);
 			j.accumulate("total", total);
@@ -159,8 +167,8 @@ public class SqlAction extends AjaxAction {
 		}
 	}
 	
-	//获取表中数据
-	public String selectQuerySql(){
+	//执行SQL-自动判断是select还是update
+	public String executeSql(){
 		HttpServletRequest request=ServletActionContext.getRequest();
 		String sql=parameter.get("sql");
 		Integer pageIndex=Integer.valueOf(request.getParameter("page"));
@@ -179,22 +187,62 @@ public class SqlAction extends AjaxAction {
 				return ajaxUtil.setSuccess(result);
 			} catch (SQLException e) {
 				e.printStackTrace();
+				return ajaxUtil.setFail(e.getMessage());
 			}
 		}
-		
-		JSONObject resultSql = mySqlConnection.executeSql(conn, sql,pageIndex,pageSize);
-		if("select".equals(resultSql.get("type"))){
-			List<JSONObject> list = (List<JSONObject>) resultSql.get("data");
-			if(list.size()>100){
-				result.accumulate("rows", list.subList(0, 100));
+		try {
+			JSONObject resultSql = mySqlConnection.executeSql(conn, sql,pageIndex,pageSize);
+			if("select".equals(resultSql.get("type"))){
+				List<JSONObject> list = (List<JSONObject>) resultSql.get("data");
+				if(list.size()>100){
+					result.accumulate("rows", list.subList(0, 100));
+				}else{
+					result.accumulate("rows", list);
+				}
+				result.accumulate("total", list.size());
 			}else{
-				result.accumulate("rows", list);
+				result.accumulate("count", resultSql.get("data"));
 			}
-			result.accumulate("total", list.size());
-		}else{
-			result.accumulate("count", resultSql.get("data"));
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return ajaxUtil.setFail(e.getMessage());
 		}
 		return ajaxUtil.setSuccess(result);
+	}
+	
+	//获取表中数据
+	public String executeSqlQuery(){
+		HttpServletRequest request=ServletActionContext.getRequest();
+		String sql=parameter.get("sql");
+		try{
+			String sqlCount="select count(1) from ("+sql+") as temp";
+			Integer pageIndex=Integer.valueOf(request.getParameter("page"));
+			Integer pageSize=Integer.valueOf(request.getParameter("rows"));
+			Integer total = mySqlConnection.findTableCount(conn, sqlCount);
+			if(total>100){
+				sql="("+sql+") limit "+(pageIndex-1)*pageSize+","+pageSize;
+			}
+			JSONArray rows = mySqlConnection.findTableDatas(conn, sql);
+			JSONObject j=new JSONObject();
+			j.accumulate("rows", rows);
+			j.accumulate("total", total);
+			return ajaxUtil.setSuccess(j);
+		}catch (SQLException e) {
+			e.printStackTrace();
+			return ajaxUtil.setFail(e.getMessage());
+		}
+	}
+	
+	//更新表中数据
+	public String executeSqlUpdate(){
+		String sql=parameter.get("sql");
+		try{
+			JSONObject result = mySqlConnection.executeSqlUpdate(conn, sql);
+			return ajaxUtil.setSuccess(result);
+		}catch (SQLException e) {
+			e.printStackTrace();
+			return ajaxUtil.setFail(e.getMessage());
+		}
 	}
 	
 	//格式化tables

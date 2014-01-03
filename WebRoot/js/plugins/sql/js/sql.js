@@ -50,8 +50,8 @@ define(function(require,exports,module){
 		});
 	};
 	
-	//运行Sql,通常是打开表自动生成Sql调用的
-	module.exports.runSql=function(that,sql,callback){
+	//打开表自动生成Sql调用的
+	module.exports.selectTable=function(that,sql,callback){
 		if(that.find(".table_datagrid").size()==0){
 			that.find(".result_table").html(createTable());
 		}
@@ -74,30 +74,35 @@ define(function(require,exports,module){
 	    		}
 	    	},
 	        onLoadSuccess: function(result){
+	        	$(".conn_content").tabs("select","列表展示");
+	        	var layout=['list','sep','first','prev','sep',"links",'sep','next','last','sep','refresh','sep','manual'];
+	        	
 	        	if(result.total==0){
-	        		that.find(".result_table").html("<div class=\"no-result\">表中没有数据！</div>");
+	        		layout=['refresh'];
+	        		that.find(".result_table .datagrid-view2 .datagrid-body").html("<div class=\"no-result\">表中没有数据！</div>");
+	        	}
+	        	else if(result.total<=20){
+	        		//that.find(".datagrid-pager").hide();
+	        		layout=['list','sep','refresh'];
+	        	}else{
+	        		//that.find(".datagrid-pager").show();
 	        	}
 	        	
-	        	if(result.total<=10){
-	        		that.find(".datagrid-pager").hide();
-	        	}else{
-	        		that.find(".datagrid-pager").show();
-	        	}
-	        	$(".conn_content").tabs("select","列表展示");
+	        	datagrid.datagrid('getPager').pagination({
+	        		layout:layout,
+	        		beforePageText:'跳转：第',
+	        		afterPageText:'页',
+	        		displayMsg:"当前第[{from}-{to}]条 共[{total}]条"
+	        	});
 	    	}
 	    });
-		datagrid.datagrid('getPager').pagination({
-			layout:['list','sep','first','prev','sep',"links",'sep','next','last','sep','refresh','sep','manual'],
-			 beforePageText:'跳转：第',
-			 afterPageText:'页',
-			 displayMsg:"当前第[{from}-{to}]条 共[{total}]条"
-		});
 	};
 	
 	//执行SQL
 	module.exports.exeSql=function(that,sql,pageIndex,pageSize,callback){
 		message.wait("正在运行sql，请稍后...");
-		$.post("sql/selectQuerySql.action",{"parameter.sql":sql,"page":pageIndex||"1","rows":pageSize},function(result){
+		var sqlType=$("#selectTableType").combobox("getValue");
+		$.post("sql/"+sqlType+".action",{"parameter.sql":sql,"page":pageIndex||"1","rows":pageSize},function(result){
 			if(typeof result=="object" && typeof result.data=="object"){
 				that.find(".msg_tip").html("");
 				that.find(".result_table").empty().show();
@@ -113,8 +118,8 @@ define(function(require,exports,module){
 				}else{
 					return that.find(".msg_tip").html("<div class=\"no-result\">"+result.message+"</div>");
 				}
-				console.log(result.data);
 				var fields=[];
+				console.log(result.data);
 				for(var field in result.data.rows[0]){
 					fields.push({field:field,title:field,width:100});
 				}
@@ -128,30 +133,19 @@ define(function(require,exports,module){
 			        pageSize:pageSize,
 			        pageList: [pageSize],
 			        loadFilter:function(data){
-			    		var opts = datagrid.datagrid('options');
 			    		var pager = datagrid.datagrid('getPager');
 			    		pager.pagination({
 			    			onSelectPage:function(pageNum, pageSize){
-			    				opts.pageNumber = pageNum;
-			    				opts.pageSize = pageSize;
-			    				pager.pagination('refresh',{
-			    					pageNumber:pageNum,
-			    					pageSize:pageSize
-			    				});
-			    				message.wait("正在加载，请稍后...");
-			    				module.exports.exeSql(that,sql,pageNum,pageSize,function(result){
-			    					message.hide();
-			    					datagrid.datagrid('loadData',result);
-			    				});
+			    				module.exports.exeSql(that,sql,pageNum,pageSize);
 			    			}
 			    		});
 			    		return data;
 			    	},
 			        onLoadSuccess: function(result){
 			        	if(result.total==0){
-			        		that.find(".result_table").html("<div class=\"no-result\">表中没有数据！</div>");
+			        		return that.find(".result_table").html("<div class=\"no-result\">表中没有数据！</div>");
 			        	}
-			        	if(result.total<=10){
+			        	if(result.total<=100){
 			        		that.find(".datagrid-pager").hide();
 			        	}else{
 			        		that.find(".datagrid-pager").show();
