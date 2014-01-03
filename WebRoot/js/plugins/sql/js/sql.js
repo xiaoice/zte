@@ -59,7 +59,7 @@ define(function(require,exports,module){
 		var treeTable=$('.dataBaseTree').tree("getSelected");
 		datagrid.datagrid({
 	        url:"sql/findTableData.action",
-	        queryParams: {"parameter.sql":sql},
+	        queryParams: {"sql":sql},
 	        columns:[treeTable.columns],
 	        height:$(that).height(),
 	        remoteSort:false,
@@ -102,7 +102,7 @@ define(function(require,exports,module){
 	module.exports.exeSql=function(that,sql,pageIndex,pageSize,callback){
 		message.wait("正在运行sql，请稍后...");
 		var sqlType=$("#selectTableType").combobox("getValue");
-		$.post("sql/"+sqlType+".action",{"parameter.sql":sql,"page":pageIndex||"1","rows":pageSize},function(result){
+		$.post("sql/"+sqlType+".action",{"sql":sql,"page":pageIndex||"1","rows":pageSize},function(result){
 			if(typeof result=="object" && typeof result.data=="object"){
 				that.find(".msg_tip").html("");
 				that.find(".result_table").empty().show();

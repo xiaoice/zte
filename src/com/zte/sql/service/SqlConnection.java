@@ -8,6 +8,8 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.zte.sql.dto.JdbcDto;
+
 public class SqlConnection {
 	@Autowired
 	private SqlSessionFactory sqlSessionFactory;
@@ -40,6 +42,12 @@ public class SqlConnection {
 			e.printStackTrace();
 		}
 		return false;
+	}
+	
+	//获取JDBC连接
+	public Connection getConnection(JdbcDto jdbcDto) throws ClassNotFoundException, SQLException{
+		Class.forName(jdbcDto.getDriver());
+		return DriverManager.getConnection(jdbcDto.getUrl(), jdbcDto.getUser(), jdbcDto.getPassword());
 	}
 	
 	//获取JDBC连接

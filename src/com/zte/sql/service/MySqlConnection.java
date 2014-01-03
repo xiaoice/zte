@@ -21,8 +21,9 @@ public class MySqlConnection extends SqlConnection{
 	 * 使用当前系统ibatis的连接获取库中所有的表
 	 * @param table
 	 * @return
+	 * @throws SQLException 
 	 */
-	public List<String> findTables() {
+	public List<String> findTables() throws SQLException {
 		SqlSession sqlSession=getSqlSession();
 		List<String> resultList = findTables(sqlSession.getConnection());
 		closeSqlSession(sqlSession);
@@ -30,26 +31,42 @@ public class MySqlConnection extends SqlConnection{
 	}
 	
 	/**
+	 * 使用指定的连接名获取库中所有的库
+	 * @param conn
+	 * @return
+	 * @throws SQLException 
+	 */
+	public List<String> findDatabases(Connection conn) throws SQLException {
+		return findFristFelidList(conn, "SHOW DATABASES");
+	}
+	
+	/**
 	 * 使用指定的连接名获取库中所有的表
 	 * @param conn
 	 * @return
+	 * @throws SQLException 
 	 */
-	public List<String> findTables(Connection conn) {
+	public List<String> findTables(Connection conn) throws SQLException {
+		return findFristFelidList(conn, "SHOW TABLES");
+	}
+	
+	/**
+	 * 运行sql，获取第一列结果
+	 * @param conn
+	 * @param sql
+	 * @return
+	 * @throws SQLException 
+	 */
+	public List<String> findFristFelidList(Connection conn,String sql) throws SQLException {
 		List<String> resultList=new ArrayList<String>();
-		try{
-			Statement stmt=conn.createStatement();
-			ResultSet resultSet=stmt.executeQuery("SHOW TABLES");
-			while (resultSet.next()) {
-				String value = resultSet.getString(1);
-				resultList.add(value);
-			}
-			stmt.close();
-			resultSet.close();
-		}catch (SQLException e) {
-			e.printStackTrace();
-		}finally{
-			//this.closeConnection(conn);
+		Statement stmt=conn.createStatement();
+		ResultSet resultSet=stmt.executeQuery(sql);
+		while (resultSet.next()) {
+			String value = resultSet.getString(1);
+			resultList.add(value);
 		}
+		stmt.close();
+		resultSet.close();
 		return resultList;
 	}
 	

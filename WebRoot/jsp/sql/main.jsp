@@ -74,8 +74,13 @@
 					<td><input id="input_con_ip" class="easyui-validatebox" type="text"></input></td>
 				</tr>
 				<tr>
-					<td class="tdLabel">数据库名称:</td>
-					<td><input id="input_con_database" class="easyui-validatebox" type="text"></input></td>
+					<td class="tdLabel">字符编码:</td>
+					<td>
+						<select id="input_con_charset" class="easyui-combobox" data-options="panelHeight:'auto'">
+							<option value="GBK">GBK</option>
+							<option value="UTF-8">UTF-8</option>
+						</select>
+					</td>
 				</tr>
 				<tr>
 					<td class="tdLabel">端口:</td>
@@ -91,6 +96,7 @@
 				</tr>
 				<tr>
 					<td colspan="2" class="text-center">
+						<input id="input_con_database" type="hidden"></input>
 						<a id="bt_login_in" class="easyui-linkbutton">连接</a>
 						<a id="bt_login_cancel" class="easyui-linkbutton">取消</a>
 						<a id="bt_login_test" class="easyui-linkbutton">测试连接</a>
@@ -103,15 +109,10 @@
 		<div id="context_table" class="easyui-menu">
 	        <div iconCls="icon-search" id="context_table_open">打开表</div>
 	        <div iconCls="icon-edit" id="context_table_edit">修改表</div>
+	        <div iconCls="icon-eye-open" id="context_table_select">查看表结构</div>
 	        <div class="menu-sep"></div>
 	        <div iconCls="icon-reload" class="context_table_reload">刷新</div>
 	    </div>
-	    
-		<!-- 树节点-右键菜单 -修改表弹出框 -->
-		<div id="window_edit_table" class="window_edit_table">
-	 	    <span id="datagrid_edit_table" class="datagrid"></span>
-		</div>
-		
 	</div>
 </body>
 </html>

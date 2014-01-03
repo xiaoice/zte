@@ -10,18 +10,18 @@
 			<result name="input">/jsp/sql/main.jsp</result>
 		</action>
 		
-		<!-- test -->
-		<action name="show" class="sqlAction" method="show">
-			<result name="json" type="json"><param name="root">ajaxUtil</param></result>
-		</action>
-		
 		<!-- 测试数据库是否连接成功 -->
 		<action name="testCon" class="sqlAction" method="testConnection">
 			<result name="json" type="json"><param name="root">ajaxUtil</param></result>
 		</action>
 		
+		<!-- 获取库中所有的数据库 -->
+		<action name="getDatabases" class="sqlAction" method="getDatabases">
+			<result name="json" type="json"><param name="root">ajaxUtil</param></result>
+		</action>
+		
 		<!-- 获取库中所有的表 -->
-		<action name="getTable" class="sqlAction" method="getTable">
+		<action name="getTables" class="sqlAction" method="getTables">
 			<result name="json" type="json"><param name="root">ajaxUtil</param></result>
 		</action>
 		
