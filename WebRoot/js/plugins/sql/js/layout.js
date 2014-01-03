@@ -4,7 +4,7 @@
  * 2013-12-31 15:39:15
  */
 
-define(["easyui","bootstrap","message","util","menu","login","tree","sql"],function(require, exports, module){
+define(["easyui","message","util","menu","login","tree","sql"],function(require, exports, module){
 	var util=require("util");
 	var menu=require("menu");
 	var login=require("login");
