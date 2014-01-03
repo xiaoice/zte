@@ -6,7 +6,6 @@
 
 define(["easyui","message","util","menu","login","tree","sql"],function(require, exports, module){
 	var util=require("util");
-	var menu=require("menu");
 	var login=require("login");
 	var $document=$(document);
 	module.exports.target=$(".body_layout").height($document.height()).show().layout();
@@ -26,12 +25,9 @@ define(["easyui","message","util","menu","login","tree","sql"],function(require,
 		$("#input_con_password").val("Zte@ict2012");
 	}
 	
-	menu.init();
 	$(".body_loading").fadeOut("slow",function(){
-		login.init();
-		fillValue();
+		login.init(fillValue);
 	});
-	
 	
 	//当window窗体大小改变时候，重置layout
 	$(window).resize(function(){

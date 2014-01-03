@@ -22,8 +22,8 @@
 	
 	<!-- <div region="east" title="数据库" split="true" style="width:180px;"></div> -->
 	<div region="center" style="overflow:hidden;border-top-width:0;">
-		<div class="easyui-tabs conn_content" border="false" fit="true">  
-		    <div class="show_table_list" title="列表展示" style="padding:5px;">
+		<div id="sql_tabs" class="easyui-tabs" border="false" fit="true">  
+		    <div class="sql_table_data" title="列表展示" style="padding:5px;">
 		    	<div class="msg_tip"></div>
 				<div class="result_table"></div>
 		    </div>  
@@ -76,7 +76,7 @@
 				<tr>
 					<td class="tdLabel">字符编码:</td>
 					<td>
-						<select id="input_con_charset" class="easyui-combobox" data-options="panelHeight:'auto'">
+						<select id="input_con_charset" class="easyui-combobox" data-options="panelHeight:'auto',editable:false">
 							<option value="GBK">GBK</option>
 							<option value="UTF-8">UTF-8</option>
 						</select>
@@ -92,7 +92,7 @@
 				</tr>
 				<tr>
 					<td class="tdLabel">口令:</td>
-					<td><input id="input_con_password" class="easyui-validatebox" type="text"></input></td>
+					<td><input id="input_con_password" class="easyui-validatebox" type="password"></input></td>
 				</tr>
 				<tr>
 					<td colspan="2" class="text-center">

@@ -12,8 +12,53 @@ define(function(require,exports,module){
 	var editIndex = undefined; //当前编辑的行索引
 	var editRows={},delRows={};//修改的行、删除的行
 	var dialog=undefined,datagrid=undefined,dialogUtil={};
-	module.exports.target=$('.dataBaseTree');
+	target=$('.dataBaseTree');
 	module.exports.init=function(callback){
+		dialogInit();
+		//绑定数据到到左侧树上
+		target.tree({
+			checkbox: false,
+			lines:true,
+			url: 'sql/getDatabases.action',
+			onBeforeLoad:function(node){
+				message.wait("正在加载数据，请稍后");
+			}, 
+			loadFilter: function(data){
+				if (data.data){
+					return data.data;
+				} else {
+					return data;
+				}
+			},
+			onDblClick:function(node){
+				if(node.type=="table"){
+					sql.selectTable($(".sql_table_data"),node.text);
+				}
+			},
+			onContextMenu:function(e,node){
+				target.tree("select", node.target);
+				if(node.iconCls=="icon-table"){
+					e.preventDefault();
+					$('#context_table').menu('show', {
+			    		left: e.pageX,
+			    		top: e.pageY
+			    	});
+				}
+			},
+			onLoadSuccess:function(node, data){
+				message.hide();
+				callback&&callback();
+			},
+			onBeforeSelect:function(node){
+				$("#input_con_database").val(node.id);
+				if(target.tree("getSelected")!=node&&node.type=="database"){
+					login.loginDatabase(function(){
+						message.ok("切换数据库"+node.id);
+					});
+				}
+			}
+		});
+		
 		bindDomEvent();
 	};
 	
@@ -38,50 +83,6 @@ define(function(require,exports,module){
 	
 	//绑定事件
 	function bindDomEvent(){
-		dialogInit();
-		//绑定数据到到左侧树上
-		$('.dataBaseTree').tree({
-			checkbox: false,
-			lines:true,
-			url: 'sql/getDatabases.action',
-			onBeforeLoad:function(node){
-				message.wait("正在加载数据，请稍后");
-			}, 
-			loadFilter: function(data){
-				if (data.data){
-					return data.data;
-				} else {
-					return data;
-				}
-			},
-			onDblClick:function(node){
-				sql.selectTable($(".show_table_list"),node.text);
-			},
-			onContextMenu:function(e,node){
-				$(".dataBaseTree").tree("select", node.target);
-				if(node.iconCls=="icon-table"){
-					e.preventDefault();
-					$('#context_table').menu('show', {
-			    		left: e.pageX,
-			    		top: e.pageY
-			    	});
-				}
-			},
-			onLoadSuccess:function(node, data){
-				message.hide();
-				sql.init();
-			},
-			onSelect:function(node){
-				console.log(node);
-				$("#input_con_database").val(node.id);
-				if(node.type=="database"){
-					login.loginDatabase(function(){
-						message.ok("切换数据库"+node.id);
-					});
-				}
-			}
-		});
-		
 		//初始化【修改表】弹出框
 		dialogUtil.dialog_edit.dialog({
 		    title: '修改表结构',
@@ -310,7 +311,7 @@ define(function(require,exports,module){
 	//右键-打开表
 	$document.on("click","#context_table_open",function(e){
 		var table=$($('.dataBaseTree').tree("getSelected").target).find(".tree-title").text();
-		sql.selectTable($(".show_table_list"),table);
+		sql.selectTable($(".sql_table_data"),table);
 	});
 	
 	//右键-查看表结构
@@ -377,5 +378,5 @@ define(function(require,exports,module){
 	    }).datagrid('loadData', data);
 		dialog.window("open");
 	});
-	
+	module.exports.target=target;
 });

@@ -30,5 +30,5 @@ seajs.config({
 
 //加载入口模块
 seajs.use(["layout"],function(layout){
-	console.log("sql was init!",layout);
+	console.log("page was init!",layout);
 });
