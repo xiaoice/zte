@@ -56,7 +56,7 @@ define(function(require,exports,module){
 				$("#input_con_database").val(node.text);
 				if(databaseSelect.html()!=node.text&&node.type=="database"){
 					login.loginDatabase(function(){
-						message.ok("切换数据库"+node.text);
+						message.ok("成功切换到数据库【"+node.text+"】");
 						databaseSelect.html(node.text);
 					});
 				}else if(node.type=="table"){
