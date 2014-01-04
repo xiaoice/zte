@@ -12,7 +12,7 @@ define("login",[],function(require,exports,module){
 	module.exports.init=function(callback){
 		
 		//初始化登录弹出框
-	    $('#window_create_connection').window({
+		dialog.window({
 	        iconCls:'icon-retweet',
 	        closed:false,
 	        collapsible:false,
@@ -81,7 +81,7 @@ define("login",[],function(require,exports,module){
 	
 	//打开登录提示框
 	module.exports.open=function(){
-		$('#window_create_connection').window('open');
+		dialog.window('open');
 	};
 	//对外接口
 	module.exports.target=dialog;

@@ -6,6 +6,7 @@
 
 define(["easyui","message","util","menu","login","tree","sql"],function(require, exports, module){
 	var util=require("util");
+	var menu=require("menu");
 	var login=require("login");
 	var $document=$(document);
 	module.exports.target=$(".body_layout").height($document.height()).show().layout();

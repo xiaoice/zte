@@ -52,7 +52,9 @@
 
 body{overflow: hidden;}
 .gray{color: gray;}
+.body_layout_south{height: 24px;line-height: 24px;}
 .no-result{color: red;padding: 5px;border:1px solid #C76B6B;background-color: #FDD0D0;border-radius:3px;}
+.ok-result{color: green;padding: 5px;border:1px solid #1FD948;background-color: #D1FED4;border-radius:3px;}
 [class^="icon-"]:before, [class*=" icon-"]{color:#FF9800;line-height: 18px; text-align: center;-moz-user-select:none;-khtml-user-select:none;user-select:none;}
 .menu_tool{background-color: #6D6D6D;height:28px;overflow: hidden;display: table;}
 .menu_tool a{overflow: hidden;}
@@ -67,8 +69,11 @@ body{overflow: hidden;}
 .pagination-loading,.datagrid-mask-msg{background-image: url('../../../../images/loading_black.gif');}
 .pagination-loading{ border-radius: 4px;}
 .panel-header{border-bottom-width: 0 !important;}
-.sql_text{width:100%; height:100%;font-size: 12px;border:1px solid #9AD378;}
+.sql_tabs_cmd{overflow:hidden;height:140px;border-width:0;border-bottom-width: 1px; position: relative;}
+.cmd_toolBar{position: absolute;top:0;left: 0;width: 100%;height:28px; background-color: #666666;border-bottom: 1px solid #009308;}
 .cmd_toolBar .l-btn-icon-left{font-size:12px;padding: 0 !important;}
+.cmd_toolBar .combo{border-radius: 3px; border-color: #FF9800;}
+.sql_text{width:100%; height:100%;font-size: 12px;border:1px solid #9AD378;padding:30px 5px 5px 5px; overflow: auto;}
 .datagrid-wrap i{color:#ccc;}
 .dialog_edit_table{border: 1px solid #000 !important;}
 .dialog_edit_table .panel-body-noheader{border-width: 0 !important;}
@@ -87,11 +92,19 @@ body{overflow: hidden;}
 .body_loading .icon_loading{background-image: url('../../../../images/ajax-loader.gif');padding: 1px 0 1px 16px;margin:0 3px;}
 .body_layout{display: none;}
 .tooltip{background-color: #FFC8C8 !important;border: 1px solid #AE0000 !important;}
-
-
-
-
-
+.dialog_create_tablename,.dialog_create_tablename:hover{text-align: right; width: 600px;display: block;color:#fff;text-decoration: none;}
+.dialog_create_tablename span{background-color: #fff;display: inline-block;}
+.dialog_create_tablename_input{border:1px solid #805C1E;background-color:#F8FFDA;margin:1px;border-radius: 3px;color:#333;width: 150px;}
+.dialog_create_panel_sql{position: absolute;top:0;left: 0;width:100%;height:100%;z-index: 10000;background-color: #fff;color:#aeaeae;padding:5px;overflow: auto;display: none;}
+.dialog_create_panel_sql .Field{padding:0 2px 0 20px;color:#aeaeae;}
+.dialog_create_panel_sql .Type{padding:0 2px;color:#4857C5; font-weight: bold;}
+.dialog_create_panel_sql .Null{padding:0 2px;color:#A4925F;}
+.dialog_create_panel_sql .Extra{padding:0 2px;color:#9F2081;}
+.dialog_create_panel_sql .Comment{padding:0 2px;color:#1BB132;}
+.dialog_create_panel_sql .Default{padding:0 2px;color:#8E7619;}
+.dialog_create_panel_sql .Key{padding:0 2px 0 20px;color:#B53333;}
+.window .messager-icon{display: none;}
+.messager_question{font-size: 14px;}
 
 
 

@@ -2,6 +2,7 @@ package com.zte.sql.action;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,6 +27,7 @@ public class SqlAction extends AjaxAction {
 	private MySqlConnection mySqlConnection;
 	@Autowired
 	private SqlSessionFactory sqlSessionFactory;
+	Connection conn=null;
 	
 	//获取数据库连接
 	public SqlSession getSqlSession(){
@@ -57,10 +59,14 @@ public class SqlAction extends AjaxAction {
 					setSessionProperty("jdbc", jdbc);
 				}
 			}
+			if(jdbc==null){
+				throw new SQLException("请先登录!");
+			}
 			conn = mySqlConnection.getConnection(jdbc);
 			parameter=null;
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
+			throw new SQLException(e.getMessage(),e);
 		}
 		return conn;
 	}
@@ -68,11 +74,13 @@ public class SqlAction extends AjaxAction {
 	//测试连接数据库
 	public String testConnection(){
         try {
-        	Connection conn=getConnection();
-			return ajaxUtil.setResult(mySqlConnection.isConnected(conn));
+        	conn=getConnection();
+			return ajaxUtil.setResult(!conn.isClosed());
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return ajaxUtil.setFail(e.getMessage());
+		}finally{
+			mySqlConnection.closeConnection(conn);
 		}
 	}
 	
@@ -81,26 +89,39 @@ public class SqlAction extends AjaxAction {
 		try {
 			HttpServletRequest request=ServletActionContext.getRequest();
 			String id=request.getParameter("id");
-			Connection conn=getConnection(id);
 			if(StringUtils.isNotBlank(id)){
-				return getTables();
+				String[] ids=id.split("—");
+				conn=getConnection(ids[0]);
+				if(ids.length==1){
+					return getTables();
+				}else if(ids.length==2){
+					JSONArray array=mySqlConnection.findTableColumnInfo(conn, ids[1]);
+					return ajaxUtil.setSuccess(formatTableColumn(array));
+				}else{
+					return ajaxUtil.setFail("选中的数据库或者数据表不正确！");
+				}
 			}else{
+				conn=getConnection();
 				return ajaxUtil.setSuccess(formatDatabaseName(mySqlConnection.findDatabases(conn)));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return ajaxUtil.setFail(e.getMessage());
+		}finally{
+			mySqlConnection.closeConnection(conn);
 		}
 	}
 	
 	//获取数据库中所有的表、表中所有的列
 	public String getTables(){
 		try {
-			Connection conn=getConnection();
+			conn=getConnection();
 			return ajaxUtil.setSuccess(formatTableName(mySqlConnection.findTables(conn)));
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return ajaxUtil.setFail(e.getMessage());
+		}finally{
+			mySqlConnection.closeConnection(conn);
 		}
 	}
 	
@@ -109,7 +130,7 @@ public class SqlAction extends AjaxAction {
 		HttpServletRequest request=ServletActionContext.getRequest();
 		String sql=request.getParameter("sql");
 		try{
-			Connection conn=getConnection();
+			conn=getConnection();
 			String sqlCount="select count(1) from "+sql+" as temp";
 			Integer pageIndex=Integer.valueOf(request.getParameter("page"));
 			Integer pageSize=Integer.valueOf(request.getParameter("rows"));
@@ -123,6 +144,8 @@ public class SqlAction extends AjaxAction {
 		}catch (SQLException e) {
 			e.printStackTrace();
 			return ajaxUtil.setFail(e.getMessage());
+		}finally{
+			mySqlConnection.closeConnection(conn);
 		}
 	}
 	
@@ -135,7 +158,7 @@ public class SqlAction extends AjaxAction {
 		JSONObject result=new JSONObject();
 		if(pageIndex>1){
 			try {
-				Connection conn=getConnection();
+				conn=getConnection();
 				String sqlCount="select count(1) from ("+sql+") as temp";
 				Integer total = mySqlConnection.findTableCount(conn, sqlCount);
 				if(total>pageSize){
@@ -148,10 +171,12 @@ public class SqlAction extends AjaxAction {
 			} catch (SQLException e) {
 				e.printStackTrace();
 				return ajaxUtil.setFail(e.getMessage());
+			}finally{
+				mySqlConnection.closeConnection(conn);
 			}
 		}
 		try {
-			Connection conn=getConnection();
+			conn=getConnection();
 			JSONObject resultSql = mySqlConnection.executeSql(conn, sql,pageIndex,pageSize);
 			if("select".equals(resultSql.get("type"))){
 				List<JSONObject> list = (List<JSONObject>) resultSql.get("data");
@@ -162,11 +187,13 @@ public class SqlAction extends AjaxAction {
 				}
 				result.accumulate("total", list.size());
 			}else{
-				result.accumulate("count", resultSql.get("data"));
+				result.accumulate("result", resultSql.get("data"));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return ajaxUtil.setFail(e.getMessage());
+		}finally{
+			mySqlConnection.closeConnection(conn);
 		}
 		return ajaxUtil.setSuccess(result);
 	}
@@ -176,7 +203,7 @@ public class SqlAction extends AjaxAction {
 		HttpServletRequest request=ServletActionContext.getRequest();
 		String sql=request.getParameter("sql");
 		try{
-			Connection conn=getConnection();
+			conn=getConnection();
 			String sqlCount="select count(1) from ("+sql+") as temp";
 			Integer pageIndex=Integer.valueOf(request.getParameter("page"));
 			Integer pageSize=Integer.valueOf(request.getParameter("rows"));
@@ -192,6 +219,8 @@ public class SqlAction extends AjaxAction {
 		}catch (SQLException e) {
 			e.printStackTrace();
 			return ajaxUtil.setFail(e.getMessage());
+		}finally{
+			mySqlConnection.closeConnection(conn);
 		}
 	}
 	
@@ -200,22 +229,25 @@ public class SqlAction extends AjaxAction {
 		HttpServletRequest request=ServletActionContext.getRequest();
 		String sql=request.getParameter("sql");
 		try{
-			Connection conn=getConnection();
+			conn=getConnection();
 			JSONObject result = mySqlConnection.executeSqlUpdate(conn, sql);
 			return ajaxUtil.setSuccess(result);
 		}catch (SQLException e) {
 			e.printStackTrace();
 			return ajaxUtil.setFail(e.getMessage());
+		}finally{
+			mySqlConnection.closeConnection(conn);
 		}
 	}
 	
-	//格式化tables
+	//格式化database
 	private JSONArray formatDatabaseName(List<String> list){
 		JSONArray tablesArray=new JSONArray();
 		for(String value : list){
 			JSONObject j=new JSONObject();
 			j.accumulate("id", value);
 			j.accumulate("text", value);
+			j.accumulate("name", value);
 			j.accumulate("iconCls","icon-desktop");
 			j.accumulate("state", "closed");
 			j.accumulate("type", "database");
@@ -227,14 +259,17 @@ public class SqlAction extends AjaxAction {
 	//格式化tables
 	private JSONArray formatTableName(List<String> list) throws SQLException{
 		JSONArray tablesArray=new JSONArray();
+		JdbcDto jdbc =(JdbcDto) getSessionProperty("jdbc");
 		Connection conn=getConnection();
 		for(String value : list){
 			JSONObject j=new JSONObject();
 			JSONArray array=mySqlConnection.findTableColumnInfo(conn, value);
-			j.accumulate("id", value);
+			j.accumulate("id", jdbc.getDatabase()+"—"+value);
 			j.accumulate("text", value);
+			j.accumulate("name", value);
 			j.accumulate("iconCls","icon-table");
 			j.accumulate("state", "closed");
+			j.accumulate("type", "table");
 			j.accumulate("columns", formatTableColumnDatagrid(array));
 			j.accumulate("children", formatTableColumn(array));
 			tablesArray.add(j);
@@ -276,6 +311,8 @@ public class SqlAction extends AjaxAction {
 			}
 			j.accumulate("id", value);
 			j.accumulate("text", text);
+			j.accumulate("name", value);
+			j.accumulate("type", "column");
 			j.accumulate("attributes", column);
 			tablesArray.add(j);
 		}

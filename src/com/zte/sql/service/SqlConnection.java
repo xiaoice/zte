@@ -21,27 +21,10 @@ public class SqlConnection {
 	
 	//关闭本地ibatis数据库连接
 	public void closeSqlSession(SqlSession sqlSession){
-		try {
-			if (sqlSession != null) {
-				sqlSession.close();
-				sqlSession = null;
-			}
-		} 
-		catch (Exception e){
-			System.out.println(e.getMessage());
+		if (sqlSession != null) {
+			sqlSession.close();
+			sqlSession = null;
 		}
-	}
-	
-	//查看当前是否已经连接成功
-	public boolean isConnected(Connection conn) {
-		try {
-			if(conn!=null){
-				return !conn.isClosed();
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return false;
 	}
 	
 	//获取JDBC连接
@@ -62,12 +45,12 @@ public class SqlConnection {
 	}
 	//关闭JDBC连接
 	public void closeConnection(Connection conn){
-		if(isConnected(conn)){
-			try {
+		try {
+			if(!conn.isClosed()){
 				conn.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
 			}
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 	}
 

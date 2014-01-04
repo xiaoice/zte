@@ -13,7 +13,9 @@
 <body>
 	<div class="body_loading"><div class="body_loading_box"><div class="body_loading_msg"><i class="icon_loading"></i><span>正在初始化，请稍后。。。</span></div></div></div>
 	<div class="body_layout">
-	<!-- <div region="south" split="true" style="height:0px;background:#cbcbcb;"></div> -->
+	<div region="south" class="body_layout_south">
+		<div>当前数据库:<span id="database_select">未选中数据库</span></div>
+	</div>
 	<div region="west" split="true" style="width:260px;border-top-width:0;"><ul class="easyui-tree dataBaseTree" ></ul></div>
 	<div region="north" class="menu_tool">
 	    <a href="javascript:void(0)" id="menu_top_file" class="easyui-menubutton" data-options="menu:'#menu_down_file'">文件</a>
@@ -29,7 +31,7 @@
 		    </div>  
 		    <div title="命令提示行" style="overflow:auto;">  
         		<div class="easyui-layout" fit="true" >
-			    	<div region="north" split="true" style="overflow:hidden;height:140px;border-width:0;border-bottom-width: 1px;">
+			    	<div region="north" split="true" class="sql_tabs_cmd">
 						<div class="cmd_toolBar">
 							<a class="easyui-linkbutton" plain="true" iconCls="icon-play" id="btn_run">&nbsp;运行</a>
 							<select id="selectTableType" class="easyui-combobox" data-options="panelHeight:'auto'">
@@ -105,13 +107,22 @@
 			</table>
 		</div>
 		
-		<!-- 树节点-点击右键菜单 -->
+		<!-- 树节点-数据库-点击右键菜单 -->
+		<div id="context_database" class="easyui-menu">
+		<div iconCls="icon-plus-sign" class="context_table_create">创建表</div>
+	        <div iconCls="icon-repeat" id="context_database_reload">刷新</div>
+	    </div>
+	    
+		<!-- 树节点-数据表-点击右键菜单 -->
 		<div id="context_table" class="easyui-menu">
+	        <div iconCls="icon-plus-sign" class="context_table_create">创建表</div>
 	        <div iconCls="icon-search" id="context_table_open">打开表</div>
 	        <div iconCls="icon-edit" id="context_table_edit">修改表</div>
-	        <div iconCls="icon-eye-open" id="context_table_select">查看表结构</div>
+	        <div iconCls="icon-list-alt" id="context_table_select">查看表结构</div>
+	        <div iconCls="icon-trash" id="context_table_delete">删除表</div>
+	        <div iconCls="icon-exchange" id="context_table_rename">重命名</div>
 	        <div class="menu-sep"></div>
-	        <div iconCls="icon-reload" class="context_table_reload">刷新</div>
+	        <div iconCls="icon-repeat" id="context_table_reload">刷新</div>
 	    </div>
 	</div>
 </body>

@@ -17,7 +17,7 @@ define(function(require,exports,module){
 		if(sql==""){
 			return message.error("系统提示：请输入sql语句");
 		}
-		exeSql($(".exe_result_list"),sql,1,100);
+		executeTable($(".exe_result_list"),sql,1,100);
 	});
 	
 	//打开表自动生成Sql调用的
@@ -67,8 +67,8 @@ define(function(require,exports,module){
 	    });
 	};
 	
-	//执行SQL
-	function exeSql(that,sql,pageIndex,pageSize,callback){
+	//执行SQL并返回结果
+	function executeTable(that,sql,pageIndex,pageSize,callback){
 		$("#sql_text").focus();
 		message.wait("正在运行sql，请稍后...");
 		var sqlType=$("#selectTableType").combobox("getValue");
@@ -88,6 +88,15 @@ define(function(require,exports,module){
 				}else{
 					return that.find(".msg_tip").html("<div class=\"no-result\">"+result.message+"</div>");
 				}
+				
+				if(typeof result.data.result!="undefined"){
+					var resultTip="命令成功完成！";
+					if(result.data.result>0){
+						resultTip+="<br>"+result.data.result+"条数据受影响！";
+					}
+					return that.find(".msg_tip").show().html("<div class=\"ok-result\">"+resultTip+"</div>");
+				}
+				
 				var fields=[];
 				for(var field in result.data.rows[0]){
 					fields.push({field:field,title:field,width:100});
@@ -105,23 +114,26 @@ define(function(require,exports,module){
 			    		var pager = datagrid.datagrid('getPager');
 			    		pager.pagination({
 			    			onSelectPage:function(pageNum, pageSize){
-			    				exeSql(that,sql,pageNum,pageSize);
+			    				executeTable(that,sql,pageNum,pageSize);
 			    			}
 			    		});
 			    		return data;
 			    	},
 			        onLoadSuccess: function(result){
-			        	var layout=['list','sep','first','prev','sep',"links",'sep','next','last','sep','refresh','sep','manual'];
+			        	var layout=['first','prev','sep',"links",'sep','next','last','sep','refresh','sep','manual'];
+			        	var displayMsg="当前第[{from}-{to}]条 共[{total}]条";
 			        	if(result.total==0){
 			        		layout=['refresh'];
 			        		return that.find(".result_table").html("<div class=\"no-result\">表中没有数据！</div>");
 			        	}
 			        	else if(result.total<=100){
-			        		layout=['list','sep','refresh'];
+			        		layout=['refresh'];
+			        	}else{
+			        		displayMsg="因浏览器性能限制，若查询语句未加分页，默认每100条数据进行分页；当前第[{from}-{to}]条 共[{total}]条";
 			        	}
 			        	datagrid.datagrid('getPager').pagination({
 			        		layout:layout,
-			        		displayMsg:"因浏览器性能限制，若查询语句未加分页，默认每100条数据进行分页；当前第[{from}-{to}]条 共[{total}]条"
+			        		displayMsg:displayMsg
 			        	});
 			        	callback&&callback();
 			    	}
@@ -132,6 +144,13 @@ define(function(require,exports,module){
 		    }
 		});
 	};
+	
+	//执行SQL
+	function executeSqlUpdate(sql,callback){
+		$.post("sql/executeSqlUpdate.action",{"sql":sql},function(result){
+			callback&&callback(result);
+		});
+	}
 	
 	//创建表
 	function createTable(){
@@ -167,6 +186,7 @@ define(function(require,exports,module){
 		return word;
 	};
 	
-	module.exports.exeSql=exeSql;
+	module.exports.executeTable=executeTable;
 	module.exports.selectTable=selectTable;
+	module.exports.executeSqlUpdate=executeSqlUpdate;
 });

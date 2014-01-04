@@ -20,11 +20,6 @@
 			<result name="json" type="json"><param name="root">ajaxUtil</param></result>
 		</action>
 		
-		<!-- 获取库中所有的表 -->
-		<action name="getTables" class="sqlAction" method="getTables">
-			<result name="json" type="json"><param name="root">ajaxUtil</param></result>
-		</action>
-		
 		<!-- 获取表中所有的数据 -->
 		<action name="findTableData" class="sqlAction" method="findTableData">
 			<result name="json" type="json"><param name="root">ajaxUtil</param></result>
