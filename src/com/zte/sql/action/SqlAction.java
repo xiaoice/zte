@@ -41,6 +41,7 @@ public class SqlAction extends AjaxAction {
 	
 	//连接数据库
 	public Connection getConnection() throws SQLException{
+		//return getSqlSession().getConnection();
 		return getConnection(null);
 	}
 	
