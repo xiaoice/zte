@@ -5,7 +5,7 @@
  */
 
 define(function(require,exports,module){
-	var message=require("message");
+	var util=require("util"),message=util.message;
 	var $document=$(document);
 	module.exports.init=function(callback){
 		
@@ -47,7 +47,10 @@ define(function(require,exports,module){
 	        	$("#sql_tabs").tabs("select",'列表展示');
 	        	var layout=['list','sep','first','prev','sep',"links",'sep','next','last','sep','refresh','sep','manual'];
 	        	
-	        	if(result.total==0){
+	        	if(result.recode==0){
+					return that.find(".msg_tip").html("<div class=\"no-result\">"+result.message+"</div>");
+				}
+	        	else if(result.total==0){
 	        		layout=['refresh'];
 	        		that.find(".result_table .datagrid-view2 .datagrid-body").html("<div class=\"no-result\">表中没有数据！</div>");
 	        	}

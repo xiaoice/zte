@@ -5,8 +5,7 @@
  */
 
 define("login",[],function(require,exports,module){
-	var tree=require("tree");
-	var message=require("message");
+	var tree=require("tree"),util=require("util"),message=util.message;
 	var dialog=$('#window_create_connection');
 	var $document=$(document);
 	module.exports.init=function(callback){
@@ -67,6 +66,7 @@ define("login",[],function(require,exports,module){
 		message.wait("正在连接");
 		$.post("sql/testCon.action",getLoginInfo(),function(result){
 			if(typeof result=="object"){
+				message.hide();
 				callback&&callback(result);
 			}else{
 				message.error("连接失败！系统错误！");

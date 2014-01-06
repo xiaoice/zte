@@ -11,40 +11,40 @@ define(["messageCss"],function(require,exports,module){
 		small:true,	//是否为小图标模式
 		//创建消息框
 		create:function(){
-			if(this.self==null){
+			if(message.self==null){
 				var msg='<div class="message_box">';
 				msg+='<div class="message_content"><span class="message_icon"></span><span class="message_text"></span></div></div>';
-				this.self=$(msg).appendTo("body");
+				message.self=$(msg).appendTo("body");
 			}
-			return this.self;
+			return message.self;
 		},
 		setOffset:function(){
 			var documentWidth = $(document).width();
 			var documentHeight = $(document).height();
-			var width=this.self.outerWidth();
-			var height=this.self.outerHeight();
+			var width=message.self.outerWidth();
+			var height=message.self.outerHeight();
 			var left=(documentWidth-width)/2;
 			var top=(documentHeight-height)/2;
-			this.self.css({"top":top,"left":left});
-			return this.self;
+			message.self.css({"top":top,"left":left});
+			return message.self;
 		},
 		setContent:function(text,icon){
-			this.create();
+			message.create();
 			if($(".message_content").hasClass("message_content_wait")){
 				$(".message_content_wait").removeClass("message_content_wait");
 			}
 			$(".message_icon").removeAttr("class").addClass("message_icon icon_message_"+icon);
-			$(".message_text").text(text).css("color",this.color);
-			this.setOffset();
-			if(this.small==true){
-				this.self.removeAttr("class").addClass("message_box_small");
+			$(".message_text").text(text).css("color",message.color);
+			//message.setOffset();
+			if(message.small==true){
+				message.self.removeAttr("class").addClass("message_box_small");
 			}else{
-				this.self.removeAttr("class").addClass("message_box");
+				message.self.removeAttr("class").addClass("message_box");
 			}
-			return this.self;
+			return message;
 		},
 		show:function(text,icon,timeout){
-			message.setContent(text,icon).show();
+			message.setContent(text,icon).setOffset().show();
 			util.processor.process(function(){
 				message.hide();
 			},timeout||2000);
@@ -53,28 +53,28 @@ define(["messageCss"],function(require,exports,module){
 			message.self.fadeOut("slow");
 		},
 		ok:function(text,timeout){
-			this.color="green";
-			this.show(text,"ok",timeout);
+			message.color="green";
+			message.show(text,"ok",timeout);
 		},
 		error:function(text,timeout){
-			this.color="red";
-			this.show(text,"error",timeout);
+			message.color="red";
+			message.show(text,"error",timeout);
 		},
 		warn:function(text,timeout){
-			this.color="#9E9E29";
-			this.show(text,"warn",timeout);
+			message.color="#9E9E29";
+			message.show(text,"warn",timeout);
 		},
 		stop:function(text,timeout){
-			this.color="#8f0000";
-			this.show(text,"stop",timeout);
+			message.color="#8f0000";
+			message.show(text,"stop",timeout);
 		},
 		info:function(text,timeout){
-			this.color="#3250D3";
-			this.show(text,"info",timeout);
+			message.color="#3250D3";
+			message.show(text,"info",timeout);
 		},
 		wait:function(text,timeout){
-			this.color="#D86F29";
-			this.show(text,"wait",timeout||30000);
+			message.color="#D86F29";
+			message.show(text,"wait",timeout||30000);
 			$(".message_content").addClass("message_content_wait");
 		}
 	};

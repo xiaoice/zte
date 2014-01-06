@@ -11,15 +11,16 @@
 	<link charset="utf-8" rel="stylesheet" href="../js/plugins/sql/css/sql.css" />
 </head>
 <body>
-	<div class="body_loading"><div class="body_loading_box"><div class="body_loading_msg"><i class="icon_loading"></i><span>正在初始化，请稍后。。。</span></div></div></div>
+	<div id="body_message_wrap_init" class="body_message_wrap"><div class="body_message_box"><div class="body_message_content"><i class="body_message_icon"></i><span class="body_message_text">正在初始化，请稍后。。。</span></div></div></div>
 	<div class="body_layout">
 	<div region="south" class="body_layout_south">
-		<div>当前数据库:<span id="database_select">未选中数据库</span></div>
+		<div>当前数据库:<span id="database_select" class="database_select">未选中数据库</span></div>
 	</div>
 	<div region="west" split="true" style="width:260px;border-top-width:0;"><ul class="easyui-tree dataBaseTree" ></ul></div>
 	<div region="north" class="menu_tool">
-	    <a href="javascript:void(0)" id="menu_top_file" class="easyui-menubutton" data-options="menu:'#menu_down_file'">文件</a>
-	    <a href="javascript:void(0)" id="menu_top_tool" class="easyui-menubutton">工具</a>
+	    <a id="menu_top_file" class="easyui-menubutton" data-options="menu:'#menu_down_file'">文件</a>
+	    <a id="menu_top_tool" class="easyui-menubutton">工具</a>
+	    <a id="menu_top_help" class="easyui-menubutton">帮助</a>
 	</div>
 	
 	<!-- <div region="east" title="数据库" split="true" style="width:180px;"></div> -->

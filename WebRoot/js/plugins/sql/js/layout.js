@@ -4,13 +4,11 @@
  * 2013-12-31 15:39:15
  */
 
-define(["easyui","message","util","menu","login","tree","sql"],function(require, exports, module){
-	var util=require("util");
-	var menu=require("menu");
-	var login=require("login");
+define(["easyui","util","menu","login","tree","sql"],function(require, exports, module){
+	var login=require("login"),util=require("util"),message=util.message;menu=require("menu");
 	var $document=$(document);
 	module.exports.target=$(".body_layout").height($document.height()).show().layout();
-	function fillValue(){
+	function fillValue2(){
 		$("#input_con_ip").val("localhost");
 		$("#input_con_port").val("3306");
 		$("#input_con_database").val("test");
@@ -18,7 +16,7 @@ define(["easyui","message","util","menu","login","tree","sql"],function(require,
 		$("#input_con_password").val("root");
 	}
 	
-	function fillValue2(){
+	function fillValue(){
 		$("#input_con_ip").val("10.17.82.155");
 		$("#input_con_port").val("3306");
 		$("#input_con_database").val("newest_edu3");
@@ -26,7 +24,7 @@ define(["easyui","message","util","menu","login","tree","sql"],function(require,
 		$("#input_con_password").val("Zte@ict2012");
 	}
 	
-	$(".body_loading").fadeOut("slow",function(){
+	$("#body_message_wrap_init").fadeOut("slow",function(){
 		login.init(fillValue);
 	});
 	
