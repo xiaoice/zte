@@ -8,8 +8,9 @@ define(function(require,exports,module){
 	var login=require("login");
 	var $document=$(document);
 	module.exports.init=function(){
-		$document.on("click","#menu_down_connection",function(){
-			login.open();
-		});
+		
 	};
+	$document.on("click","#menu_down_connection",function(){
+		login.open();
+	});
 });

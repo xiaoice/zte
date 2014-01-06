@@ -12,7 +12,7 @@ define("login",[],function(require,exports,module){
 	module.exports.init=function(callback){
 		
 		//初始化登录弹出框
-	    $('#window_create_connection').window({
+		dialog.window({
 	        iconCls:'icon-retweet',
 	        closed:false,
 	        collapsible:false,
@@ -29,6 +29,7 @@ define("login",[],function(require,exports,module){
 	
 	//测试连接
 	$document.on("click","#bt_login_test",function(e){
+		$("#input_con_database").val("");
 		loginDatabase(function(result){
 			if(result.recode==1){
 				message.ok("连接成功！");
@@ -40,13 +41,16 @@ define("login",[],function(require,exports,module){
 	
 	//点击登录
 	$document.on("click","#bt_login_in",function(e){
+		$("#input_con_database").val("");
 		loginDatabase(function(){
 			tree.init();
 			dialog.window('close');
 		});
 	});
 	
-	var loginInfo={
+	//获取登录信息
+	function getLoginInfo(){
+		var loginInfo={
 			"parameter.driver":"com.mysql.jdbc.Driver",
 			"parameter.ip":$("#input_con_ip").val(),
 			"parameter.port":$("#input_con_port").val(),
@@ -54,16 +58,18 @@ define("login",[],function(require,exports,module){
 			"parameter.user":$("#input_con_user").val(),
 			"parameter.password":$("#input_con_password").val(),
 			"parameter.database":$("#input_con_database").val()
-	};
+		};
+		return loginInfo;
+	}
 	
 	//登录系统
 	function loginDatabase(callback){
 		message.wait("正在连接");
-		$.post("sql/testCon.action",loginInfo,function(result){
+		$.post("sql/testCon.action",getLoginInfo(),function(result){
 			if(typeof result=="object"){
 				callback&&callback(result);
 			}else{
-				console.error("连接失败！系统错误！");
+				message.error("连接失败！系统错误！");
 			}
 		});
 	}
@@ -75,10 +81,10 @@ define("login",[],function(require,exports,module){
 	
 	//打开登录提示框
 	module.exports.open=function(){
-		$('#window_create_connection').window('open');
+		dialog.window('open');
 	};
 	//对外接口
 	module.exports.target=dialog;
-	module.exports.loginInfo=loginInfo;
+	module.exports.getLoginInfo=getLoginInfo;
 	module.exports.loginDatabase=loginDatabase;
 });

@@ -10,7 +10,7 @@ define(["easyui","message","util","menu","login","tree","sql"],function(require,
 	var login=require("login");
 	var $document=$(document);
 	module.exports.target=$(".body_layout").height($document.height()).show().layout();
-	function fillValue1(){
+	function fillValue(){
 		$("#input_con_ip").val("localhost");
 		$("#input_con_port").val("3306");
 		$("#input_con_database").val("test");
@@ -18,7 +18,7 @@ define(["easyui","message","util","menu","login","tree","sql"],function(require,
 		$("#input_con_password").val("root");
 	}
 	
-	function fillValue(){
+	function fillValue2(){
 		$("#input_con_ip").val("10.17.82.155");
 		$("#input_con_port").val("3306");
 		$("#input_con_database").val("newest_edu3");
@@ -26,12 +26,9 @@ define(["easyui","message","util","menu","login","tree","sql"],function(require,
 		$("#input_con_password").val("Zte@ict2012");
 	}
 	
-	menu.init();
 	$(".body_loading").fadeOut("slow",function(){
-		login.init();
-		fillValue();
+		login.init(fillValue);
 	});
-	
 	
 	//当window窗体大小改变时候，重置layout
 	$(window).resize(function(){
