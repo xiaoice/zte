@@ -68,4 +68,5 @@
 	<include file="struts-user.xml" />
 	<include file="struts-message.xml" />
 	<include file="struts-sql.xml" />
+	<include file="struts-coze.xml" />
 </struts>

@@ -47,16 +47,20 @@ define(function(require,exports,module){
 			    		top: e.pageY
 			    	});
 				}
+				return false;
 			},
 			onLoadSuccess:function(node, data){
 				message.hide();
 				callback&&callback();
 			},
+			onBeforeExpand:function(node){
+				target.tree("select", node.target);
+			},
 			onBeforeSelect:function(node){
 				$("#input_con_database").val(node.text);
 				if(databaseSelect.html()!=node.text&&node.type=="database"){
 					login.loginDatabase(function(){
-						message.ok("成功切换到数据库【11"+node.text+"】",0.5);
+						message.ok("成功切换到数据库【"+node.text+"】",0.5);
 						databaseSelect.html(node.text);
 					});
 				}else if(node.type=="table"){

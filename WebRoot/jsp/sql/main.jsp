@@ -77,6 +77,14 @@
 					<td><input id="input_con_ip" class="easyui-validatebox" type="text"></input></td>
 				</tr>
 				<tr>
+					<td class="tdLabel">端口:</td>
+					<td><input id="input_con_port" class="easyui-validatebox" type="text"></input></td>
+				</tr>
+				<tr>
+					<td class="tdLabel">数据库名:</td>
+					<td><input id="input_con_database" class="easyui-validatebox" type="text"></input></td>
+				</tr>
+				<tr>
 					<td class="tdLabel">字符编码:</td>
 					<td>
 						<select id="input_con_charset" class="easyui-combobox" data-options="panelHeight:'auto',editable:false">
@@ -84,10 +92,6 @@
 							<option value="UTF-8">UTF-8</option>
 						</select>
 					</td>
-				</tr>
-				<tr>
-					<td class="tdLabel">端口:</td>
-					<td><input id="input_con_port" class="easyui-validatebox" type="text"></input></td>
 				</tr>
 				<tr>
 					<td class="tdLabel">登录名:</td>
@@ -99,7 +103,6 @@
 				</tr>
 				<tr>
 					<td colspan="2" class="text-center">
-						<input id="input_con_database" type="hidden"></input>
 						<a id="bt_login_in" class="easyui-linkbutton">连接</a>
 						<a id="bt_login_cancel" class="easyui-linkbutton">取消</a>
 						<a id="bt_login_test" class="easyui-linkbutton">测试连接</a>

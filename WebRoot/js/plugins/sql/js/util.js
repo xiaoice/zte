@@ -51,7 +51,7 @@ define(function(require,exports,module){
     		 (function(_i){
     			 var type=types[_i];
     			 that[type]=function(text,callback,callbacks){
-    				 var timeout=2000;
+    				 var timeout=1000;
     				 if(typeof callback=="number"){
     					 timeout=callback*1000;
     				 }

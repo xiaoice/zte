@@ -4,9 +4,6 @@
  * 2013-12-31 15:39:15
  */
 
-$.fn.table=function(option,callback){
-	var $handle=$(this);
-	
-	
-};
-
+define(function(require,exports,module){
+     var coze = {};
+});
