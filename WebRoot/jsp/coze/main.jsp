@@ -27,36 +27,29 @@
  	</div>
  	
  	
- 	<div class="window_warp window_warp_model">
+ 	<div class="window_warp window_warp_model" id="{{windowId}}">
  		<div class="window_box">
  		<div class=window_tool><i class="icon-remove windows_close"></i></div>
  		<div class="window_head">{{name}}</div>
 		  <div class="window_body">
+		  	<div class="window_body_resize"></div>
 		    <ul class="window_body_ui">
-		    	<li class="clearfix">
-		    		<div class="li_left">
+		    	<li class="clearfix" a-repeat="{{receiveList}}">
+		    		<div class="li_left" id="li_receive_{{id}}">
 		    			<img class="li_photo" alt="" src="../images/default_user.png">
 		    			<div class="li_body">
-		    				<i class="li_caret icon-caret-left"></i><div class="li_content">床前明月光</div>
-		    				<div class="li_foot">发送时间：2014-01-13 11:56:52</div>
+		    				<i class="li_caret icon-caret-left"></i><div class="li_content">{{content}}</div>
+		    				<div class="li_foot">发送时间：<span class="li_foot_time">{{createTime}}</span></div>
 		    			</div>
 		    		</div>
 		    	</li>
-		    	<li class="clearfix">
-		    		<div class="li_right">
-		    			<img class="li_photo" alt="" src="../images/default_user.png">
-		    			<div class="li_body">
-		    				<i class="li_caret icon-caret-right"></i><div class="li_content">疑似地上霜疑似地上霜疑似地上霜疑似地上霜疑似地上霜</div>
-		    				<div class="li_foot">发送时间：2014-01-13 11:56:52</div>
-		    			</div>
-		    		</div>
-		    	</li>
-		    	<li class="clearfix" a-repeat="{{msgs}}">
-		    		<div class="li_right">
+		    	
+		    	<li class="clearfix" a-repeat="{{sendList}}">
+		    		<div class="li_right" id="li_send_{{t}}">
 		    			<img class="li_photo" alt="" src="../images/default_user.png">
 		    			<div class="li_body">
 		    				<i class="li_caret icon-caret-right"></i><div class="li_content">{{content}}</div>
-		    				<div class="li_foot">发送时间：{{time}}</div>
+		    				<div class="li_foot">发送时间：<span class="li_foot_time">{{time}}</span></div>
 		    			</div>
 		    		</div>
 		    	</li>
@@ -64,7 +57,7 @@
 		  </div>
 		  <div class="window_foot">
 		  	<div class="window_edit">
-		  		<div class="window_edit_text" contentEditable=true a-model='{{text}}'>请输入内容</div>
+		  		<textarea class="window_edit_text" a-model='{{content}}'>请输入内容</textarea>
 		  		<div class="window_edit_tool">
 		  			<button type="button" class="btn btn-primary btn-xs send_msg">发送消息</button>
 		  			<button type="button" class="btn btn-default btn-xs windows_close">关闭</button>
@@ -80,11 +73,11 @@
 	 		<div class="login_body">
 				<div class="form-group">
 					<label for="user_username">用户名： </label> 
-					<input type="text" class="form-control" id="input_username" placeholder="请输入用户名">
+					<input type="text" class="form-control" id="input_username" placeholder="请输入用户名" value="zengxiaobin">
 				</div>
 				<div class="form-group">
 					<label for="user_password">密码：</label>
-					<input type="password" class="form-control" id="input_password" placeholder="请输入密码">
+					<input type="password" class="form-control" id="input_password" placeholder="请输入密码" value="123456">
 				</div>
 				<p>用户名为6-16位；密码为6位以上</p>
 				<button id="bt_login" type="submit" class="btn btn-primary btn-lg btn-block">登录</button>

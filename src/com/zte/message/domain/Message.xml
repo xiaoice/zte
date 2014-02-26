@@ -24,7 +24,7 @@
     
     <!-- 获取未读的新消息列表 -->
 	<select id="getMessageList" resultType="hashMap" parameterType="hashMap">
-		select m.*,u.photo from message m,user u where u.id=m.userid and userId=#{userId} and friendId=#{friendId} and createBy!=#{createBy} and isRead=0 and isDel=0 order by createTime desc
+		select m.*,u.photo from message m,user u where u.id=m.userid and userId=#{userId} and friendId=#{friendId} and createBy!=#{createBy} and isRead=0 and isDel=0 order by createTime asc
     </select>
     
     <select id="getMessageCount" resultType="int" parameterType="hashMap">
