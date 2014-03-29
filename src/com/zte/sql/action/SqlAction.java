@@ -90,6 +90,12 @@ public class SqlAction extends AjaxAction {
 		try {
 			HttpServletRequest request=ServletActionContext.getRequest();
 			String id=request.getParameter("id");
+			JdbcDto jdbc =(JdbcDto) getSessionProperty("jdbc");
+			if(StringUtils.isBlank(id)&&StringUtils.isNotBlank(jdbc.getDatabase())){
+				conn=getConnection();
+				return ajaxUtil.setSuccess(formatDatabaseName(Arrays.asList(new String[]{jdbc.getDatabase()})));
+			}
+			
 			if(StringUtils.isNotBlank(id)){
 				String[] ids=id.split("—");
 				conn=getConnection(ids[0]);

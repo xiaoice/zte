@@ -44,7 +44,7 @@ public class UserAction extends AjaxAction{
 		if(user!=null){
 			user.setPassword(null);
 			setSessionProperty("user", user);
-			return ajaxUtil.setSuccess(user);
+			return ajaxUtil.setSuccess("登录成功！",user);
 		}
 		return ajaxUtil.setFail("用户名或者密码错误！");
 	}

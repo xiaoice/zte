@@ -9,6 +9,10 @@
 		<action name="index" class="sqlAction" method="index">
 			<result name="input">/jsp/sql/main.jsp</result>
 		</action>
+	
+		<action name="table" class="sqlAction" method="index">
+			<result name="input">/jsp/sql/table.jsp</result>
+		</action>
 		
 		<!-- 测试数据库是否连接成功 -->
 		<action name="testCon" class="sqlAction" method="testConnection">

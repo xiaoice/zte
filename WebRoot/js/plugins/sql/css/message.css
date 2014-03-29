@@ -7,7 +7,7 @@
 .message_box .message_content_wait{padding-left: 0px;text-align: center;min-height:20px;}
 .message_box .message_icon{position:absolute;top:0px;left:0px; width:24px; height:24px; background: url("icon_message.png") no-repeat}
 .message_box_small .message_content{position:relative; color:green;padding-left: 20px;*padding-top:2px; height: auto; min-height:16px;}
-.message_box_small .message_icon{position:absolute;top:0px;left:0px; width:16px; height:16px; background: url("../images/icon_message.png") no-repeat 0px 0px;}
+.message_box_small .message_icon{position:absolute;top:0px;left:0px; width:16px; height:16px;margin-top:2px; background: url("../images/icon_message.png") no-repeat 0px 0px;}
 
 .message_box_small .icon_message_ok{background-position: 0 0;}
 .message_box_small .icon_message_warn{background-position: 0 -38px;}
