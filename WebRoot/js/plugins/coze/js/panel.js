@@ -72,9 +72,9 @@ define(function(require,exports,module){
 			  view.ajax.abort();
 			}
 			view.ajax=$.get("../message/loopMessage.action?parameter.friendId="+view.friendId).done(function(result){
-				if(result.data.DATA){
-					//view.view.set("receiveList",result.data.DATA);
-					view.view.get("receiveList").push.apply(view.view.get("receiveList"), result.data.DATA);
+				if(result&&result.data&&result.data.DATA){
+					//view.view.set("list",result.data.DATA);
+					view.view.get("list").push.apply(view.view.get("list"), result.data.DATA);
 					var ids=[],data=result.data.DATA,i=0,j=data.length;
 					for(;i<j;i++){
 						ids.push(data[i].id);
@@ -110,29 +110,37 @@ define(function(require,exports,module){
 				  'click li': function(e) {
 					  var index=e.currentTarget.$index
 					  , name = this.data.friendList[index].user.name
+					  , userId = this.data.friendList[index].user.id
 					  , friendId = this.data.friendList[index].friend.id
 					  ,view=undefined;
 					  if(typeof views["view"+friendId]=="undefined"){
 						  views["view"+friendId]={};
 					  }
 					  view=views["view"+friendId];
-					  view.windowId="window_"+friendId;
-					  view.$window=$("#"+view.windowId);
 					  view.friendId=friendId;
 					  getMessageListByFriendId(friendId,function(result){
 						  //若这个对话框不存在，则创建，确保唯一性
-						  if(view.$window.size()==0){
-							  var model_html=$('.window_warp_model').clone().removeClass("window_warp_model")[0].outerHTML;
-							  view.view=new Ant(model_html, {data: {name: name,sendList:[], receiveList: result.data,time:"正在发送",windowId:view.windowId},
+						  if($("#window_"+friendId).size()==0){
+							  var model_html=$('.window_warp_model').clone().removeClass("window_warp_model")[0].outerHTML,list=[];
+							  if(result&&result.data){
+								  list=result.data;
+								  var ids=[],i=0,j=list.length;
+								  for(;i<j;i++){
+									ids.push(list[i].id);
+								  }
+								  updateMsgRead(ids);
+							  }
+							  
+							  view.view=new Ant(model_html, {data: {name: name,list: list,friendID:view.friendId},
 								  events: {'click .send_msg': function() {
 									  var t=new Date().getTime(),that=this,content=that.data.content,$content=$(".window_edit_text");
 									  $content.focus();
-									  if(content==""){
+									  if(content==""||typeof content=="undefined"){
 										  return message.warn("不能发送空消息");
 									  }
-									  this.data.sendList.push({content: content,t:t});
+									  this.data.list.push({content: content,id:t,createTime:"正在发送",userId:userId,friendId:friendId});
 									  $.post("../message/send.action",{"parameter.content":content,"parameter.friendId":friendId}).done(function(result){
-										  var $li=$("#li_send_"+t);
+										  var $li=$("#li_"+t);
 										  if(result&&result.data){
 											  $li.find(".li_foot_time").html(result.data.createTime);
 										  }else{
@@ -140,6 +148,7 @@ define(function(require,exports,module){
 										  }
 										  //清空输入内容
 										  that.set("content","");
+										  $("#window_"+friendId).find(".window_body_ui").scrollTop(99999);
 									  });
 							  		}
 								  }
@@ -149,7 +158,7 @@ define(function(require,exports,module){
 							  
 							  //轮询控制
 							  view.enble=true;
-							  view.$body=view.$el.find("window_body");
+							  view.$body=view.$el.find(".window_body_ui");
 							  
 							  //轮询最新消息
 							  getNewMessageListByFriendId(view);
@@ -162,9 +171,13 @@ define(function(require,exports,module){
 	
 	//关闭弹出层
 	$document.on("click",".windows_close",function(){
-		$(this).parents(".window_warp").parent("div").remove();
+		$(this).parents(".window_warp").parent("div").remove(),val=$(this).data("value");
+		//关闭弹出层时，同时关闭调ajax请求
+		var view=views["view"+val];
+		view&&view.ajax&&view.ajax.abort();
 	});
 	
+	//弹出层缩放
 	$document.on("mousedown",".window_body_resize",function(){
 		var that=this
 			,$window=$(that).parents(".window_warp")
@@ -202,6 +215,13 @@ define(function(require,exports,module){
 			$body.css("height",body_height);
 			$foot.css("height",foot_height);
 			$window.removeClass("no_select");
+			$window.find(".window_edit_text").focus();
 		});
 	});
+	
+	$document.on("mouseover",".window_body_ui",function(){
+		$(this).parents(".window_warp").removeClass("no_select");
+	}).on("mouseout",".window_body_ui",function(){
+		$(this).parents(".window_warp").addClass("no_select");
+	})
 });

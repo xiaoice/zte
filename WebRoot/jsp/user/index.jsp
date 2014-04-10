@@ -15,6 +15,7 @@
 <body>
 	<input id="userid" type="hidden" value="${user.id}"/>
 	<input id="username" type="hidden" value="${user.username}"/>
+	<input id="user_photo" type="hidden" value="${user.photo}"/>
 	<input id="friendId" type="hidden" value="10000"/>
 	<div class="container">
 		<%@include file="/jsp/common/header.jsp" %>
@@ -110,7 +111,7 @@ var page={
 	pageIndex:1,	//默认第一页
 	pageSize:10		//每页显示10条
 };
-var $out=$(".chat_warp_out_ui"),$more=$(".more_message"),$blank=$(".chat_blank"),$wait=$(".chat_wait");
+var $out=$(".chat_warp_out_ui"),$more=$(".more_message"),$blank=$(".chat_blank"),$wait=$(".chat_wait"),userPhoto=$("#user_photo").val();
 //轮询回调控制计数器
 var ajax_loop=0;
 var current_request=null,index_request=null,index_request_stop=false;
@@ -126,11 +127,15 @@ var service={
 				"parameter.content":content,
 				"parameter.friendId":$("#friendId").val()
 			};
-			var $li=$(service.getOneself({content:content,createTime:""})).appendTo($out);
+			var $li=$(service.getOneself({content:content,createTime:"发送时间：正在发送",photo:userPhoto,wait:true})).appendTo($out);
 			$.post("${base}message/send.action",option).done(function(result){
-				service.scrollEnd();
-				$("#content").contents().find("body").html("");
-				$li.find(".wait").hide(1000);
+				if(result.recode==1){
+					service.scrollEnd();
+					$("#content").contents().find("body").html("");
+					$li.attr("id","chat_"+result.data.id);
+					$li.find(".time").html("发送时间："+result.data.createTime);
+					$li.find(".wait").remove();
+				}
 			});
 		},
 		//刷新新消息列表
@@ -235,8 +240,13 @@ var service={
 				+"<div class=\"right tip\"></div>"
 				+"<div class=\"border-radius-5 right chat_body\"><a class=\"close\">×</a>" 
 				+"<div class=\"content\">"+data.content+"</div>" 
-				+"<div class=\"create_time\"><span class=\"user\">用户名："+data.sendUsername+"</span><span class=\"time\">"+data.createTime.replace("T"," ")+"</span><a class=\"reply hide\">回复</a></div>" 
-				+"</div><div class=\"wait\"><i class=\"icon-spinner icon-spin text_wait\"></i></div></li>";
+				+"<div class=\"create_time\">"
+				//+"<span class=\"user\">用户名："+data.sendUsername+"</span>"
+				+"<span class=\"time\">"+data.createTime.replace("T"," ")+"</span><a class=\"reply hide\">回复</a></div></div>";
+				if(data.wait){
+					li+="<div class=\"wait\"><i class=\"icon-spinner icon-spin text_wait\"></i></div>";
+				}
+				li+="</li>";
 			return li;
 		},
 		pageNext:function(){
